@@ -1,21 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createClient } from '@sanity/client';
 import formidable from 'formidable';
 import fs from 'fs';
-
-// Debug environment variables
-console.log('Environment check:');
-console.log('PROJECT_ID:', process.env.SANITY_PROJECT_ID ? 'Found' : 'Missing');
-console.log('DATASET:', process.env.SANITY_DATASET_NAME ? 'Found' : 'Missing');
-console.log('TOKEN:', process.env.SANITY_API_TOKEN ? 'Found (length: ' + process.env.SANITY_API_TOKEN.length + ')' : 'Missing');
-
-const client = createClient({
-  projectId: process.env.SANITY_PROJECT_ID!,
-  dataset: process.env.SANITY_DATASET_NAME!,
-  token: process.env.SANITY_API_TOKEN!,
-  apiVersion: '2023-05-03',
-  useCdn: false,
-});
+import { sanityClient } from 'utils/sanityClient';
 
 export const config = {
   api: {
@@ -33,7 +19,7 @@ function generateSlug(title: string): string {
 async function uploadImageToSanity(filePath: string, filename: string) {
   try {
     const imageBuffer = fs.readFileSync(filePath);
-    const asset = await client.assets.upload('image', imageBuffer, {
+    const asset = await sanityClient.assets.upload('image', imageBuffer, {
       filename: filename,
     });
     return asset;
@@ -137,7 +123,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     console.log('Created content blocks:', contentBlocks.length);
 
-    // Create blog post document
     const blogPost = {
       _type: 'blog',
       title,
@@ -154,7 +139,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     };
 
     console.log('Creating blog post in Sanity...');
-    const result = await client.create(blogPost);
+    const result = await sanityClient.create(blogPost);
     console.log('Blog post created successfully:', result._id);
 
     res.status(201).json({

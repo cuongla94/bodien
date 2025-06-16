@@ -1,4 +1,4 @@
-import { Navbar, Nav } from 'react-bootstrap';
+import { Navbar } from 'react-bootstrap';
 import Link from 'next/link';
 import Image from 'next/image';
 import ThemeToggle from 'common/ThemeToggle';
@@ -12,7 +12,7 @@ export const AppNavbar = () => {
   const Brand = (
     <Link
       href="/"
-      className="d-flex align-items-center gap-2 text-decoration-none"
+      className="d-flex align-items-center gap-2"
       style={{ textDecoration: 'none' }}
     >
       <Image
@@ -25,27 +25,29 @@ export const AppNavbar = () => {
           objectFit: 'cover'
         }}
       />
-      <span style={{ color: theme?.mainTextColor }}>{MainInfo.brandName}</span>
+      <span
+        style={{
+          color: theme?.mainTextColor,
+          fontWeight: 'bold',
+          fontSize: '25px'
+        }}
+      >
+        {MainInfo.brandName}
+      </span>
     </Link>
   );  
 
   return (
     <Navbar
       variant={theme.type === 'dark' ? 'dark' : 'light'}
-      className="fj-navbar fj-nav-base"
       bg="transparent"
       expand="lg"
+      className="fj-navbar fj-nav-base"
     >
-      <Navbar.Brand className="fj-navbar-brand">{Brand}</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse
-        id="basic-navbar-nav"
-        className="d-flex justify-content-between align-items-center"
-      >
-        <div className="ms-auto">
-          <ThemeToggle />
-        </div>
-      </Navbar.Collapse>
+      <div className="container-fluid d-flex justify-content-between align-items-center">
+        {Brand}
+        <ThemeToggle />
+      </div>
     </Navbar>
   );
 };

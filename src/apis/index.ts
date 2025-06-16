@@ -2,6 +2,8 @@ import client, { previewClient } from 'lib/sanity';
 import imageUrlBuilder from '@sanity/image-url';
 
 const blogFields = `
+  _id,
+  _type,
   title,
   subtitle,
   'slug': slug.current,

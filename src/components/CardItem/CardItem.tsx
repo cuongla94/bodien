@@ -1,4 +1,4 @@
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Badge } from 'react-bootstrap';
 import Link from 'next/link';
 import { urlFor } from 'apis';
 
@@ -14,6 +14,10 @@ interface ICardItemProps {
   date?: string;
   link?: ILink;
   theme?: any;
+  tags?: string[];
+  isAdmin?: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 export const CardItem = ({
@@ -22,7 +26,11 @@ export const CardItem = ({
   image,
   date,
   link,
-  theme
+  theme,
+  tags = [],
+  isAdmin = false,
+  onEdit,
+  onDelete,
 }: ICardItemProps) => {
   const hasImage = !!image;
 
@@ -30,9 +38,9 @@ export const CardItem = ({
     <Card
       className="fj-card"
       style={{
-        backgroundColor: theme?.cardBg,
+        backgroundColor: theme?.cardBackground,
         color: theme?.mainTextColor,
-        borderColor: theme?.borderColor
+        borderColor: theme?.borderColor,
       }}
     >
       <div className="card-body-wrapper">
@@ -47,7 +55,7 @@ export const CardItem = ({
             borderTopLeftRadius: '0.25rem',
             borderTopRightRadius: '0.25rem',
             overflow: 'hidden',
-            position: 'relative'
+            position: 'relative',
           }}
         >
           {hasImage ? (
@@ -58,7 +66,7 @@ export const CardItem = ({
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                objectPosition: 'center'
+                objectPosition: 'center',
               }}
             />
           ) : (
@@ -68,7 +76,7 @@ export const CardItem = ({
                 fontSize: '1rem',
                 fontWeight: 500,
                 textTransform: 'uppercase',
-                letterSpacing: '0.05em'
+                letterSpacing: '0.05em',
               }}
             >
               No Image Available
@@ -76,13 +84,38 @@ export const CardItem = ({
           )}
         </div>
 
-        <Card.Body style={{ padding: '8px'}}>
+        <Card.Body style={{ padding: '8px' }}>
           <Card.Title
             className="card-main-title"
             style={{ color: theme?.mainTextColor }}
           >
             {title && title.length > 40 ? title.substr(0, 40) + '...' : title}
           </Card.Title>
+
+          {subtitle && (
+            <Card.Text style={{ color: theme?.subTextColor }}>
+              {subtitle}
+            </Card.Text>
+          )}
+
+          {tags.length > 0 && (
+            <div className="mb-2 d-flex flex-wrap gap-1">
+              {tags.map((tag, idx) => (
+                <Badge
+                  key={idx}
+                  bg="secondary"
+                  style={{
+                    backgroundColor: theme?.secondaryColor,
+                    color: theme?.buttonText,
+                    fontSize: '0.75rem',
+                    padding: '0.25rem 0.5rem',
+                  }}
+                >
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          )}
 
           <div className="d-flex justify-content-between align-items-center">
             {date && (
@@ -94,12 +127,47 @@ export const CardItem = ({
               </Card.Text>
             )}
 
-            {link && (
+            {!isAdmin && link && (
               <Link href={link.href} passHref>
-                <Button variant="info" size="sm" style={{ color: theme?.mainTextColor }}>
+                <Button
+                  variant="info"
+                  size="sm"
+                  style={{
+                    backgroundColor: theme?.buttonBg,
+                    color: theme?.buttonText,
+                    border: 'none',
+                  }}
+                >
                   Read More
                 </Button>
               </Link>
+            )}
+
+            {isAdmin && (
+              <div className="d-flex gap-2">
+                <Button
+                  size="sm"
+                  onClick={onEdit}
+                  style={{
+                    backgroundColor: theme?.primaryColor,
+                    color: theme?.buttonText,
+                    border: 'none',
+                  }}
+                >
+                  Edit
+                </Button>
+                <Button
+                  size="sm"
+                  variant="danger"
+                  onClick={onDelete}
+                  style={{
+                    color: '#fff',
+                    border: 'none',
+                  }}
+                >
+                  Delete
+                </Button>
+              </div>
             )}
           </div>
         </Card.Body>
