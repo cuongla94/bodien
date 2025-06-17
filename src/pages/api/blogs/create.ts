@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       if (section.type === 'content') {
         sections.push({
-          _type: 'contentSection',
+          _type: 'content',
           content: [
             {
               _type: 'block',
@@ -92,7 +92,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }));
 
         sections.push({
-          _type: 'productSection',
+          _type: 'product',
           name: section.name,
           description: section.description,
           image: imageRef,
