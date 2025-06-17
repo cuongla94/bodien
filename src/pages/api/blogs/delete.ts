@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { sanityClient } from 'utils/sanityClient';
+import { sanityClient } from 'services';
 
 interface DeleteResponse {
   success: boolean;

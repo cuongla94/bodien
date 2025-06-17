@@ -1,78 +1,73 @@
 import { useEffect, useState } from 'react';
 import PageLayout from 'layouts/PageLayout';
-import { BlogHeader, BlogContent } from 'components/Blog';
+import { BlogHeader } from 'components/Blog';
 import { getBlogBySlug, getAllBlogs, onBlogUpdate } from 'apis';
-import { Row, Col } from 'react-bootstrap'
 import { urlFor } from 'apis';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import PreviewAlert from 'components/PreviewAlert';
+import { useTrackBlogView } from 'hooks';
+import BlogSections from 'components/BlogDetails/BlogSections';
 
-const BlogDetail = ({blog: initialBlog, preview}) => {
+const BlogDetail = ({ blog: initialBlog, preview }) => {
   const router = useRouter();
   const [blog, setBlog] = useState(initialBlog);
+  const [loading, setLoading] = useState(true);
+
+  useTrackBlogView(initialBlog?.slug);
 
   useEffect(() => {
     let sub;
+
     if (preview) {
-      sub = onBlogUpdate(blog.slug)
-        .subscribe(update => {
-          setBlog(update.result)
-        })
+      sub = onBlogUpdate(initialBlog.slug).subscribe((update) => {
+        setBlog(update.result);
+        setLoading(false); 
+      });
+    } else {
+      if (initialBlog) setLoading(false);
     }
 
-    return () => sub && sub.unsubscribe()
-  }, [])
+    return () => sub && sub.unsubscribe();
+  }, [preview, initialBlog]);
 
-  if (router.isFallback) {
-    return (
-      <PageLayout className="blog-detail-page">
-        Loading...
-      </PageLayout>
-    )
+  const getCoverImageUrl = () =>
+    blog?.coverImage?.asset ? urlFor(blog.coverImage).height(600).url() : null;
+
+  if (router.isFallback || loading) {
+    return <PageLayout className="blog-detail-page">Loading...</PageLayout>;
   }
-
-  // Helper function to safely get cover image URL
-  const getCoverImageUrl = () => {
-    if (blog.coverImage && blog.coverImage.asset) {
-      return urlFor(blog.coverImage).height(600).url();
-    }
-    return null; // or return a default image URL
-  };
 
   return (
     <PageLayout className="blog-detail-page">
-      { preview && <PreviewAlert /> }
+      {preview && <PreviewAlert />}
       <BlogHeader
         title={blog.title}
         subtitle={blog.subtitle}
         coverImage={getCoverImageUrl()}
         date={moment(blog.date || blog.publishedAt).format('LL')}
       />
-      <hr/>
-      { blog.content &&
-        <BlogContent content={blog.content} />
-      }
+      <hr />
+      {blog.sections && <BlogSections sections={blog.sections} />}
     </PageLayout>
-  )
-}
+  );
+};
 
-// Default export is required for Next.js pages
 export default BlogDetail;
 
-export async function getStaticProps({params, preview = false, previewData}) {
+export async function getStaticProps({ params, preview = false }) {
   const blog = await getBlogBySlug(params.slug, preview);
   return {
     props: { blog, preview },
-    revalidate: 1
-  }
+    revalidate: 1,
+  };
 }
 
 export async function getStaticPaths() {
   const blogs = await getAllBlogs();
-  const paths = blogs?.map(b => ({params: {slug: b.slug}}));
+  const paths = blogs?.map((b) => ({ params: { slug: b.slug } })) || [];
   return {
     paths,
-    fallback: true
-  }
-};
+    fallback: true,
+  };
+}

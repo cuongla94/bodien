@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import formidable from 'formidable';
 import fs from 'fs';
-import { sanityClient } from 'utils/sanityClient';
+import { sanityClient } from 'services';
 
 export const config = {
   api: {
@@ -89,6 +89,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           _type: 'affiliateLink',
           label: link.label,
           url: link.url,
+          clicks: 0
         }));
 
         sections.push({
@@ -108,6 +109,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       slug: { _type: 'slug', current: slug },
       publishedAt: new Date().toISOString(),
       tags,
+      numOfViews: 0,
+      numOfShares: 0,
       sections,
       ...(coverImageRef && { coverImage: coverImageRef }),
     };

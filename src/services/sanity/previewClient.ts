@@ -17,4 +17,4 @@ export const previewClient = createClient({
   token: process.env.SANITY_API_TOKEN
 })
 
-export default createClient(options);
+export const client = createClient(options);
