@@ -1,11 +1,12 @@
-import { Container, Row, Col } from 'react-bootstrap';
-import Link from 'next/link';
+// pages/admin/blogs/create.tsx
+import { Container } from 'react-bootstrap';
 import { BlogCreateForm } from 'components/BlogCreateForm';
+import {AdminPageLayout} from 'layouts';
 
 export default function CreateBlogPage() {
-  return ( 
-    <Container>
+  return (
+    <AdminPageLayout>
       <BlogCreateForm />
-    </Container>
+    </AdminPageLayout>
   );
-}
+};

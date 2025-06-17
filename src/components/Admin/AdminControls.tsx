@@ -1,6 +1,8 @@
 import { Button } from "react-bootstrap";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaSignOutAlt, FaHome } from "react-icons/fa";
 import { useRouter } from "next/router";
+import { AdminControlsData } from "config/admin-config";
+import { FiExternalLink } from "react-icons/fi";
 
 interface AdminControlsProps {
   onLogout?: () => void;
@@ -11,19 +13,23 @@ export const AdminControls = ({ onLogout }: AdminControlsProps) => {
 
   const logout = () => {
     localStorage.removeItem('bodien-admin-auth');
-    if (onLogout) {
-      onLogout();
-    } else {
-      router.reload();
-    }
+    window.location.href = '/'; 
   };
+  
 
   const isDashboard = router.pathname === '/admin';
 
   return (
     <div className="d-flex justify-content-between align-items-center mb-4">
-      <h1 className="mb-0">Admin Dashboard</h1>
       <div className="d-flex gap-2">
+        <Button
+          variant="outline-secondary"
+          onClick={() => router.push('/')}
+          className="d-flex align-items-center gap-2"
+        >
+          <FiExternalLink />
+          Public Site
+        </Button>
         {isDashboard ? (
           <Button
             variant="primary"
@@ -31,7 +37,7 @@ export const AdminControls = ({ onLogout }: AdminControlsProps) => {
             className="d-flex align-items-center gap-2"
           >
             <FaPlus />
-            Add Blog
+            {AdminControlsData.navigation.add_blog}
           </Button>
         ) : (
           <Button
@@ -39,12 +45,20 @@ export const AdminControls = ({ onLogout }: AdminControlsProps) => {
             onClick={() => router.push('/admin')}
             className="d-flex align-items-center gap-2"
           >
-            🏠 Dashboard
+            <FaHome />
+            {AdminControlsData.navigation.dashboard}
           </Button>
         )}
-
-        <Button variant="outline-danger" size="sm" onClick={logout}>
-          🔒 Logout
+      </div>
+      <div>
+        <Button
+          variant="outline-danger"
+          size="sm"
+          onClick={logout}
+          className="d-flex align-items-center gap-2"
+        >
+          <FaSignOutAlt />
+          {AdminControlsData.logout}
         </Button>
       </div>
     </div>

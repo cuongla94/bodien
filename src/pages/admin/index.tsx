@@ -11,6 +11,9 @@ import { useThemeProvider } from 'hooks/useThemeProvider';
 import { ConfirmationModal } from 'common/modals';
 import axios from 'axios';
 import { AdminControls } from 'components/Admin/AdminControls';
+import { AdminBlogList } from 'components/AdminDashBoard/AdminBlogList';
+import { AdminPageLayout } from 'layouts';
+import { AdminDashboard } from 'components/AdminDashBoard';
 
 export default function AdminPage() {
   const router = useRouter();
@@ -103,94 +106,35 @@ export default function AdminPage() {
   if (authLoading) return null;
 
   return (
-    <Container fluid className="py-4">
-      <AdminPasswordForm
-        show={!authenticated}
-        onSubmit={handlePasswordSubmit}
+    <AdminPageLayout>
+      <AdminDashboard
+        authenticated={authenticated}
+        filteredBlogs={filteredBlogs}
+        theme={theme}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        filter={filter}
+        setFilter={setFilter}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        deleteSuccess={deleteSuccess}
+        deleteError={deleteError}
+        dismissAlert={dismissAlert}
+        hitEnd={hitEnd}
+        size={size}
+        setSize={setSize}
+        formatDate={formatDate}
+        showConfirm={showConfirm}
+        setShowConfirm={setShowConfirm}
+        selectedBlog={selectedBlog}
+        deleteLoading={deleteLoading}
+        confirmDelete={confirmDelete}
+        handlePasswordSubmit={handlePasswordSubmit}
         error={error}
-        loading={formLoading}
+        formLoading={formLoading}
+        setSelectedBlog={setSelectedBlog}
       />
-
-      {authenticated && (
-        <Row className="justify-content-center">
-          <Col md={10} className="p-4">
-            <AdminControls onLogout={logout} />
-            {deleteSuccess && (
-              <Alert variant="success" dismissible onClose={() => dismissAlert('success')}>
-                {deleteSuccess}
-              </Alert>
-            )}
-
-            {deleteError && (
-              <Alert variant="danger" dismissible onClose={() => dismissAlert('error')}>
-                {deleteError}
-              </Alert>
-            )}
-
-            <BlogFilterControls
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              sortAsc={!!filter.date.asc}
-              onToggleSort={() =>
-                setFilter(prev => ({
-                  ...prev,
-                  date: { asc: prev.date.asc ? 0 : 1 },
-                }))
-              }
-            />
-
-            {filteredBlogs.length > 0 ? (
-              <>
-                <Row>
-                  {filteredBlogs.map(blog => (
-                    <Col key={blog._id} lg="4" md="6" className="mb-4">
-                      <CardItem
-                        title={blog.title}
-                        subtitle={blog.subtitle}
-                        date={formatDate(blog.publishedAt)}
-                        image={blog.coverImage}
-                        tags={blog.tags || []}
-                        isAdmin={true}
-                        onEdit={() => handleEdit(blog._id)}
-                        onDelete={() => handleDelete(blog._id, blog.title)}
-                        theme={theme}
-                        numOfViews={blog.numOfViews || 0}
-                        numOfShares={blog.numOfShares || 0}
-                      />
-                    </Col>
-                  ))}
-                </Row>
-
-                {!hitEnd && (
-                  <div className="text-center mb-4">
-                    <Button onClick={() => setSize(size + 1)} variant="outline-secondary" size="lg">
-                      Load More
-                    </Button>
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="text-center py-4">
-                <p>No blogs found.</p>
-              </div>
-            )}
-          </Col>
-        </Row>
-      )}
-
-      <ConfirmationModal
-        show={showConfirm}
-        title="Delete Confirmation"
-        message={`Are you sure you want to delete the blog post "${selectedBlog?.title}"? This action cannot be undone.`}
-        confirmLabel={deleteLoading ? "Deleting..." : "Delete"}
-        cancelLabel="Cancel"
-        confirmVariant="danger"
-        onConfirm={confirmDelete}
-        onCancel={() => {
-          setShowConfirm(false);
-          setSelectedBlog(null);
-        }}
-      />
-    </Container>
+    </AdminPageLayout>
   );
+  
 }

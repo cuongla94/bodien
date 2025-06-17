@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { AdminControls } from 'components/Admin/AdminControls';
 import { FaTrash, FaPlusCircle, FaTimes } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
+import { BlogFormData } from 'config/blog-config';
 
 export const BlogCreateForm = () => {
   const router = useRouter();
@@ -21,11 +21,6 @@ export const BlogCreateForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
-  const logout = () => {
-    localStorage.removeItem('bodien-admin-auth');
-    router.push('/');
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -151,8 +146,7 @@ export const BlogCreateForm = () => {
 
   return (
     <Container className="py-4">
-      <AdminControls onLogout={logout}/>
-      <h2>Create New Blog Post</h2>
+      <h2>{BlogFormData.createFormTitle}</h2>
       {error && <Alert variant="danger">{error}</Alert>}
       {success && <Alert variant="success">{success}</Alert>}
 
