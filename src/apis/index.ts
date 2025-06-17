@@ -15,7 +15,18 @@ const blogFields = `
       url
     }
   },
-  products[] {
+  sections[] {
+    _type,
+    _key,
+    // For content sections
+    content[] {
+      ...,
+      children[]{
+        ...,
+        marks[]
+      }
+    },
+    // For product sections
     name,
     description,
     affiliateLinks[] {

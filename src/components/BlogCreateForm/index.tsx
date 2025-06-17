@@ -204,9 +204,6 @@ export const BlogCreateForm = () => {
                     <Form.Control placeholder="Product Name" value={section.name} onChange={(e) => updateSection(index, 'name', e.target.value)} />
                   </Form.Group>
                   <Form.Group className="mb-2">
-                    <Form.Control placeholder="Subtitle" value={section.subtitle} onChange={(e) => updateSection(index, 'subtitle', e.target.value)} />
-                  </Form.Group>
-                  <Form.Group className="mb-2">
                     <Form.Control as="textarea" placeholder="Product Description" value={section.description} onChange={(e) => updateSection(index, 'description', e.target.value)} />
                   </Form.Group>
 

@@ -114,7 +114,7 @@ export default function AdminPage() {
       {authenticated && (
         <Row className="justify-content-center">
           <Col md={10} className="p-4">
-            <AdminControls total={filteredBlogs.length} onLogout={logout} />
+            <AdminControls onLogout={logout} />
             {deleteSuccess && (
               <Alert variant="success" dismissible onClose={() => dismissAlert('success')}>
                 {deleteSuccess}

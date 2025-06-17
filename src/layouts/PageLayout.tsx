@@ -16,10 +16,7 @@ export default function PageLayout({ children, className }: IPageLayoutProps) {
   return (
     <div className={`d-flex flex-column min-vh-100 ${theme.type}`}>
       <Container className="flex-grow-1 d-flex flex-column">
-        <AppNavbar
-          theme={theme}
-          toggleTheme={toggleTheme}
-        />
+        <AppNavbar />
         <hr/>
         <div
           className={`page-wrapper flex-grow-1 ${className || ''}`}

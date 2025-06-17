@@ -17,16 +17,9 @@ function generateSlug(title: string): string {
 }
 
 async function uploadImageToSanity(filePath: string, filename: string) {
-  try {
-    const imageBuffer = fs.readFileSync(filePath);
-    const asset = await sanityClient.assets.upload('image', imageBuffer, {
-      filename: filename,
-    });
-    return asset;
-  } catch (error) {
-    console.error('Error uploading image:', error);
-    throw error;
-  }
+  const imageBuffer = fs.readFileSync(filePath);
+  const asset = await sanityClient.assets.upload('image', imageBuffer, { filename });
+  return asset;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -35,88 +28,88 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const form = formidable({
-      uploadDir: '/tmp',
-      keepExtensions: true,
-      maxFileSize: 10 * 1024 * 1024,
-    });
-
+    const form = formidable({ uploadDir: '/tmp', keepExtensions: true, maxFileSize: 10 * 1024 * 1024 });
     const [fields, files] = await form.parse(req);
 
     const title = Array.isArray(fields.title) ? fields.title[0] : fields.title;
     const subtitle = Array.isArray(fields.subtitle) ? fields.subtitle[0] : fields.subtitle;
-    const content = Array.isArray(fields.content) ? fields.content[0] : fields.content;
-    const tagsString = Array.isArray(fields.tags) ? fields.tags[0] : fields.tags;
-    const productsRaw = Array.isArray(fields.products) ? fields.products[0] : fields.products;
+    const tagsRaw = Array.isArray(fields.tags) ? fields.tags[0] : fields.tags;
+    const tags = tagsRaw ? tagsRaw.split(',').map(tag => tag.trim()).filter(Boolean) : [];
 
     const slug = generateSlug(title);
-    const tags = tagsString ? tagsString.split(',').map(tag => tag.trim()).filter(Boolean) : [];
 
-    // Cover image upload
     let coverImageRef = null;
     if (files.coverImage && files.coverImage[0]?.filepath) {
       const file = files.coverImage[0];
       const uploaded = await uploadImageToSanity(file.filepath, file.originalFilename || 'cover-image');
-      coverImageRef = {
-        _type: 'image',
-        asset: { _type: 'reference', _ref: uploaded._id },
-      };
+      coverImageRef = { _type: 'image', asset: { _type: 'reference', _ref: uploaded._id } };
       fs.unlinkSync(file.filepath);
     }
 
-    // Handle product sections
-    const products = [];
-    if (productsRaw) {
-      const parsed = JSON.parse(productsRaw);
-      for (let i = 0; i < parsed.length; i++) {
-        const product = parsed[i];
+    const rawSections = Array.isArray(fields.sections) ? fields.sections[0] : fields.sections;
+    const parsedSections = JSON.parse(rawSections || '[]');
+
+    const sections = [];
+
+    for (let i = 0; i < parsedSections.length; i++) {
+      const section = parsedSections[i];
+
+      if (section.type === 'content') {
+        sections.push({
+          _type: 'contentSection',
+          content: [
+            {
+              _type: 'block',
+              _key: Math.random().toString(36).substr(2, 9),
+              style: 'normal',
+              markDefs: [],
+              children: [
+                {
+                  _type: 'span',
+                  _key: Math.random().toString(36).substr(2, 9),
+                  text: section.value || '',
+                  marks: [],
+                },
+              ],
+            },
+          ],
+        });
+      } else if (section.type === 'product') {
         let imageRef = null;
         const imageKey = `productImage-${i}`;
-
         const imageFile = files[imageKey]?.[0];
+
         if (imageFile?.filepath) {
           const uploaded = await uploadImageToSanity(imageFile.filepath, imageFile.originalFilename || `product-${i}`);
           imageRef = { _type: 'image', asset: { _type: 'reference', _ref: uploaded._id } };
           fs.unlinkSync(imageFile.filepath);
         }
 
-        products.push({
+        const affiliateLinks = (section.affiliateLinks || []).map(link => ({
+          _type: 'affiliateLink',
+          label: link.label,
+          url: link.url,
+        }));
+
+        sections.push({
           _type: 'productSection',
-          name: product.name,
-          description: product.description,
+          name: section.name,
+          description: section.description,
           image: imageRef,
-          affiliateLinks: product.affiliateLinks.map(link => ({
-            _type: 'affiliateLink',
-            label: link.label,
-            url: link.url,
-          }))
+          affiliateLinks,
         });
       }
     }
-
-    const contentBlocks = content.split('\n\n').filter(Boolean).map(p => ({
-      _type: 'block',
-      _key: Math.random().toString(36).substr(2, 9),
-      style: 'normal',
-      markDefs: [],
-      children: [{
-        _type: 'span',
-        _key: Math.random().toString(36).substr(2, 9),
-        text: p.trim(),
-        marks: [],
-      }],
-    }));
 
     const blogPost = {
       _type: 'blog',
       title,
       subtitle,
       slug: { _type: 'slug', current: slug },
-      content: contentBlocks,
       publishedAt: new Date().toISOString(),
       tags,
+      sections,
       ...(coverImageRef && { coverImage: coverImageRef }),
-      ...(products.length && { products }),
     };
 
     const created = await sanityClient.create(blogPost);
