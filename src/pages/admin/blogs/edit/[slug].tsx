@@ -121,7 +121,7 @@ export default function EditBlogPage() {
       if (response.ok) {
         setSuccess('Blog updated successfully!');
         setTimeout(() => {
-          router.push('/admin/blogs');
+          router.push('/admin');
         }, 2000);
       } else {
         setError(result.error || 'Failed to update blog');
@@ -144,41 +144,12 @@ export default function EditBlogPage() {
   return (
     <Container fluid className="py-4">
       <Row>
-        {/* Sidebar */}
-        <Col md={2} className="bg-dark text-white p-3" style={{ minHeight: '100vh' }}>
-          <h4 className="mb-4">Admin</h4>
-          <nav>
-            <ul className="list-unstyled">
-              <li className="mb-2">
-                <Link href="/admin" className="text-decoration-none text-white">
-                  📊 Dashboard
-                </Link>
-              </li>
-              <li className="mb-2">
-                <Link href="/admin/blogs" className="text-decoration-none text-white">
-                  📝 All Blogs
-                </Link>
-              </li>
-              <li className="mb-2">
-                <Link href="/admin/blogs/create" className="text-decoration-none text-white">
-                  ➕ New Blog
-                </Link>
-              </li>
-              <li className="mb-2">
-                <Link href="/" className="text-decoration-none text-white">
-                  🌐 View Site
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </Col>
-
         {/* Main Content */}
         <Col md={10}>
           <div style={{ height: '100vh', overflowY: 'auto', padding: '2rem' }}>
             <div className="d-flex justify-content-between align-items-center mb-4">
               <h1>Edit Blog Post</h1>
-              <Link href="/admin/blogs" className="btn btn-outline-secondary">
+              <Link href="/admin" className="btn btn-outline-secondary">
                 Back to Blogs
               </Link>
             </div>
@@ -277,7 +248,7 @@ export default function EditBlogPage() {
                   <Button
                     type="button"
                     variant="outline-secondary"
-                    onClick={() => router.push('/admin/blogs')}
+                    onClick={() => router.push('/admin')}
                   >
                     Cancel
                   </Button>

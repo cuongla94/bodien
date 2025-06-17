@@ -34,129 +34,99 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Debug the client configuration
-  console.log('Client configuration debug:');
-  console.log('Project ID:', process.env.SANITY_PROJECT_ID);
-  console.log('Dataset:', process.env.SANITY_DATASET_NAME);
-  console.log('Token exists:', !!process.env.SANITY_API_TOKEN);
-  console.log('Token length:', process.env.SANITY_API_TOKEN?.length);
-  console.log('Token starts with sk:', process.env.SANITY_API_TOKEN?.startsWith('sk'));
-
   try {
-    console.log('API called - starting form parsing...');
-
     const form = formidable({
       uploadDir: '/tmp',
       keepExtensions: true,
-      maxFileSize: 10 * 1024 * 1024, // 10MB limit
+      maxFileSize: 10 * 1024 * 1024,
     });
 
     const [fields, files] = await form.parse(req);
-    console.log('Form parsed successfully');
-    console.log('Fields:', fields);
-    console.log('Files:', Object.keys(files));
 
-    // Extract field values (formidable returns arrays)
     const title = Array.isArray(fields.title) ? fields.title[0] : fields.title;
     const subtitle = Array.isArray(fields.subtitle) ? fields.subtitle[0] : fields.subtitle;
     const content = Array.isArray(fields.content) ? fields.content[0] : fields.content;
-    const excerpt = Array.isArray(fields.excerpt) ? fields.excerpt[0] : fields.excerpt;
     const tagsString = Array.isArray(fields.tags) ? fields.tags[0] : fields.tags;
-
-    console.log('Extracted values:', { title, subtitle, content: content?.substring(0, 100) + '...', excerpt, tagsString });
-
-    if (!title || !content) {
-      console.log('Validation failed: missing title or content');
-      return res.status(400).json({ error: 'Title and content are required' });
-    }
+    const productsRaw = Array.isArray(fields.products) ? fields.products[0] : fields.products;
 
     const slug = generateSlug(title);
     const tags = tagsString ? tagsString.split(',').map(tag => tag.trim()).filter(Boolean) : [];
 
-    console.log('Generated slug:', slug);
-    console.log('Processed tags:', tags);
-
-    // Handle image upload
+    // Cover image upload
     let coverImageRef = null;
-    if (files.coverImage) {
-      console.log('Processing cover image...');
-      const imageFile = Array.isArray(files.coverImage) ? files.coverImage[0] : files.coverImage;
-      if (imageFile && imageFile.filepath) {
-        try {
-          const uploadedAsset = await uploadImageToSanity(
-            imageFile.filepath,
-            imageFile.originalFilename || 'cover-image'
-          );
-          coverImageRef = {
-            _type: 'image',
-            asset: {
-              _type: 'reference',
-              _ref: uploadedAsset._id,
-            },
-          };
-          console.log('Image uploaded successfully:', uploadedAsset._id);
-          
-          // Clean up temp file
+    if (files.coverImage && files.coverImage[0]?.filepath) {
+      const file = files.coverImage[0];
+      const uploaded = await uploadImageToSanity(file.filepath, file.originalFilename || 'cover-image');
+      coverImageRef = {
+        _type: 'image',
+        asset: { _type: 'reference', _ref: uploaded._id },
+      };
+      fs.unlinkSync(file.filepath);
+    }
+
+    // Handle product sections
+    const products = [];
+    if (productsRaw) {
+      const parsed = JSON.parse(productsRaw);
+      for (let i = 0; i < parsed.length; i++) {
+        const product = parsed[i];
+        let imageRef = null;
+        const imageKey = `productImage-${i}`;
+
+        const imageFile = files[imageKey]?.[0];
+        if (imageFile?.filepath) {
+          const uploaded = await uploadImageToSanity(imageFile.filepath, imageFile.originalFilename || `product-${i}`);
+          imageRef = { _type: 'image', asset: { _type: 'reference', _ref: uploaded._id } };
           fs.unlinkSync(imageFile.filepath);
-        } catch (uploadError) {
-          console.error('Failed to upload image:', uploadError);
-          // Continue without image rather than failing completely
         }
+
+        products.push({
+          _type: 'productSection',
+          name: product.name,
+          description: product.description,
+          image: imageRef,
+          affiliateLinks: product.affiliateLinks.map(link => ({
+            _type: 'affiliateLink',
+            label: link.label,
+            url: link.url,
+          }))
+        });
       }
     }
 
-    // Convert content to Sanity blocks
-    const contentBlocks = content.split('\n\n').filter(Boolean).map((paragraph: string) => ({
+    const contentBlocks = content.split('\n\n').filter(Boolean).map(p => ({
       _type: 'block',
       _key: Math.random().toString(36).substr(2, 9),
       style: 'normal',
       markDefs: [],
-      children: [
-        {
-          _type: 'span',
-          _key: Math.random().toString(36).substr(2, 9),
-          text: paragraph.trim(),
-          marks: [],
-        },
-      ],
+      children: [{
+        _type: 'span',
+        _key: Math.random().toString(36).substr(2, 9),
+        text: p.trim(),
+        marks: [],
+      }],
     }));
-
-    console.log('Created content blocks:', contentBlocks.length);
 
     const blogPost = {
       _type: 'blog',
       title,
-      subtitle: subtitle || '',
-      slug: {
-        _type: 'slug',
-        current: slug,
-      },
-      excerpt: excerpt || '',
+      subtitle,
+      slug: { _type: 'slug', current: slug },
       content: contentBlocks,
-      ...(coverImageRef && { coverImage: coverImageRef }),
       publishedAt: new Date().toISOString(),
-      tags: tags,
+      tags,
+      ...(coverImageRef && { coverImage: coverImageRef }),
+      ...(products.length && { products }),
     };
 
-    console.log('Creating blog post in Sanity...');
-    const result = await sanityClient.create(blogPost);
-    console.log('Blog post created successfully:', result._id);
+    const created = await sanityClient.create(blogPost);
 
     res.status(201).json({
       message: 'Blog post created successfully',
-      slug: result.slug.current,
-      id: result._id,
+      slug: created.slug.current,
+      id: created._id,
     });
-
-  } catch (error) {
-    console.error('Error creating blog post:', error);
-    
-    // More detailed error response
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    res.status(500).json({ 
-      error: 'Failed to create blog post',
-      details: errorMessage,
-      stack: process.env.NODE_ENV === 'development' ? (error as Error).stack : undefined
-    });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create blog post', detail: err.message });
   }
 }
