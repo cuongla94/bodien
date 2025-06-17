@@ -154,6 +154,8 @@ export default function AdminPage() {
                         onEdit={() => handleEdit(blog._id)}
                         onDelete={() => handleDelete(blog._id, blog.title)}
                         theme={theme}
+                        numOfViews={blog.numOfViews || 0}
+                        numOfShares={blog.numOfShares || 0}
                       />
                     </Col>
                   ))}
