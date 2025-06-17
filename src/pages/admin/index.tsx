@@ -10,6 +10,7 @@ import { BlogFilterControls } from 'components/Blog';
 import { useThemeProvider } from 'hooks/useThemeProvider';
 import { ConfirmationModal } from 'common/modals';
 import axios from 'axios';
+import { FaPlus } from 'react-icons/fa';
 
 export default function AdminPage() {
   const router = useRouter();
@@ -115,14 +116,19 @@ export default function AdminPage() {
           <Col md={10} className="p-4">
             <div className="d-flex justify-content-between align-items-center mb-4">
               <h1>Admin Dashboard ({filteredBlogs.length})</h1>
-              <div className="d-flex gap-2">
-                <Button variant="primary" onClick={() => router.push('/admin/blogs/create')}>
-                  ➕ Add Blog
+                <div className="d-flex gap-2">
+                <Button
+                  variant="primary"
+                  onClick={() => router.push('/admin/blogs/create')}
+                  className="d-flex align-items-center gap-2"
+                >
+                  <FaPlus />
+                  Add Blog
                 </Button>
-                <Button variant="outline-danger" size="sm" onClick={logout}>
-                  🔒 Logout
-                </Button>
-              </div>
+                  <Button variant="outline-danger" size="sm" onClick={logout}>
+                    🔒 Logout
+                  </Button>
+                </div>
             </div>
 
             {deleteSuccess && (
@@ -180,9 +186,6 @@ export default function AdminPage() {
             ) : (
               <div className="text-center py-4">
                 <p>No blogs found.</p>
-                <Button onClick={() => router.push('/admin/blogs/create')} variant="primary">
-                  Create Your First Blog
-                </Button>
               </div>
             )}
           </Col>

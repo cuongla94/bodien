@@ -8,7 +8,6 @@ const blogFields = `
   subtitle,
   'slug': slug.current,
   publishedAt,
-  'author': author->{name, 'avatar': avatar.asset->url},
   coverImage,
 `
 
