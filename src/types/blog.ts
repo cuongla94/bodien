@@ -1,3 +1,5 @@
+import { IProductSection } from "./product";
+
 export interface IBlogPost {
   _id: string;
   title: string;
@@ -42,4 +44,14 @@ export interface IBlogAnalytics {
 export interface IBlogPostsResponse {
   posts: IBlogPost[];
   total: number;
+}
+
+export interface IBlogFormData {
+  title: string;
+  subtitle: string;
+  content: string;
+  excerpt: string;
+  tags: string;
+  products: IProductSection[];
+  coverImage?: File;
 }

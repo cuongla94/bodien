@@ -23,3 +23,10 @@ export interface IAffiliateProduct {
     conversions: number;
     earnings: number;
   }
+
+
+export interface IFormAffiliateLink {
+  label: string;
+  url: string;
+}
+  

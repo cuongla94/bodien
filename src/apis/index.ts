@@ -1,4 +1,4 @@
-import client, { previewClient } from 'lib/sanity';
+import client, { previewClient } from 'utils/previewClient';
 import imageUrlBuilder from '@sanity/image-url';
 
 const blogFields = `

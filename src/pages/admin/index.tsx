@@ -10,7 +10,7 @@ import { BlogFilterControls } from 'components/Blog';
 import { useThemeProvider } from 'hooks/useThemeProvider';
 import { ConfirmationModal } from 'common/modals';
 import axios from 'axios';
-import { FaPlus } from 'react-icons/fa';
+import { AdminControls } from 'components/Admin/AdminControls';
 
 export default function AdminPage() {
   const router = useRouter();
@@ -114,23 +114,7 @@ export default function AdminPage() {
       {authenticated && (
         <Row className="justify-content-center">
           <Col md={10} className="p-4">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-              <h1>Admin Dashboard ({filteredBlogs.length})</h1>
-                <div className="d-flex gap-2">
-                <Button
-                  variant="primary"
-                  onClick={() => router.push('/admin/blogs/create')}
-                  className="d-flex align-items-center gap-2"
-                >
-                  <FaPlus />
-                  Add Blog
-                </Button>
-                  <Button variant="outline-danger" size="sm" onClick={logout}>
-                    🔒 Logout
-                  </Button>
-                </div>
-            </div>
-
+            <AdminControls total={filteredBlogs.length} onLogout={logout} />
             {deleteSuccess && (
               <Alert variant="success" dismissible onClose={() => dismissAlert('success')}>
                 {deleteSuccess}
