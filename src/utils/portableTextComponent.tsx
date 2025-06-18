@@ -1,23 +1,18 @@
-import { PortableTextMarkComponentProps } from '@portabletext/react';
+import { PortableTextComponents } from '@portabletext/react';
 
-export const portableTextComponents = {
-  marks: {
-    link: ({ value, children }: PortableTextMarkComponentProps<any>) => {
-      const href = value?.href;
+export const portableTextComponents: PortableTextComponents = {
+  types: {
+    block: ({ value }) => {
+      // Get the plain text from the first child span
+      const text = value?.children?.[0]?.text;
 
-      // Fallback safely
-      if (!href) return <>{children}</>;
+      // If it starts like HTML, render it as raw HTML
+      if (typeof text === 'string' && /<\/?[a-z][\s\S]*>/i.test(text)) {
+        return <div dangerouslySetInnerHTML={{ __html: text }} />;
+      }
 
-      const isExternal = href.startsWith('http');
-      return (
-        <a
-          href={href}
-          target={isExternal ? '_blank' : undefined}
-          rel={isExternal ? 'noopener noreferrer' : undefined}
-        >
-          {children}
-        </a>
-      );
+      // Fallback to plain text
+      return <p>{text}</p>;
     },
   },
 };

@@ -12,7 +12,7 @@ interface IAdminPageLayoutProps {
 }
 
 export function AdminPageLayout({ children, className }: IAdminPageLayoutProps) {
-  const { theme, toggleTheme } = useThemeProvider() as { theme: ITheme; toggleTheme: () => void };
+  const { theme } = useThemeProvider() as { theme: ITheme; toggleTheme: () => void };
   
   return (
     <div className={`d-flex flex-column min-vh-100 ${theme.type}`}>

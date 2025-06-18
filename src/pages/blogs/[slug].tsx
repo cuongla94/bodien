@@ -47,7 +47,6 @@ const BlogDetail = ({ blog: initialBlog, preview }) => {
         coverImage={getCoverImageUrl()}
         date={moment(blog.date || blog.publishedAt).format('LL')}
       />
-      <hr />
       {blog.sections && <BlogSections sections={blog.sections} />}
     </PageLayout>
   );

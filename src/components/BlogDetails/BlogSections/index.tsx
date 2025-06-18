@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { PortableText } from '@portabletext/react';
 import { portableTextComponents } from 'utils/portableTextComponent';
+import styles from './style.module.scss';
 
 type BlogSection = {
   _type: string;
@@ -25,32 +26,30 @@ export default function BlogSections({ sections }: Props) {
         if (section._type === 'content') {
           return (
             <div key={key} className="mb-5">
-              {Array.isArray(section.content) ? (
+              {section.content && (
                 <PortableText value={section.content} components={portableTextComponents} />
-              ) : typeof section.content === 'string' ? (
-                <div dangerouslySetInnerHTML={{ __html: section.content }} />
-              ) : null}
+              )}
             </div>
           );
         }
+
         if (section._type === 'product') {
           return (
             <div
               key={key}
               className="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-4 mb-5"
             >
-              {section.image?.asset?.url && (
-                <div className="flex-shrink-0 text-center">
-                  <Image
+                {section.image?.asset?.url && (
+                <div className={`flex-shrink-0 text-center ${styles.blogSectionsImage}`}>
+                    <Image
                     src={section.image.asset.url}
                     alt={section.name || 'Product'}
                     width={200}
                     height={200}
                     style={{ objectFit: 'contain' }}
-                  />
+                    />
                 </div>
-              )}
-
+                )}
               <div
                 className="text-md-start"
                 style={{
