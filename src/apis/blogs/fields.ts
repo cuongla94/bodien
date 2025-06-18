@@ -5,6 +5,7 @@ export const blogFields = `
   subtitle,
   'slug': slug.current,
   publishedAt,
+  _updatedAt,
   tags,
   hidden,
   numOfViews,

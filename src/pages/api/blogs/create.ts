@@ -1,4 +1,3 @@
-// ... existing imports
 import { NextApiRequest, NextApiResponse } from 'next';
 import formidable from 'formidable';
 import fs from 'fs';
@@ -34,13 +33,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const title = Array.isArray(fields.title) ? fields.title[0] : fields.title;
     const subtitle = Array.isArray(fields.subtitle) ? fields.subtitle[0] : fields.subtitle;
+
     const tagsRaw = Array.isArray(fields.tags) ? fields.tags[0] : fields.tags;
     const tags = tagsRaw ? tagsRaw.split(',').map(tag => tag.trim()).filter(Boolean) : [];
 
     const slug = generateSlug(title);
 
     const hiddenRaw = Array.isArray(fields.hidden) ? fields.hidden[0] : fields.hidden;
-    const hidden = String(hiddenRaw).toLowerCase() === 'true';    
+    const hidden = String(hiddenRaw).toLowerCase() === 'true';
 
     let coverImageRef = null;
     if (files.coverImage && files.coverImage[0]?.filepath) {
@@ -59,6 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const section = parsedSections[i];
 
       if (section.type === 'content') {
+        const plainText = section.description || '';
         sections.push({
           _type: 'content',
           content: [
@@ -71,7 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 {
                   _type: 'span',
                   _key: Math.random().toString(36).substr(2, 9),
-                  text: section.value || '',
+                  text: plainText,
                   marks: [],
                 },
               ],
@@ -93,12 +94,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           _type: 'affiliateLink',
           label: link.label,
           url: link.url,
-          clicks: 0
+          clicks: 0,
         }));
 
         sections.push({
           _type: 'product',
-          name: section.name,
+          name: section.name || '', // Optional fallback
           description: section.description,
           image: imageRef,
           affiliateLinks,
@@ -115,7 +116,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       tags,
       numOfViews: 0,
       numOfShares: 0,
-      hidden, 
+      hidden,
       sections,
       ...(coverImageRef && { coverImage: coverImageRef }),
     };
@@ -130,4 +131,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (err: any) {
     res.status(500).json({ error: 'Failed to create blog post', detail: err.message });
   }
-}
+};
