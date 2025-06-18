@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PageLayout from 'layouts/PageLayout';
-import { BlogHeader } from 'components/Blog';
+import { BlogHeader } from 'components/BlogDetails';
 import { getBlogBySlug, getAllBlogs, onBlogUpdate } from 'apis';
 import { urlFor } from 'apis';
 import moment from 'moment';

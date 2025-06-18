@@ -25,7 +25,7 @@ export default function PageLayout({ children, className }: IPageLayoutProps) {
           {children}
         </div>
       </Container>
-      <footer className="bg-light border-top py-3 mt-auto">
+      <footer className="bg-light py-3 mt-auto">
         <Container>
           <div className="text-center">
             <p className="mb-0 text-muted">
