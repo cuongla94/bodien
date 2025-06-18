@@ -12,6 +12,7 @@ interface AdminBlogListProps {
   setFilter: (filter: any) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string, title: string) => void;
+  onToggleHidden: (id: string, hidden: boolean) => void;
   deleteSuccess: string;
   deleteError: string;
   dismissAlert: (type: 'success' | 'error') => void;
@@ -31,6 +32,7 @@ export const AdminBlogList = ({
   setFilter,
   onEdit,
   onDelete,
+  onToggleHidden,
   deleteSuccess,
   deleteError,
   dismissAlert,
@@ -42,8 +44,8 @@ export const AdminBlogList = ({
   if (!authenticated) return null;
 
   return (
-    <Row className="justify-content-center">
-      <Col md={10} className="p-4">
+    <>
+      <Col md={10}>
         {deleteSuccess && (
           <Alert variant="success" dismissible onClose={() => dismissAlert('success')}>
             {deleteSuccess}
@@ -82,6 +84,8 @@ export const AdminBlogList = ({
                     isAdmin={true}
                     onEdit={() => onEdit(blog._id)}
                     onDelete={() => onDelete(blog._id, blog.title)}
+                    onToggleHidden={() => onToggleHidden(blog._id, !blog.hidden)}
+                    hidden={blog.hidden}
                     theme={theme}
                     numOfViews={blog.numOfViews || 0}
                     numOfShares={blog.numOfShares || 0}
@@ -104,6 +108,6 @@ export const AdminBlogList = ({
           </div>
         )}
       </Col>
-    </Row>
+    </>
   );
 };

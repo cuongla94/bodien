@@ -1,3 +1,4 @@
+// ... existing imports
 import { NextApiRequest, NextApiResponse } from 'next';
 import formidable from 'formidable';
 import fs from 'fs';
@@ -37,6 +38,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const tags = tagsRaw ? tagsRaw.split(',').map(tag => tag.trim()).filter(Boolean) : [];
 
     const slug = generateSlug(title);
+
+    const hiddenRaw = Array.isArray(fields.hidden) ? fields.hidden[0] : fields.hidden;
+    const hidden = String(hiddenRaw).toLowerCase() === 'true';    
 
     let coverImageRef = null;
     if (files.coverImage && files.coverImage[0]?.filepath) {
@@ -111,6 +115,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       tags,
       numOfViews: 0,
       numOfShares: 0,
+      hidden, 
       sections,
       ...(coverImageRef && { coverImage: coverImageRef }),
     };
@@ -122,7 +127,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       slug: created.slug.current,
       id: created._id,
     });
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({ error: 'Failed to create blog post', detail: err.message });
   }
 }

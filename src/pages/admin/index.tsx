@@ -1,17 +1,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { Container, Row, Col, Button, Alert } from 'react-bootstrap';
 import { ITheme } from 'types/theme';
-import { CardItem } from 'components/CardItem';
 import { useGetBlogsPages } from 'common/Pagination';
-import { AdminPasswordForm } from 'components/Admin/AdminPasswordForm';
 import { useAdminAuth } from 'hooks/useAdminAuth';
-import { BlogFilterControls } from 'components/Blog';
 import { useThemeProvider } from 'hooks/useThemeProvider';
-import { ConfirmationModal } from 'common/modals';
 import axios from 'axios';
-import { AdminControls } from 'components/Admin/AdminControls';
-import { AdminBlogList } from 'components/AdminDashBoard/AdminBlogList';
 import { AdminPageLayout } from 'layouts';
 import { AdminDashboard } from 'components/AdminDashBoard';
 
@@ -52,34 +45,27 @@ export default function AdminPage() {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const handleDelete = (id: string, title: string) => {
-    console.log('handleDelete called with:', { id, title });
-    console.log('Blog object type:', typeof id, 'Blog title type:', typeof title);
-    
     setSelectedBlog({ id, title });
     setShowConfirm(true);
     setDeleteError('');
     setDeleteSuccess('');
-    
-    console.log('selectedBlog set to:', { id, title });
   };
 
   const confirmDelete = async () => {
-    console.log(`selectedBlog.id: ${selectedBlog.id}`)
-
     if (!selectedBlog?.id) {
       setDeleteError('No blog selected for deletion.');
       return;
     }
-  
+
     setDeleteLoading(true);
-    
+
     try {
       const response = await axios.delete(`/api/blogs/delete`, {
         params: { id: selectedBlog.id },
       });
-  
+
       const result = response.data;
-  
+
       if (result.success) {
         setDeleteSuccess(`Blog post "${selectedBlog.title}" deleted successfully`);
         setSize(1);
@@ -96,7 +82,16 @@ export default function AdminPage() {
       setSelectedBlog(null);
     }
   };
-  
+
+  const handleToggleHidden = async (id: string, hidden: boolean) => {
+    try {
+      await axios.patch(`/api/blog/toggle-visibility`, { id, hidden });
+      setSize(1); // Refresh list
+    } catch (error: any) {
+      setDeleteError('Failed to toggle blog visibility.');
+      setTimeout(() => setDeleteError(''), 5000);
+    }
+  };
 
   const dismissAlert = (type: 'success' | 'error') => {
     if (type === 'success') setDeleteSuccess('');
@@ -117,6 +112,7 @@ export default function AdminPage() {
         setFilter={setFilter}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onToggleHidden={handleToggleHidden}
         deleteSuccess={deleteSuccess}
         deleteError={deleteError}
         dismissAlert={dismissAlert}
@@ -136,5 +132,4 @@ export default function AdminPage() {
       />
     </AdminPageLayout>
   );
-  
 }

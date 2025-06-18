@@ -6,6 +6,7 @@ export const blogFields = `
   'slug': slug.current,
   publishedAt,
   tags,
+  hidden,
   numOfViews,
   numOfShares,
   coverImage {

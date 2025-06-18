@@ -1,8 +1,7 @@
-import { Row, Col, Button, Alert, Container } from 'react-bootstrap';
-import { CardItem } from 'components/CardItem';
-import { BlogFilterControls } from 'components/Blog';
+import { Alert } from 'react-bootstrap';
 import { AdminPasswordForm } from 'components/Admin/AdminPasswordForm';
 import { ConfirmationModal } from 'common/modals';
+import { AdminBlogList } from './AdminBlogList'; 
 
 interface AdminDashboardProps {
   authenticated: boolean;
@@ -14,6 +13,7 @@ interface AdminDashboardProps {
   theme: any;
   onEdit: (id: string) => void;
   onDelete: (id: string, title: string) => void;
+  onToggleHidden: (id: string, hidden: boolean) => void;
   deleteSuccess: string;
   deleteError: string;
   dismissAlert: (type: 'success' | 'error') => void;
@@ -42,6 +42,7 @@ export const AdminDashboard = ({
   theme,
   onEdit,
   onDelete,
+  onToggleHidden,
   deleteSuccess,
   deleteError,
   dismissAlert,
@@ -68,7 +69,8 @@ export const AdminDashboard = ({
         loading={formLoading}
       />
 
-      <>
+      {authenticated && (
+        <>
           {deleteSuccess && (
             <Alert variant="success" dismissible onClose={() => dismissAlert('success')}>
               {deleteSuccess}
@@ -81,54 +83,29 @@ export const AdminDashboard = ({
             </Alert>
           )}
 
-          <BlogFilterControls
+          {/* ✅ Replace blog list logic with AdminBlogList */}
+          <AdminBlogList
+            authenticated={authenticated}
             searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            sortAsc={!!filter.date.asc}
-            onToggleSort={() =>
-              setFilter(prev => ({
-                ...prev,
-                date: { asc: prev.date.asc ? 0 : 1 },
-              }))
-            }
+            setSearchTerm={setSearchTerm}
+            filter={filter}
+            setFilter={setFilter}
+            filteredBlogs={filteredBlogs}
+            theme={theme}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onToggleHidden={onToggleHidden}
+            deleteSuccess={deleteSuccess}
+            deleteError={deleteError}
+            dismissAlert={dismissAlert}
+            hitEnd={hitEnd}
+            size={size}
+            setSize={setSize}
+            formatDate={formatDate}
           />
-
-          {filteredBlogs.length > 0 ? (
-            <>
-              <Row>
-                {filteredBlogs.map(blog => (
-                  <Col key={blog._id} lg="4" md="6" className="mb-4">
-                    <CardItem
-                      title={blog.title}
-                      subtitle={blog.subtitle}
-                      date={formatDate(blog.publishedAt)}
-                      image={blog.coverImage}
-                      tags={blog.tags || []}
-                      isAdmin={true}
-                      onEdit={() => onEdit(blog._id)}
-                      onDelete={() => onDelete(blog._id, blog.title)}
-                      theme={theme}
-                      numOfViews={blog.numOfViews || 0}
-                      numOfShares={blog.numOfShares || 0}
-                    />
-                  </Col>
-                ))}
-              </Row>
-
-              {!hitEnd && (
-                <div className="text-center mb-4">
-                  <Button onClick={() => setSize(size + 1)} variant="outline-secondary" size="lg">
-                    Load More
-                  </Button>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="text-center py-4">
-              <p>No blogs found.</p>
-            </div>
-          )}
         </>
+      )}
+
       <ConfirmationModal
         show={showConfirm}
         title="Delete Confirmation"

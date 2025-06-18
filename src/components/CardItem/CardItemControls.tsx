@@ -17,6 +17,8 @@ interface CardItemControlsProps {
   };
   onEdit?: () => void;
   onDelete?: () => void;
+  onToggleHidden?: () => void;
+  hidden?: boolean;
 }
 
 export const CardItemControls: React.FC<CardItemControlsProps> = ({
@@ -25,6 +27,8 @@ export const CardItemControls: React.FC<CardItemControlsProps> = ({
   theme,
   onEdit,
   onDelete,
+  onToggleHidden,
+  hidden,
 }) => {
   if (!isAdmin && link) {
     return (
@@ -62,12 +66,16 @@ export const CardItemControls: React.FC<CardItemControlsProps> = ({
           size="sm"
           variant="danger"
           onClick={onDelete}
-          style={{
-            color: '#fff',
-            border: 'none',
-          }}
+          style={{ color: '#fff', border: 'none' }}
         >
           Delete
+        </Button>
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={onToggleHidden}
+        >
+          {hidden ? 'Unhide' : 'Hide'}
         </Button>
       </div>
     );

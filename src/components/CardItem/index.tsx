@@ -4,6 +4,23 @@ import { CardItemImage } from './CardItemImage';
 import { CardItemTags } from './CardItemTags';
 import { CardItemControls } from './CardItemControls';
 
+interface ICardItemProps {
+  title: string;
+  subtitle?: string;
+  image?: any;
+  date: string;
+  link?: any;
+  theme?: any;
+  tags?: string[];
+  isAdmin?: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onToggleHidden?: () => void;
+  hidden?: boolean;
+  numOfViews?: number;
+  numOfShares?: number;
+}
+
 export const CardItem = ({
   title,
   subtitle,
@@ -15,6 +32,8 @@ export const CardItem = ({
   isAdmin = false,
   onEdit,
   onDelete,
+  onToggleHidden,
+  hidden,
   numOfViews,
   numOfShares,
 }: ICardItemProps) => {
@@ -43,7 +62,8 @@ export const CardItem = ({
           <CardItemAnalytics
             isAdmin={isAdmin}
             numOfViews={numOfViews}
-            numOfShares={numOfShares} />
+            numOfShares={numOfShares}
+          />
           <div className="d-flex justify-content-between align-items-center">
             {date && (
               <Card.Text
@@ -59,6 +79,8 @@ export const CardItem = ({
               theme={theme}
               onEdit={onEdit}
               onDelete={onDelete}
+              onToggleHidden={onToggleHidden}
+              hidden={hidden}
             />
           </div>
         </Card.Body>

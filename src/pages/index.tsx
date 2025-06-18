@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Row, Button, Col, Container } from 'react-bootstrap';
+import { Row, Button } from 'react-bootstrap';
 import moment from 'moment';
 
 import PageLayout from 'layouts/PageLayout';
@@ -19,40 +19,37 @@ export default function HomePage({ blogs, preview }) {
 
   const [searchTerm, setSearchTerm] = useState('');
 
-  const {
-    data,
-    size,
-    setSize,
-    hitEnd
-  } = useGetBlogsPages({ filter });
+  const { data, size, setSize, hitEnd } = useGetBlogsPages({ filter });
 
   const currentData = data || [blogs];
   const flatBlogs = currentData.flat();
 
-  const filteredBlogs = flatBlogs.filter(blog =>
-    blog.title?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredBlogs = flatBlogs
+    .filter(blog => !blog.hidden)
+    .filter(blog =>
+      blog.title?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   const hasBlogs = filteredBlogs.length > 0;
   const totalBlogs = filteredBlogs.length;
-
   const hasMorePosts = !hitEnd && totalBlogs > 3;
 
   return (
     <PageLayout>
       {preview && <PreviewAlert />}
       <AuthorIntro />
-        <BlogFilterControls
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          sortAsc={!!filter.date.asc}
-          onToggleSort={() =>
-            setFilter(prev => ({
-              ...prev,
-              date: { asc: prev.date.asc ? 0 : 1 }
-            }))
-          }
-        />
+      <BlogFilterControls
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        sortAsc={!!filter.date.asc}
+        onToggleSort={() =>
+          setFilter(prev => ({
+            ...prev,
+            date: { asc: prev.date.asc ? 0 : 1 }
+          }))
+        }
+      />
+
       {hasBlogs ? (
         <>
           <Row className="mb-5" style={{ overflowY: 'hidden' }}>
@@ -91,9 +88,11 @@ export default function HomePage({ blogs, preview }) {
 
 export async function getStaticProps({ preview = false }) {
   const blogs = await getPaginatedBlogs({ offset: 0, date: 'desc' });
+  const publicBlogs = blogs.filter(blog => !blog.hidden);
+
   return {
     props: {
-      blogs,
+      blogs: publicBlogs,
       preview
     },
     revalidate: 1
