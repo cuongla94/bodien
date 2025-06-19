@@ -11,7 +11,6 @@ export const BlogFormTags = ({ tags, setTags, tagInput, setTagInput }) => {
 
     setIsAdding(true);
 
-    // Simulate async delay — replace with actual logic if needed
     await new Promise(resolve => setTimeout(resolve, 300));
 
     setTags([...tags, newTag]);
@@ -50,16 +49,6 @@ export const BlogFormTags = ({ tags, setTags, tagInput, setTagInput }) => {
           placeholder="Add New Tag"
           disabled={isAdding}
         />
-
-        {/* <Button
-          size="sm"
-          variant="primary"
-          style={{ height: '38px' }}
-          disabled={!tagInput.trim() || isAdding}
-          onClick={handleAddTag}
-        >
-          {isAdding ? <Spinner animation="border" size="sm" /> : 'Add New Tag'}
-        </Button> */}
       </TagContainer>
     </Form.Group>
   );

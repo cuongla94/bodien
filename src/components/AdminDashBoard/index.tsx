@@ -1,7 +1,7 @@
 import { Alert } from 'react-bootstrap';
 import { AdminPasswordForm } from 'components/Admin/AdminPasswordForm';
 import { ConfirmationModal } from 'common/modals';
-import { AdminBlogList } from './AdminBlogList'; 
+import { AdminBlogList } from './AdminBlogList';
 
 interface AdminDashboardProps {
   authenticated: boolean;
@@ -72,13 +72,21 @@ export const AdminDashboard = ({
       {authenticated && (
         <>
           {deleteSuccess && (
-            <Alert variant="success" dismissible onClose={() => dismissAlert('success')}>
+            <Alert
+              variant="success"
+              dismissible
+              onClose={() => dismissAlert('success')}
+            >
               {deleteSuccess}
             </Alert>
           )}
 
           {deleteError && (
-            <Alert variant="danger" dismissible onClose={() => dismissAlert('error')}>
+            <Alert
+              variant="danger"
+              dismissible
+              onClose={() => dismissAlert('error')}
+            >
               {deleteError}
             </Alert>
           )}

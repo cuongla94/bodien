@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge } from 'react-bootstrap';
+import { TagsWrapper, ThemedBadge } from './styles';
 
 interface CardItemTagsProps {
   tags: string[];
@@ -13,21 +13,16 @@ export const CardItemTags: React.FC<CardItemTagsProps> = ({ tags, theme }) => {
   if (!tags || tags.length === 0) return null;
 
   return (
-    <div className="mb-2 d-flex flex-wrap gap-1">
+    <TagsWrapper>
       {tags.map((tag, idx) => (
-        <Badge
+        <ThemedBadge
           key={idx}
-          bg="secondary"
-          style={{
-            backgroundColor: theme?.secondaryColor,
-            color: theme?.buttonText,
-            fontSize: '0.75rem',
-            padding: '0.25rem 0.5rem',
-          }}
+          bgColor={theme?.secondaryColor}
+          textColor={theme?.buttonText}
         >
           {tag}
-        </Badge>
+        </ThemedBadge>
       ))}
-    </div>
+    </TagsWrapper>
   );
 };

@@ -1,6 +1,6 @@
-// components/CardItemAnalytics.tsx
 import React from 'react';
 import { FiEye, FiShare2 } from 'react-icons/fi';
+import { AnalyticsWrapper, AnalyticsItem } from './styles';
 
 interface CardItemAnalyticsProps {
   isAdmin: boolean;
@@ -16,20 +16,17 @@ export const CardItemAnalytics: React.FC<CardItemAnalyticsProps> = ({
   if (!isAdmin || (!numOfViews && !numOfShares)) return null;
 
   return (
-    <div
-      className="d-flex gap-3 align-items-center mb-2 text-muted"
-      style={{ fontSize: '0.8rem' }}
-    >
+    <AnalyticsWrapper>
       {typeof numOfViews === 'number' && (
-        <span className="d-flex align-items-center gap-1">
+        <AnalyticsItem>
           <FiEye /> {numOfViews} view{numOfViews !== 1 ? 's' : ''}
-        </span>
+        </AnalyticsItem>
       )}
       {typeof numOfShares === 'number' && (
-        <span className="d-flex align-items-center gap-1">
+        <AnalyticsItem>
           <FiShare2 /> {numOfShares} share{numOfShares !== 1 ? 's' : ''}
-        </span>
+        </AnalyticsItem>
       )}
-    </div>
+    </AnalyticsWrapper>
   );
 };

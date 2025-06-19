@@ -1,7 +1,6 @@
 import React from 'react';
-import { Card } from 'react-bootstrap';
 import { urlFor } from 'apis';
-import styles from './styles.module.scss';
+import { CardImageWrapper, StyledCardImage, PlaceholderText } from './styles';
 
 interface CardItemImageProps {
   image?: any;
@@ -11,18 +10,15 @@ export const CardItemImage: React.FC<CardItemImageProps> = ({ image }) => {
   const hasImage = !!image;
 
   return (
-    <div className={styles.cardimage_wrapper}>
+    <CardImageWrapper>
       {hasImage ? (
-        <Card.Img
+        <StyledCardImage
           src={urlFor(image).height(300).url()}
           alt="Card image"
-          className={styles.cardimage_image}
         />
       ) : (
-        <span className={styles.cardimage_placeholdertext}>
-          No Image Available
-        </span>
+        <PlaceholderText>No Image Available</PlaceholderText>
       )}
-    </div>
+    </CardImageWrapper>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
+import { ControlsWrapper, ThemedButton } from './styles';
 
 interface ILink {
   href: string;
@@ -33,35 +34,30 @@ export const CardItemControls: React.FC<CardItemControlsProps> = ({
   if (!isAdmin && link) {
     return (
       <Link href={link.href} passHref>
-        <Button
+        <ThemedButton
+          as="a"
           variant="info"
           size="sm"
-          style={{
-            backgroundColor: theme?.buttonBg,
-            color: theme?.buttonText,
-            border: 'none',
-          }}
+          bg={theme?.buttonBg}
+          text={theme?.buttonText}
         >
           Read More
-        </Button>
+        </ThemedButton>
       </Link>
     );
   }
 
   if (isAdmin) {
     return (
-      <div className="d-flex gap-2">
-        <Button
+      <ControlsWrapper>
+        <ThemedButton
           size="sm"
           onClick={onEdit}
-          style={{
-            backgroundColor: theme?.primaryColor,
-            color: theme?.buttonText,
-            border: 'none',
-          }}
+          bg={theme?.primaryColor}
+          text={theme?.buttonText}
         >
           Edit
-        </Button>
+        </ThemedButton>
         <Button
           size="sm"
           variant="danger"
@@ -70,14 +66,10 @@ export const CardItemControls: React.FC<CardItemControlsProps> = ({
         >
           Delete
         </Button>
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={onToggleHidden}
-        >
+        <Button size="sm" variant="secondary" onClick={onToggleHidden}>
           {hidden ? 'Unhide' : 'Hide'}
         </Button>
-      </div>
+      </ControlsWrapper>
     );
   }
 

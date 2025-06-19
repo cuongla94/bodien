@@ -8,7 +8,8 @@ export const BlogList = ({ data = [] }) => {
   const { theme } = useThemeProvider() as { theme: ITheme };
 
   const getFormattedDate = (blog: any) => {
-    const dateValue = blog.publishedAt || blog.date || blog.createdAt || blog._createdAt;
+    const dateValue =
+      blog.publishedAt || blog.date || blog.createdAt || blog._createdAt;
     const momentDate = moment(dateValue);
     return momentDate.isValid() ? momentDate.format('LL') : 'No date';
   };
