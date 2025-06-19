@@ -1,12 +1,6 @@
 import { useEffect } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
-import {
-  FaTrash,
-  FaPlusCircle,
-  FaTimes,
-  FaArrowUp,
-  FaArrowDown,
-} from 'react-icons/fa';
+import { FaPlusCircle, FaTimes } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 import { isValidUrl } from 'utils/isValidUrl';
 import {
@@ -17,6 +11,7 @@ import {
   UploadPlaceholder,
   InvalidUrlText,
 } from './styles';
+import { BlogFormSectionsControls } from './BlogFormSectionsControls';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -72,42 +67,27 @@ export const BlogFormSections = ({
         return (
           <SectionWrapper key={index}>
             {section._type === 'content' && (
-              <Col md={12}>
+              <Col md={12} className="p-2">
                 <Form.Group className="mb-3">
                   <ReactQuill
-                    value={section.description || ''}
+                    value={
+                      mode === 'edit' && section.description
+                        ? section.description
+                        : ''
+                    }
                     onChange={val => updateSection(index, 'description', val)}
                     placeholder="Write a description..."
                   />
                 </Form.Group>
 
-                <div className="d-flex justify-content-end gap-2">
-                  {index > 0 && (
-                    <Button
-                      size="sm"
-                      variant="outline-secondary"
-                      onClick={() => moveSectionUp(index)}
-                    >
-                      <FaArrowUp />
-                    </Button>
-                  )}
-                  {index < formData.sections.length - 1 && (
-                    <Button
-                      size="sm"
-                      variant="outline-secondary"
-                      onClick={() => moveSectionDown(index)}
-                    >
-                      <FaArrowDown />
-                    </Button>
-                  )}
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => removeSection(index)}
-                  >
-                    <FaTrash />
-                  </Button>
-                </div>
+                <BlogFormSectionsControls
+                  index={index}
+                  removeSection={removeSection}
+                  moveSectionUp={moveSectionUp}
+                  moveSectionDown={moveSectionDown}
+                  totalSections={formData.sections.length}
+                  showAffiliateButton={false}
+                />
               </Col>
             )}
 
@@ -153,7 +133,11 @@ export const BlogFormSections = ({
                   <Col md={9}>
                     <Form.Group className="mb-3">
                       <ReactQuill
-                        value={section.description || ''}
+                        value={
+                          mode === 'edit' && section.description
+                            ? section.description
+                            : ''
+                        }
                         onChange={val =>
                           updateSection(index, 'description', val)
                         }
@@ -219,45 +203,15 @@ export const BlogFormSections = ({
                       </Col>
                     </Row>
                   ))}
-                  <Row className="align-items-center">
-                    <Col xs="auto">
-                      <Button
-                        size="sm"
-                        variant="dark"
-                        disabled={!canAdd}
-                        onClick={() => addAffiliateLink(index)}
-                      >
-                        + Add Affiliate Link
-                      </Button>
-                    </Col>
-                    <Col className="text-end d-flex gap-2 justify-content-end">
-                      {index > 0 && (
-                        <Button
-                          size="sm"
-                          variant="outline-secondary"
-                          onClick={() => moveSectionUp(index)}
-                        >
-                          <FaArrowUp />
-                        </Button>
-                      )}
-                      {index < formData.sections.length - 1 && (
-                        <Button
-                          size="sm"
-                          variant="outline-secondary"
-                          onClick={() => moveSectionDown(index)}
-                        >
-                          <FaArrowDown />
-                        </Button>
-                      )}
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={() => removeSection(index)}
-                      >
-                        <FaTrash />
-                      </Button>
-                    </Col>
-                  </Row>
+                  <BlogFormSectionsControls
+                    index={index}
+                    canAddAffiliateLink={canAdd}
+                    addAffiliateLink={addAffiliateLink}
+                    removeSection={removeSection}
+                    moveSectionUp={moveSectionUp}
+                    moveSectionDown={moveSectionDown}
+                    totalSections={formData.sections.length}
+                  />
                 </div>
               </>
             )}

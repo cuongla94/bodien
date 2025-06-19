@@ -8,7 +8,6 @@ import 'react-quill/dist/quill.snow.css';
 import { BlogFormCoverImage } from './BlogFormCoverImage';
 import { BlogFormTags } from './BlogFormTags';
 import { BlogFormSections } from './BlogFormSections';
-import { toHTML } from '@portabletext/to-html';
 
 export const BlogForm = ({ mode = 'create', initialData = null }) => {
   const router = useRouter();
@@ -46,12 +45,9 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
           }
 
           if (section._type === 'content') {
-            const description =
-              section.description ||
-              (Array.isArray(section.content) ? toHTML(section.content) : '');
             return {
               ...section,
-              description,
+              description: section.description || '',
             };
           }
 

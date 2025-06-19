@@ -49,6 +49,7 @@
     "@sanity/client": "^6.15.7",
     "@sanity/image-url": "^1.0.2",
     "axios": "^1.10.0",
+    "babel-plugin-styled-components": "^2.1.4",
     "bootstrap": "^5.3.3",
     "dayjs": "^1.11.10",
     "dompurify": "^3.2.6",
