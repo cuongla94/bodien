@@ -38,7 +38,7 @@ export default function AdminPage() {
 
   const handleEdit = (id: string) => {
     router.push(`/admin/blogs/edit/${id}`);
-  };
+  };  
 
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState<{ id: string; title: string } | null>(null);

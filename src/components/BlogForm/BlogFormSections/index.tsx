@@ -1,0 +1,269 @@
+import { useEffect } from 'react';
+import { Form, Button, Row, Col } from 'react-bootstrap';
+import {
+  FaTrash,
+  FaPlusCircle,
+  FaTimes,
+  FaArrowUp,
+  FaArrowDown,
+} from 'react-icons/fa';
+import dynamic from 'next/dynamic';
+import { isValidUrl } from 'utils/isValidUrl';
+import {
+  SectionWrapper,
+  ProductImageWrapper,
+  ProductImagePreview,
+  RemoveIcon,
+  UploadPlaceholder,
+  InvalidUrlText,
+} from './styles';
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
+export const BlogFormSections = ({
+  formData,
+  updateSection,
+  removeSection,
+  handleProductImageChange,
+  removeProductImage,
+  updateAffiliateLink,
+  addAffiliateLink,
+  removeAffiliateLink,
+  moveSectionUp,
+  moveSectionDown,
+  mode,
+}) => {
+  useEffect(() => {
+    const updatedSections = formData.sections.map(section => {
+      if (
+        section._type === 'content' &&
+        !section.description &&
+        Array.isArray(section.content)
+      ) {
+        const htmlString = section.content
+          .map(block => block.children?.map(child => child.text).join(''))
+          .join('\n');
+        return { ...section, description: htmlString };
+      }
+      return section;
+    });
+
+    const needsUpdate =
+      JSON.stringify(updatedSections) !== JSON.stringify(formData.sections);
+    if (needsUpdate) {
+      updatedSections.forEach((section, index) => {
+        updateSection(index, 'description', section.description);
+      });
+    }
+  }, [formData.sections]);
+
+  if (!formData.sections || formData.sections.length === 0) return null;
+
+  return (
+    <>
+      {formData.sections.map((section, index) => {
+        const canAdd = section.affiliateLinks?.every(
+          link => link.label.trim() && isValidUrl(link.url)
+        );
+
+        const imagePreview =
+          section.imagePreview || section.image?.asset?.url || '';
+
+        return (
+          <SectionWrapper key={index}>
+            {section._type === 'content' && (
+              <Col md={12}>
+                <Form.Group className="mb-3">
+                  <ReactQuill
+                    value={section.description || ''}
+                    onChange={val => updateSection(index, 'description', val)}
+                    placeholder="Write a description..."
+                  />
+                </Form.Group>
+
+                <div className="d-flex justify-content-end gap-2">
+                  {index > 0 && (
+                    <Button
+                      size="sm"
+                      variant="outline-secondary"
+                      onClick={() => moveSectionUp(index)}
+                    >
+                      <FaArrowUp />
+                    </Button>
+                  )}
+                  {index < formData.sections.length - 1 && (
+                    <Button
+                      size="sm"
+                      variant="outline-secondary"
+                      onClick={() => moveSectionDown(index)}
+                    >
+                      <FaArrowDown />
+                    </Button>
+                  )}
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => removeSection(index)}
+                  >
+                    <FaTrash />
+                  </Button>
+                </div>
+              </Col>
+            )}
+
+            {section._type === 'product' && (
+              <>
+                <Row className="pt-3 ps-3 pe-3">
+                  <Col md={3} className="text-center">
+                    <label style={{ cursor: 'pointer', display: 'block' }}>
+                      <ProductImageWrapper>
+                        {imagePreview ? (
+                          <>
+                            <ProductImagePreview
+                              src={imagePreview}
+                              alt="Preview"
+                            />
+                            <RemoveIcon>
+                              <FaTimes
+                                size={16}
+                                color="red"
+                                onClick={() => removeProductImage(index)}
+                              />
+                            </RemoveIcon>
+                          </>
+                        ) : (
+                          <UploadPlaceholder>
+                            <FaPlusCircle size={24} color="red" />
+                            <div style={{ marginTop: '6px' }}>Upload Image</div>
+                          </UploadPlaceholder>
+                        )}
+                      </ProductImageWrapper>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        onChange={e =>
+                          e.target.files?.[0] &&
+                          handleProductImageChange(index, e.target.files[0])
+                        }
+                      />
+                    </label>
+                  </Col>
+
+                  <Col md={9}>
+                    <Form.Group className="mb-3">
+                      <ReactQuill
+                        value={section.description || ''}
+                        onChange={val =>
+                          updateSection(index, 'description', val)
+                        }
+                        placeholder="Write a product overview here..."
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+
+                <div className="p-3">
+                  {section.affiliateLinks.map((link, linkIdx) => (
+                    <Row
+                      key={linkIdx}
+                      className="mb-2 align-items-start position-relative"
+                    >
+                      <Col>
+                        <Form.Control
+                          placeholder="Label"
+                          value={link.label}
+                          onChange={e =>
+                            updateAffiliateLink(
+                              index,
+                              linkIdx,
+                              'label',
+                              e.target.value
+                            )
+                          }
+                        />
+                      </Col>
+                      <Col
+                        style={{
+                          position: 'relative',
+                          paddingBottom: '1.3rem',
+                        }}
+                      >
+                        <Form.Control
+                          placeholder="https://example.com"
+                          value={link.url}
+                          onChange={e =>
+                            updateAffiliateLink(
+                              index,
+                              linkIdx,
+                              'url',
+                              e.target.value
+                            )
+                          }
+                          isInvalid={!isValidUrl(link.url)}
+                        />
+                        {!isValidUrl(link.url) && (
+                          <InvalidUrlText>
+                            Please enter a valid URL.
+                          </InvalidUrlText>
+                        )}
+                      </Col>
+                      <Col xs="auto">
+                        <Button
+                          variant="outline-danger"
+                          size="md"
+                          onClick={() => removeAffiliateLink(index, linkIdx)}
+                        >
+                          <FaTimes />
+                        </Button>
+                      </Col>
+                    </Row>
+                  ))}
+                  <Row className="align-items-center">
+                    <Col xs="auto">
+                      <Button
+                        size="sm"
+                        variant="dark"
+                        disabled={!canAdd}
+                        onClick={() => addAffiliateLink(index)}
+                      >
+                        + Add Affiliate Link
+                      </Button>
+                    </Col>
+                    <Col className="text-end d-flex gap-2 justify-content-end">
+                      {index > 0 && (
+                        <Button
+                          size="sm"
+                          variant="outline-secondary"
+                          onClick={() => moveSectionUp(index)}
+                        >
+                          <FaArrowUp />
+                        </Button>
+                      )}
+                      {index < formData.sections.length - 1 && (
+                        <Button
+                          size="sm"
+                          variant="outline-secondary"
+                          onClick={() => moveSectionDown(index)}
+                        >
+                          <FaArrowDown />
+                        </Button>
+                      )}
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => removeSection(index)}
+                      >
+                        <FaTrash />
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
+              </>
+            )}
+          </SectionWrapper>
+        );
+      })}
+    </>
+  );
+};

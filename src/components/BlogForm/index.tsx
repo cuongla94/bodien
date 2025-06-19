@@ -1,0 +1,308 @@
+import { useState, useEffect } from 'react';
+import { Form, Button, Alert, Container } from 'react-bootstrap';
+import { useRouter } from 'next/router';
+import axios from 'axios';
+import { BlogFormData } from 'config/blog-config';
+import { isValidUrl } from 'utils/isValidUrl';
+import 'react-quill/dist/quill.snow.css';
+import { BlogFormCoverImage } from './BlogFormCoverImage';
+import { BlogFormTags } from './BlogFormTags';
+import { BlogFormSections } from './BlogFormSections';
+import { toHTML } from '@portabletext/to-html';
+
+export const BlogForm = ({ mode = 'create', initialData = null }) => {
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    title: '',
+    subtitle: '',
+    tags: '',
+    sections: [],
+    coverImage: null,
+    coverPreview: '',
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [tagInput, setTagInput] = useState('');
+  const [tags, setTags] = useState([]);
+
+  useEffect(() => {
+    if (mode === 'edit' && initialData) {
+      setFormData({
+        title: initialData.title || '',
+        subtitle: initialData.subtitle || '',
+        tags: '',
+        sections: (initialData.sections || []).map(section => {
+          if (section._type === 'product') {
+            return {
+              ...section,
+              image: null,
+              imagePreview: section.image?.asset?.url || '',
+              description: section.description || '',
+              affiliateLinks: section.affiliateLinks || [],
+            };
+          }
+
+          if (section._type === 'content') {
+            const description =
+              section.description ||
+              (Array.isArray(section.content) ? toHTML(section.content) : '');
+            return {
+              ...section,
+              description,
+            };
+          }
+
+          return section;
+        }),
+        coverImage: null,
+        coverPreview: initialData.coverImage || '',
+      });
+
+      setTags(initialData.tags || []);
+    }
+  }, [initialData, mode]);
+
+  const handleInputChange = e => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = e => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setFormData(prev => ({
+        ...prev,
+        coverImage: file,
+        coverPreview: previewUrl,
+      }));
+    }
+  };
+
+  const addContentSection = () => {
+    setFormData(prev => ({
+      ...prev,
+      sections: [...prev.sections, { type: 'content', description: '' }],
+    }));
+  };
+
+  const addProductSection = () => {
+    setFormData(prev => ({
+      ...prev,
+      sections: [
+        ...prev.sections,
+        {
+          type: 'product',
+          description: '',
+          image: null,
+          imagePreview: '',
+          affiliateLinks: [],
+        },
+      ],
+    }));
+  };
+
+  const updateSection = (index, field, value) => {
+    setFormData(prev => {
+      const updated = [...prev.sections];
+      updated[index][field] = value;
+      return { ...prev, sections: updated };
+    });
+  };
+
+  const removeSection = index => {
+    setFormData(prev => {
+      const updated = [...prev.sections];
+      updated.splice(index, 1);
+      return { ...prev, sections: updated };
+    });
+  };
+
+  const handleProductImageChange = (index, file) => {
+    const previewUrl = URL.createObjectURL(file);
+    updateSection(index, 'image', file);
+    updateSection(index, 'imagePreview', previewUrl);
+  };
+
+  const removeProductImage = index => {
+    updateSection(index, 'image', null);
+    updateSection(index, 'imagePreview', '');
+  };
+
+  const addAffiliateLink = index => {
+    setFormData(prev => {
+      const updated = [...prev.sections];
+      const section = updated[index];
+      const hasEmpty = section.affiliateLinks.some(
+        link => !link.label.trim() || !isValidUrl(link.url)
+      );
+      if (hasEmpty) return prev;
+      section.affiliateLinks = [
+        ...section.affiliateLinks,
+        { label: '', url: '' },
+      ];
+      updated[index] = section;
+      return { ...prev, sections: updated };
+    });
+  };
+
+  const updateAffiliateLink = (sectionIdx, linkIdx, field, value) => {
+    setFormData(prev => {
+      const updated = [...prev.sections];
+      updated[sectionIdx].affiliateLinks[linkIdx][field] = value;
+      return { ...prev, sections: updated };
+    });
+  };
+
+  const removeAffiliateLink = (sectionIdx, linkIdx) => {
+    setFormData(prev => {
+      const updated = [...prev.sections];
+      updated[sectionIdx].affiliateLinks.splice(linkIdx, 1);
+      return { ...prev, sections: updated };
+    });
+  };
+
+  const moveSectionUp = index => {
+    if (index <= 0) return;
+    const newSections = [...formData.sections];
+    [newSections[index - 1], newSections[index]] = [
+      newSections[index],
+      newSections[index - 1],
+    ];
+    setFormData({ ...formData, sections: newSections });
+  };
+
+  const moveSectionDown = index => {
+    if (index >= formData.sections.length - 1) return;
+    const newSections = [...formData.sections];
+    [newSections[index], newSections[index + 1]] = [
+      newSections[index + 1],
+      newSections[index],
+    ];
+    setFormData({ ...formData, sections: newSections });
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('subtitle', formData.subtitle);
+      formDataToSend.append('tags', tags.join(','));
+      if (formData.coverImage) {
+        formDataToSend.append('coverImage', formData.coverImage);
+      }
+
+      const serializedSections = formData.sections.map((section, i) => {
+        if (section._type === 'product' && section.image) {
+          formDataToSend.append(`productImage-${i}`, section.image);
+        }
+        return section;
+      });
+
+      formDataToSend.append('sections', JSON.stringify(serializedSections));
+
+      if (mode === 'edit' && initialData?._id) {
+        await axios.put(`/api/blogs/${initialData._id}`, formDataToSend, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        setSuccess('Blog post updated successfully!');
+      } else {
+        await axios.post('/api/blogs/create', formDataToSend, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        setSuccess('Blog post created successfully!');
+      }
+
+      setTimeout(() => router.push('/admin'), 2000);
+    } catch (err) {
+      setError('An error occurred.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <Container className="py-4">
+      <h2>
+        {mode === 'edit'
+          ? BlogFormData.editFormTitle
+          : BlogFormData.createFormTitle}
+      </h2>
+      {error && <Alert variant="danger">{error}</Alert>}
+      {success && <Alert variant="success">{success}</Alert>}
+
+      <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Label>Title *</Form.Label>
+          <Form.Control
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
+            required
+          />
+        </Form.Group>
+
+        <BlogFormTags
+          tags={tags}
+          setTags={setTags}
+          tagInput={tagInput}
+          setTagInput={setTagInput}
+        />
+
+        <BlogFormCoverImage
+          formData={formData}
+          setFormData={setFormData}
+          handleFileChange={handleFileChange}
+        />
+
+        <BlogFormSections
+          formData={formData}
+          updateSection={updateSection}
+          removeSection={removeSection}
+          handleProductImageChange={handleProductImageChange}
+          removeProductImage={removeProductImage}
+          updateAffiliateLink={updateAffiliateLink}
+          addAffiliateLink={addAffiliateLink}
+          removeAffiliateLink={removeAffiliateLink}
+          moveSectionUp={moveSectionUp}
+          moveSectionDown={moveSectionDown}
+          mode={mode}
+        />
+
+        <div className="mb-3 d-flex gap-2">
+          <Button variant="success" onClick={addProductSection}>
+            + Add Product Section
+          </Button>
+          <Button variant="primary" onClick={addContentSection}>
+            + Add Content Section
+          </Button>
+        </div>
+
+        <div className="d-flex gap-2 mb-4">
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={isSubmitting || !formData.title}
+          >
+            {mode === 'edit' ? 'Update Blog Post' : 'Create Blog Post'}
+          </Button>
+          <Button
+            variant="outline-secondary"
+            onClick={() => router.push('/admin')}
+          >
+            Cancel
+          </Button>
+        </div>
+      </Form>
+    </Container>
+  );
+};

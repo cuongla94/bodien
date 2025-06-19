@@ -7,7 +7,7 @@ import {
   faBorderAll,
   faList,
   faSortNumericDown,
-  faSortNumericUp
+  faSortNumericUp,
 } from '@fortawesome/free-solid-svg-icons';
 
 config.autoAddCss = false;
@@ -25,6 +25,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'highlight.js/styles/atom-one-dark.css';
 import 'react-toggle/style.css';
 import 'styles/index.scss';
+import 'react-quill/dist/quill.snow.css';
 
 function MyAppWrapper({ Component, pageProps }) {
   const { theme } = useContext(ThemeContext);

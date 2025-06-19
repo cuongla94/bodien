@@ -50,3 +50,14 @@ export async function getBlogBySlug(slug, preview) {
 
   return result;
 }
+
+export async function getBlogById(id) {
+  const result = await client.fetch(
+    `*[_type == "blog" && _id == $id] {
+      ${blogFields}
+    }[0]`,
+    { id }
+  );
+
+  return result;
+}
