@@ -227,7 +227,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
 
   return (
     <Container className="py-4">
-      <h2>
+      <h2 className="mb-4">
         {mode === 'edit'
           ? BlogFormData.editFormTitle
           : BlogFormData.createFormTitle}

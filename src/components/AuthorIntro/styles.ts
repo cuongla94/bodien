@@ -4,7 +4,7 @@ import styled from 'styled-components';
 export const IntroWrapper = styled.div`
   display: flex;
   margin-bottom: 1.5rem;
-  padding: 0px 2px;
+  padding: 0px 3px;
 
   @media (max-width: 768px) {
     flex-direction: column;

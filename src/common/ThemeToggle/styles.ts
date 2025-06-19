@@ -4,7 +4,7 @@ export const ToggleLabel = styled.label`
   .react-toggle {
     position: relative;
     display: inline-block;
-    width: 62px;
+    width: 60px; /* ← Updated from 62px */
     height: 30px;
   }
 
@@ -39,7 +39,7 @@ export const ToggleLabel = styled.label`
   }
 
   .react-toggle--checked .react-toggle-thumb {
-    left: 34px;
+    left: 32px; /* ← Adjusted from 34px to fit 60px track */
     background-color: ${({ theme }) => theme.buttonBg};
   }
 
@@ -65,9 +65,6 @@ export const ToggleLabel = styled.label`
 
   .react-toggle-track-x {
     right: 5px;
-    // color: #ffffff;
-    // background-color: #000000;
-
     background-color: ${({ theme }) => theme.cardBackground};
     border-radius: 50%;
     width: 22px;
@@ -77,7 +74,7 @@ export const ToggleLabel = styled.label`
     justify-content: center;
   }
 
-  /* Remove hover opacity flickers */
+  /* Keep icons always visible */
   .react-toggle:hover .react-toggle-track-check,
   .react-toggle:hover .react-toggle-track-x {
     opacity: 1;
