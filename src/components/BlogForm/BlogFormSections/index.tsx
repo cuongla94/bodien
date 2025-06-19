@@ -195,7 +195,6 @@ export const BlogFormSections = ({
                       <Col xs="auto">
                         <Button
                           variant="outline-danger"
-                          size="md"
                           onClick={() => removeAffiliateLink(index, linkIdx)}
                         >
                           <FaTimes />

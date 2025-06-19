@@ -1,5 +1,5 @@
 // components/BlogFilterControls/index.tsx
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { FilterWrapper, SortControl, SearchInput } from './styles';
 
 interface BlogFilterControlsProps {
@@ -15,13 +15,13 @@ export const BlogFilterControls = ({
   sortAsc,
   onToggleSort,
 }: BlogFilterControlsProps) => {
-  const Icon = sortAsc ? ChevronUp : ChevronDown;
+  const Icon = sortAsc ? FaChevronUp : FaChevronDown;
 
   return (
     <FilterWrapper>
       <SortControl>
         <span>Sort by date</span>
-        <Icon size={20} onClick={onToggleSort} />
+        <Icon size={16} onClick={onToggleSort} style={{ cursor: 'pointer' }} />
       </SortControl>
 
       <SearchInput

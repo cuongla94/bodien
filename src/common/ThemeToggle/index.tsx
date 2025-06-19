@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Toggle from 'react-toggle';
-import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FaSun, FaMoon } from 'react-icons/fa';
 import { ThemeContext } from 'theme/ThemeContext';
 import { ToggleLabel } from './styles';
 
@@ -19,8 +18,8 @@ export const ThemeToggle = () => {
         checked={theme.type === 'dark'}
         onChange={toggleTheme}
         icons={{
-          checked: <FontAwesomeIcon icon={faMoon} />,
-          unchecked: <FontAwesomeIcon icon={faSun} />,
+          checked: <FaMoon />,
+          unchecked: <FaSun />,
         }}
       />
     </ToggleLabel>
