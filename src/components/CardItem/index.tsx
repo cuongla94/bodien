@@ -53,24 +53,23 @@ export const CardItem = ({
         <Card.Body style={{ padding: '8px' }}>
           <Card.Title
             className="card-main-title"
-            style={{ color: theme?.mainTextColor }}
+            style={{ color: theme?.mainTextColor, margin: '.8rem 0' }}
           >
-            {title && title.length > 40 ? title.substr(0, 40) + '...' : title}
+            {title}
           </Card.Title>
-          <hr />
           <CardItemTags tags={tags} />
           <CardItemAnalytics
             isAdmin={isAdmin}
             numOfViews={numOfViews}
             numOfShares={numOfShares}
           />
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex justify-content-between align-items-center mt-4">
             {date && (
               <Card.Text
                 className="small mb-0"
                 style={{ color: theme?.subTextColor }}
               >
-                Created on {date}
+                Added on {date}
               </Card.Text>
             )}
             <CardItemControls

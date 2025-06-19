@@ -10,7 +10,7 @@ export const CardItemImage: React.FC<CardItemImageProps> = ({ image }) => {
   const hasImage = !!image;
 
   return (
-    <CardImageWrapper>
+    <CardImageWrapper className={!hasImage ? 'no-image' : ''}>
       {hasImage ? (
         <StyledCardImage
           src={urlFor(image).height(300).url()}

@@ -23,6 +23,7 @@ export const BlogList = ({ data = [] }) => {
           date={getFormattedDate(blog)}
           image={blog.coverImage}
           link={{ href: `/blogs/${blog.slug}` }}
+          tags={blog.tags}
           theme={theme}
         />
       </Col>

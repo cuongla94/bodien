@@ -1,7 +1,16 @@
 import Image from 'next/image';
 import { PortableText } from '@portabletext/react';
 import { portableTextComponents } from 'utils/portableTextComponent';
-import styles from './style.module.scss';
+
+import {
+  SectionWrapper,
+  ProductWrapper,
+  ImageWrapper,
+  ContentWrapper,
+  Title,
+  Description,
+  LinksWrapper,
+} from './styles';
 
 type BlogSection = {
   _type: string;
@@ -25,46 +34,39 @@ export default function BlogSections({ sections }: Props) {
 
         if (section._type === 'content') {
           return (
-            <div key={key} className="mb-5">
+            <SectionWrapper key={key}>
               {section.content && (
-                <PortableText value={section.content} components={portableTextComponents} />
+                <PortableText
+                  value={section.content}
+                  components={portableTextComponents}
+                />
               )}
-            </div>
+            </SectionWrapper>
           );
         }
 
         if (section._type === 'product') {
           return (
-            <div
-              key={key}
-              className="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-4 mb-5"
-            >
-                {section.image?.asset?.url && (
-                <div className={`flex-shrink-0 text-center ${styles.blogSectionsImage}`}>
-                    <Image
+            <ProductWrapper key={key}>
+              {section.image?.asset?.url && (
+                <ImageWrapper>
+                  <Image
                     src={section.image.asset.url}
                     alt={section.name || 'Product'}
                     width={200}
                     height={200}
-                    style={{ objectFit: 'contain' }}
-                    />
-                </div>
+                  />
+                </ImageWrapper>
+              )}
+
+              <ContentWrapper>
+                {section.name && <Title>{section.name}</Title>}
+                {section.description && (
+                  <Description>{section.description}</Description>
                 )}
-              <div
-                className="text-md-start"
-                style={{
-                  flex: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  height: '100%',
-                }}
-              >
-                {section.name && <h4 className="mb-2">{section.name}</h4>}
-                {section.description && <p className="text-muted">{section.description}</p>}
 
                 {section.affiliateLinks?.length > 0 && (
-                  <div className="mt-3 d-flex flex-wrap gap-2">
+                  <LinksWrapper>
                     {section.affiliateLinks.map((link, i) => (
                       <a
                         key={i}
@@ -76,10 +78,10 @@ export default function BlogSections({ sections }: Props) {
                         {link.label}
                       </a>
                     ))}
-                  </div>
+                  </LinksWrapper>
                 )}
-              </div>
-            </div>
+              </ContentWrapper>
+            </ProductWrapper>
           );
         }
 

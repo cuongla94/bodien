@@ -1,8 +1,10 @@
-import { Button } from "react-bootstrap";
-import { FaPlus, FaSignOutAlt, FaHome } from "react-icons/fa";
-import { useRouter } from "next/router";
-import { AdminControlsData } from "config/admin-config";
-import { FiExternalLink } from "react-icons/fi";
+// components/Admin/AdminControls.tsx
+import { Button } from 'react-bootstrap';
+import { FaPlus, FaSignOutAlt, FaHome } from 'react-icons/fa';
+import { FiExternalLink } from 'react-icons/fi';
+import { useRouter } from 'next/router';
+import { AdminControlsData } from 'config/admin-config';
+import { ControlsContainer, ControlsGroup } from './styles';
 
 interface AdminControlsProps {
   onLogout?: () => void;
@@ -10,18 +12,16 @@ interface AdminControlsProps {
 
 export const AdminControls = ({ onLogout }: AdminControlsProps) => {
   const router = useRouter();
+  const isDashboard = router.pathname === '/admin';
 
   const logout = () => {
     localStorage.removeItem('bodien-admin-auth');
-    window.location.href = '/'; 
+    window.location.href = '/';
   };
-  
-
-  const isDashboard = router.pathname === '/admin';
 
   return (
-    <div className="d-flex justify-content-between align-items-center mb-4">
-      <div className="d-flex gap-2">
+    <ControlsContainer>
+      <ControlsGroup>
         <Button
           variant="outline-secondary"
           onClick={() => router.push('/')}
@@ -30,6 +30,7 @@ export const AdminControls = ({ onLogout }: AdminControlsProps) => {
           <FiExternalLink />
           Public Site
         </Button>
+
         {isDashboard ? (
           <Button
             variant="primary"
@@ -49,7 +50,8 @@ export const AdminControls = ({ onLogout }: AdminControlsProps) => {
             {AdminControlsData.navigation.dashboard}
           </Button>
         )}
-      </div>
+      </ControlsGroup>
+
       <div>
         <Button
           variant="outline-danger"
@@ -61,6 +63,6 @@ export const AdminControls = ({ onLogout }: AdminControlsProps) => {
           {AdminControlsData.logout}
         </Button>
       </div>
-    </div>
+    </ControlsContainer>
   );
 };

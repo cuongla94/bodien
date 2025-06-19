@@ -3,14 +3,9 @@ import Link from 'next/link';
 import { Button } from 'react-bootstrap';
 import { ControlsWrapper, ThemedButton } from './styles';
 
-interface ILink {
-  href: string;
-  as?: string;
-}
-
 interface CardItemControlsProps {
   isAdmin?: boolean;
-  link?: ILink;
+  link?: { href: string; as?: string };
   theme?: {
     buttonBg?: string;
     buttonText?: string;
@@ -33,17 +28,17 @@ export const CardItemControls: React.FC<CardItemControlsProps> = ({
 }) => {
   if (!isAdmin && link) {
     return (
-      <Link href={link.href} passHref>
-        <ThemedButton
-          as="a"
-          variant="info"
-          size="sm"
-          bg={theme?.buttonBg}
-          text={theme?.buttonText}
-        >
-          Read More
-        </ThemedButton>
-      </Link>
+      <ControlsWrapper>
+        <Link href={link.href} passHref>
+          <ThemedButton
+            size="sm"
+            bg={theme?.primaryColor}
+            text={theme?.buttonText}
+          >
+            Read More
+          </ThemedButton>
+        </Link>
+      </ControlsWrapper>
     );
   }
 

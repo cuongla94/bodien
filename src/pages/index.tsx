@@ -1,3 +1,4 @@
+// HomePage.tsx
 import { useState } from 'react';
 import { Row, Button } from 'react-bootstrap';
 import moment from 'moment';
@@ -6,7 +7,7 @@ import PageLayout from 'layouts/PageLayout';
 import { AuthorIntro } from 'components/AuthorIntro';
 import PreviewAlert from 'components/PreviewAlert';
 
-import { useGetBlogsPages } from 'common/Pagination';
+import { useGetBlogsPages } from 'utils/Pagination';
 import { getPaginatedBlogs } from 'apis';
 import { BlogList } from 'components/BlogList';
 import { BlogFilterControls } from 'components/Blog';
@@ -14,13 +15,12 @@ import { BlogFilterControls } from 'components/Blog';
 export default function HomePage({ blogs, preview }) {
   const [filter, setFilter] = useState({
     view: { list: 0 },
-    date: { asc: 0 }
+    date: { asc: 0 },
   });
 
   const [searchTerm, setSearchTerm] = useState('');
 
   const { data, size, setSize, hitEnd } = useGetBlogsPages({ filter });
-
   const currentData = data || [blogs];
   const flatBlogs = currentData.flat();
 
@@ -45,7 +45,7 @@ export default function HomePage({ blogs, preview }) {
         onToggleSort={() =>
           setFilter(prev => ({
             ...prev,
-            date: { asc: prev.date.asc ? 0 : 1 }
+            date: { asc: prev.date.asc ? 0 : 1 },
           }))
         }
       />
@@ -78,7 +78,8 @@ export default function HomePage({ blogs, preview }) {
         <div className="text-center py-5">
           <h4>No Posts Available</h4>
           <p className="text-muted mb-0">
-            There are currently no blog posts to display. Please check back later!
+            There are currently no blog posts to display. Please check back
+            later!
           </p>
         </div>
       )}
@@ -93,8 +94,8 @@ export async function getStaticProps({ preview = false }) {
   return {
     props: {
       blogs: publicBlogs,
-      preview
+      preview,
     },
-    revalidate: 1
+    revalidate: 1,
   };
 }

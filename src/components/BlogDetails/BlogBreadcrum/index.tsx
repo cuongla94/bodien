@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Breadcrumb } from 'react-bootstrap';
-import styles from './styles.module.scss';
+import { BreadcrumbWrapper, BreadcrumbText } from './styles';
 
 interface BlogBreadcrumbProps {
   title: string;
@@ -15,23 +15,25 @@ export const BlogBreadcrumb: React.FC<BlogBreadcrumbProps> = ({
   title,
   subtitle,
   showHome = true,
-  homeLabel = "Home",
-  homeHref = "/",
+  homeLabel = 'Home',
+  homeHref = '/',
 }) => {
   return (
-    <div className={`${styles.blogBreadcrumb} mb-5`}>
-        <Breadcrumb>
-            {showHome && (
-            <Breadcrumb.Item>
-                <Link href={homeHref} className={`${styles.breadcrumbText} text-decoration-none`}>
-                {homeLabel}
-                </Link>
-            </Breadcrumb.Item>
-            )}
-            <Breadcrumb.Item active>
-            <span className={`fw-semibold ${styles.breadcrumbText}`}>{title}</span>
-            </Breadcrumb.Item>
-        </Breadcrumb>
-    </div>
+    <BreadcrumbWrapper className="mb-5">
+      <Breadcrumb>
+        {showHome && (
+          <Breadcrumb.Item>
+            <Link href={homeHref} passHref legacyBehavior>
+              <BreadcrumbText as="a">{homeLabel}</BreadcrumbText>
+            </Link>
+          </Breadcrumb.Item>
+        )}
+        <Breadcrumb.Item active>
+          <BreadcrumbText as="span" className="fw-semibold">
+            {title}
+          </BreadcrumbText>
+        </Breadcrumb.Item>
+      </Breadcrumb>
+    </BreadcrumbWrapper>
   );
 };

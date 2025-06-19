@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { ITheme } from 'types/theme';
-import { useGetBlogsPages } from 'common/Pagination';
+import { useGetBlogsPages } from 'utils/Pagination';
 import { useAdminAuth } from 'hooks/useAdminAuth';
 import { useThemeProvider } from 'hooks/useThemeProvider';
 import axios from 'axios';
 import { AdminPageLayout } from 'layouts';
-import { AdminDashboard } from 'components/AdminDashBoard';
+import { AdminDashboard } from 'components/Admin/AdminDashboard';
 
 export default function AdminPage() {
   const router = useRouter();
@@ -21,9 +21,11 @@ export default function AdminPage() {
 
   const { data, size, setSize, hitEnd } = useGetBlogsPages({ filter });
   const currentData = data || [[]];
-  const filteredBlogs = currentData.flat().filter(blog =>
-    blog.title?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredBlogs = currentData
+    .flat()
+    .filter(blog =>
+      blog.title?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   const formatDate = (date: string) => new Date(date).toLocaleDateString();
 
@@ -38,10 +40,13 @@ export default function AdminPage() {
 
   const handleEdit = (id: string) => {
     router.push(`/admin/blogs/edit/${id}`);
-  };  
+  };
 
   const [showConfirm, setShowConfirm] = useState(false);
-  const [selectedBlog, setSelectedBlog] = useState<{ id: string; title: string } | null>(null);
+  const [selectedBlog, setSelectedBlog] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const handleDelete = (id: string, title: string) => {
@@ -67,14 +72,17 @@ export default function AdminPage() {
       const result = response.data;
 
       if (result.success) {
-        setDeleteSuccess(`Blog post "${selectedBlog.title}" deleted successfully`);
+        setDeleteSuccess(
+          `Blog post "${selectedBlog.title}" deleted successfully`
+        );
         setSize(1);
         setTimeout(() => setDeleteSuccess(''), 5000);
       } else {
         throw new Error(result.message || 'Delete operation failed');
       }
     } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error.message || 'Unknown error';
+      const errorMessage =
+        error?.response?.data?.message || error.message || 'Unknown error';
       setDeleteError(`Failed to delete blog post: ${errorMessage}`);
     } finally {
       setDeleteLoading(false);

@@ -14,6 +14,8 @@ export interface Theme {
   highlight: string;
   codeBackground: string;
   codeTextColor: string;
+  primaryColor: string;
+  secondaryColor: string;
 
   // Buttons
   buttonBg: string;

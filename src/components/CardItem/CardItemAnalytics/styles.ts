@@ -2,15 +2,23 @@ import styled from 'styled-components';
 
 export const AnalyticsWrapper = styled.div`
   display: flex;
-  gap: 0.75rem; /* Bootstrap gap-3 = 0.75rem */
   align-items: center;
-  margin-bottom: 0.5rem; /* Bootstrap mb-2 = 0.5rem */
-  color: #6c757d; /* Bootstrap text-muted */
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+
+  color: ${({ theme }) => theme.subTextColor};
   font-size: 0.8rem;
+  font-weight: 500;
 `;
 
 export const AnalyticsItem = styled.span`
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.25rem; /* Bootstrap gap-1 = 0.25rem */
+  gap: 0.25rem;
+
+  svg {
+    color: ${({ theme }) => theme.highlight};
+    width: 14px;
+    height: 14px;
+  }
 `;

@@ -1,19 +1,22 @@
 import styled from 'styled-components';
 
 export const SectionWrapper = styled.div`
-  border: 1px solid #dee2e6;
+  border: 1px solid ${({ theme }) => theme.borderColor};
   border-radius: 0.5rem;
   margin-bottom: 1.5rem;
   position: relative;
   padding: 1rem;
+  background-color: ${({ theme }) => theme.cardBackground};
+  box-shadow: ${({ theme }) => theme.cardShadow};
+  transition: all 0.3s ease;
 `;
 
 export const ProductImageWrapper = styled.div`
   width: 100%;
   height: 250px;
-  background-color: #f9f9f9;
+  background-color: ${({ theme }) => theme.codeBackground};
   border-radius: 10px;
-  border: 1px dashed #ccc;
+  border: 1px dashed ${({ theme }) => theme.borderColor};
   overflow: hidden;
   position: relative;
 `;
@@ -32,12 +35,19 @@ export const RemoveIcon = styled.div`
   top: 5px;
   right: 5px;
   cursor: pointer;
-  background-color: white;
+  background-color: ${({ theme }) => theme.cardBackground};
   border-radius: 50%;
-  padding: 2px;
+  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: ${({ theme }) => theme.mainTextColor};
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    background-color: ${({ theme }) => theme.highlight};
+    color: #000;
+  }
 `;
 
 export const UploadPlaceholder = styled.div`
@@ -46,8 +56,9 @@ export const UploadPlaceholder = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  color: #000;
+  color: ${({ theme }) => theme.subTextColor};
   font-weight: 500;
+  font-size: 0.95rem;
 `;
 
 export const InvalidUrlText = styled.div`
@@ -55,5 +66,5 @@ export const InvalidUrlText = styled.div`
   top: 65%;
   left: 0.9rem;
   font-size: 0.8rem;
-  color: red;
+  color: ${({ theme }) => theme.errorColor || 'red'};
 `;

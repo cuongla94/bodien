@@ -22,6 +22,8 @@ export const themes: { light: Theme; dark: Theme } = {
     linkHover: '#1d4ed8',
     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
     cardShadow: '0 1px 4px rgba(0, 0, 0, 0.05)',
+    primaryColor: '#2563eb', // ✅ added
+    secondaryColor: '#4f46e5', // ✅ added
   },
   dark: {
     type: 'dark',
@@ -42,6 +44,8 @@ export const themes: { light: Theme; dark: Theme } = {
     linkHover: '#60a5fa',
     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.5)',
     cardShadow: '0 1px 4px rgba(255, 255, 255, 0.05)',
+    primaryColor: '#3b82f6', // ✅ added
+    secondaryColor: '#818cf8', // ✅ added
   },
 };
 

@@ -1,7 +1,7 @@
 import { Alert } from 'react-bootstrap';
 import { AdminPasswordForm } from 'components/Admin/AdminPasswordForm';
 import { ConfirmationModal } from 'common/modals';
-import { AdminBlogList } from './AdminBlogList';
+import { AdminBlogList } from '../AdminBlogList';
 
 interface AdminDashboardProps {
   authenticated: boolean;

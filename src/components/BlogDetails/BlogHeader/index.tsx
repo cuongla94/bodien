@@ -1,5 +1,12 @@
 import Link from 'next/link';
 import { BlogBreadcrumb } from '../BlogBreadcrum';
+import {
+  BlogHeaderWrapper,
+  BlogTitle,
+  BlogDate,
+  CoverImageWrapper,
+  CoverImage,
+} from './styles';
 
 interface BlogHeaderProps {
   title: string;
@@ -17,11 +24,11 @@ export function BlogHeader({
   coverImage,
   date,
   showBreadcrumb = true,
-  breadcrumbHome = "/",
-  breadcrumbHomeLabel = "Home",
+  breadcrumbHome = '/',
+  breadcrumbHomeLabel = 'Home',
 }: BlogHeaderProps) {
   return (
-    <div className="blog-detail-header">
+    <BlogHeaderWrapper>
       {showBreadcrumb && (
         <BlogBreadcrumb
           title={title}
@@ -31,28 +38,26 @@ export function BlogHeader({
         />
       )}
 
-      <h1 className="fw-bold blog-detail-header-title mb-1">{title}</h1>
-      <div className="text-end text-muted mb-3" style={{ fontSize: '0.9rem' }}>
-        Created on {date}
-      </div>
+      <BlogTitle>{title}</BlogTitle>
+      <BlogDate>Added on {date}</BlogDate>
 
       {coverImage && (
-        <div className="blog-cover-image mb-4">
-          <img
-            className="img-fluid rounded"
+        <CoverImageWrapper>
+          <CoverImage
             src={coverImage}
             alt={`Cover image for ${title}`}
-            onError={(e) => {
+            onError={e => {
               e.currentTarget.style.display = 'none';
               const placeholder = document.createElement('div');
-              placeholder.className = 'cover-image-placeholder bg-light p-4 rounded text-center';
+              placeholder.className =
+                'cover-image-placeholder bg-light p-4 rounded text-center';
               placeholder.innerHTML =
                 '<p class="text-muted mb-0">Cover image not available</p>';
               e.currentTarget.parentElement?.appendChild(placeholder);
             }}
           />
-        </div>
+        </CoverImageWrapper>
       )}
-    </div>
+    </BlogHeaderWrapper>
   );
 }
