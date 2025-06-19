@@ -27,6 +27,7 @@ export const BlogFormSections = ({
   moveSectionUp,
   moveSectionDown,
   mode,
+  sectionRefs
 }) => {
   useEffect(() => {
     const updatedSections = formData.sections.map(section => {
@@ -65,9 +66,17 @@ export const BlogFormSections = ({
           section.imagePreview || section.image?.asset?.url || '';
 
         return (
-          <SectionWrapper key={index}>
+          <SectionWrapper
+            key={index}
+            ref={el => {
+              if (!Array.isArray(sectionRefs.current)) {
+                sectionRefs.current = [];
+              }
+              sectionRefs.current[index] = el || null;
+            }}
+          >
             {section._type === 'content' && (
-              <Col md={12} className="p-2">
+              <Col md={12} className="p-3">
                 <Form.Group className="mb-3">
                   <ReactQuill
                     value={

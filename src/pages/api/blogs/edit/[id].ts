@@ -25,15 +25,19 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const slug = req.query.slug as string;
+  const blogId = req.query.id as string;
+
+  if (!blogId) {
+    return res.status(400).json({ error: 'Missing or invalid blog ID' });
+  }
 
   try {
-    const blogId = await sanityClient.fetch(
-      `*[_type == 'blog' && slug.current == $slug][0]._id`,
-      { slug }
+    const existingBlog = await sanityClient.fetch(
+      `*[_type == "blog" && _id == $id][0]`,
+      { id: blogId }
     );
 
-    if (!blogId) {
+    if (!existingBlog) {
       return res.status(404).json({ error: 'Blog not found' });
     }
 
@@ -49,6 +53,7 @@ export default async function handler(
       .filter(Boolean);
 
     let coverImageRef = null;
+
     if (files.coverImage?.[0]?.filepath) {
       const file = files.coverImage[0];
       const uploaded = await uploadImageToSanity(
@@ -62,6 +67,8 @@ export default async function handler(
       try {
         fs.unlinkSync(file.filepath);
       } catch {}
+    } else if (existingBlog.coverImage) {
+      coverImageRef = existingBlog.coverImage;
     }
 
     const rawSections = fields.sections?.[0] || '[]';
@@ -111,16 +118,11 @@ export default async function handler(
           try {
             fs.unlinkSync(imageFile.filepath);
           } catch {}
-        } else if (section.imagePreview) {
-          const match = section.imagePreview.match(
-            /image-([a-zA-Z0-9]+-[a-zA-Z0-9]+-[a-zA-Z0-9]+)/
-          );
-          if (match?.[1]) {
-            imageRef = {
-              _type: 'image',
-              asset: { _type: 'reference', _ref: `image-${match[1]}` },
-            };
-          }
+        } else if (section.image?.asset?._id) {
+          imageRef = {
+            _type: 'image',
+            asset: { _type: 'reference', _ref: section.image.asset._id },
+          };
         }
 
         const affiliateLinks =

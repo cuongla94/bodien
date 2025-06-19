@@ -17,7 +17,7 @@ type BlogSection = {
   _key?: string;
   content?: any;
   name?: string;
-  description?: string;
+  description?: any; // <- updated to support rich content
   image?: { asset: { url: string } };
   affiliateLinks?: { url: string; label: string; clicks: number }[];
 };
@@ -60,9 +60,10 @@ export default function BlogSections({ sections }: Props) {
               )}
 
               <ContentWrapper>
-                {section.name && <Title>{section.name}</Title>}
                 {section.description && (
-                  <Description>{section.description}</Description>
+                  <Description
+                    dangerouslySetInnerHTML={{ __html: section.description }}
+                  />
                 )}
 
                 {section.affiliateLinks?.length > 0 && (
@@ -89,4 +90,4 @@ export default function BlogSections({ sections }: Props) {
       })}
     </>
   );
-}
+};

@@ -44,13 +44,18 @@ export const Title = styled.h4`
 
 export const Description = styled.p`
   color: ${({ theme }) => theme.subTextColor};
+  margin: 0;
+
+  p {
+    margin-bottom: 5px;
+  }
 `;
 
 export const LinksWrapper = styled.div`
-  margin-top: 1rem;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  margin-top: 5px;
 
   a {
     font-size: 0.875rem;

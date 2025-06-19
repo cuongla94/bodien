@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Form, Button, Alert, Container } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import axios from 'axios';
@@ -26,6 +26,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
   const [success, setSuccess] = useState('');
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState([]);
+  const sectionRefs = useRef([]);
 
   useEffect(() => {
     if (mode === 'edit' && initialData) {
@@ -34,15 +35,16 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
         subtitle: initialData.subtitle || '',
         tags: '',
         sections: (initialData.sections || []).map(section => {
-          if (section._type === 'product') {
-            return {
-              ...section,
-              image: null,
-              imagePreview: section.image?.asset?.url || '',
-              description: section.description || '',
-              affiliateLinks: section.affiliateLinks || [],
-            };
-          }
+if (section._type === 'product') {
+  return {
+    ...section,
+    image: section.image || null,
+    imagePreview: section.image?.asset?.url || '',
+    description: section.description || '',
+    affiliateLinks: section.affiliateLinks || [],
+  };
+}
+
 
           if (section._type === 'content') {
             return {
@@ -81,8 +83,9 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
   const addContentSection = () => {
     setFormData(prev => ({
       ...prev,
-      sections: [...prev.sections, { type: 'content', description: '' }],
+      sections: [...prev.sections, { _type: 'content', description: '' }],
     }));
+    scrollToSection(formData.sections.length); // scroll to new
   };
 
   const addProductSection = () => {
@@ -91,7 +94,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
       sections: [
         ...prev.sections,
         {
-          type: 'product',
+          _type: 'product',
           description: '',
           image: null,
           imagePreview: '',
@@ -99,6 +102,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
         },
       ],
     }));
+    scrollToSection(formData.sections.length); // scroll to new
   };
 
   const updateSection = (index, field, value) => {
@@ -136,10 +140,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
         link => !link.label.trim() || !isValidUrl(link.url)
       );
       if (hasEmpty) return prev;
-      section.affiliateLinks = [
-        ...section.affiliateLinks,
-        { label: '', url: '' },
-      ];
+      section.affiliateLinks = [...section.affiliateLinks, { label: '', url: '' }];
       updated[index] = section;
       return { ...prev, sections: updated };
     });
@@ -161,6 +162,12 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
     });
   };
 
+  const scrollToSection = index => {
+    setTimeout(() => {
+      sectionRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
+
   const moveSectionUp = index => {
     if (index <= 0) return;
     const newSections = [...formData.sections];
@@ -169,6 +176,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
       newSections[index - 1],
     ];
     setFormData({ ...formData, sections: newSections });
+    scrollToSection(index - 1);
   };
 
   const moveSectionDown = index => {
@@ -179,6 +187,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
       newSections[index],
     ];
     setFormData({ ...formData, sections: newSections });
+    scrollToSection(index + 1);
   };
 
   const handleSubmit = async e => {
@@ -206,7 +215,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
       formDataToSend.append('sections', JSON.stringify(serializedSections));
 
       if (mode === 'edit' && initialData?._id) {
-        await axios.put(`/api/blogs/${initialData._id}`, formDataToSend, {
+        await axios.put(`/api/blogs/edit/${initialData._id}`, formDataToSend, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         setSuccess('Blog post updated successfully!');
@@ -228,9 +237,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
   return (
     <Container className="py-4">
       <h2 className="mb-4">
-        {mode === 'edit'
-          ? BlogFormData.editFormTitle
-          : BlogFormData.createFormTitle}
+        {mode === 'edit' ? BlogFormData.editFormTitle : BlogFormData.createFormTitle}
       </h2>
       {error && <Alert variant="danger">{error}</Alert>}
       {success && <Alert variant="success">{success}</Alert>}
@@ -247,12 +254,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
           />
         </Form.Group>
 
-        <BlogFormTags
-          tags={tags}
-          setTags={setTags}
-          tagInput={tagInput}
-          setTagInput={setTagInput}
-        />
+        <BlogFormTags tags={tags} setTags={setTags} tagInput={tagInput} setTagInput={setTagInput} />
 
         <BlogFormCoverImage
           formData={formData}
@@ -272,6 +274,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
           moveSectionUp={moveSectionUp}
           moveSectionDown={moveSectionDown}
           mode={mode}
+          sectionRefs={sectionRefs}
         />
 
         <div className="mb-3 d-flex gap-2">
@@ -284,17 +287,10 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
         </div>
 
         <div className="d-flex gap-2 mb-4">
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={isSubmitting || !formData.title}
-          >
+          <Button type="submit" variant="primary" disabled={isSubmitting || !formData.title}>
             {mode === 'edit' ? 'Update Blog Post' : 'Create Blog Post'}
           </Button>
-          <Button
-            variant="outline-secondary"
-            onClick={() => router.push('/admin')}
-          >
+          <Button variant="outline-secondary" onClick={() => router.push('/admin')}>
             Cancel
           </Button>
         </div>
