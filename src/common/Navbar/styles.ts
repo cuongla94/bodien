@@ -8,8 +8,8 @@ export const BrandWrapper = styled.a`
   text-decoration: none;
 `;
 
-export const BrandTitle = styled.span<{ color?: string }>`
-  color: ${({ color }) => color || '#000'};
+export const BrandTitle = styled.span`
+  color: ${({ theme }) => theme.mainTextColor};
   font-weight: bold;
   font-size: 1.6rem;
 `;
