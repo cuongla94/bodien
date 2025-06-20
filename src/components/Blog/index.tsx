@@ -1,2 +1,2 @@
-export * from './BlogContent';
-export * from './BlogFilterControls';
+export * from '../BlogDetails/BlogContent';
+export * from '../Blogs/BlogsFilterControls';

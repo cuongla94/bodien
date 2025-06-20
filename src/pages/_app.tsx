@@ -7,6 +7,7 @@ import 'react-toggle/style.css';
 import 'react-quill/dist/quill.snow.css';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/700.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function MyAppWrapper({ Component, pageProps }) {
   const { theme } = useContext(ThemeContext);

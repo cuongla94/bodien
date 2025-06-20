@@ -1,7 +1,6 @@
-import { Alert } from 'react-bootstrap';
 import { AdminPasswordForm } from 'components/Admin/AdminPasswordForm';
 import { ConfirmationModal } from 'common/modals';
-import { AdminBlogList } from '../AdminBlogList';
+import { BlogList } from 'components/Blogs/BlogList';
 
 interface AdminDashboardProps {
   authenticated: boolean;
@@ -70,48 +69,25 @@ export const AdminDashboard = ({
       />
 
       {authenticated && (
-        <>
-          {deleteSuccess && (
-            <Alert
-              variant="success"
-              dismissible
-              onClose={() => dismissAlert('success')}
-            >
-              {deleteSuccess}
-            </Alert>
-          )}
-
-          {deleteError && (
-            <Alert
-              variant="danger"
-              dismissible
-              onClose={() => dismissAlert('error')}
-            >
-              {deleteError}
-            </Alert>
-          )}
-
-          {/* ✅ Replace blog list logic with AdminBlogList */}
-          <AdminBlogList
-            authenticated={authenticated}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            filter={filter}
-            setFilter={setFilter}
-            filteredBlogs={filteredBlogs}
-            theme={theme}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onToggleHidden={onToggleHidden}
-            deleteSuccess={deleteSuccess}
-            deleteError={deleteError}
-            dismissAlert={dismissAlert}
-            hitEnd={hitEnd}
-            size={size}
-            setSize={setSize}
-            formatDate={formatDate}
-          />
-        </>
+        <BlogList
+          isAdmin
+          authenticated={authenticated}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          filter={filter}
+          setFilter={setFilter}
+          data={filteredBlogs}
+          theme={theme}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onToggleHidden={onToggleHidden}
+          deleteSuccess={deleteSuccess}
+          deleteError={deleteError}
+          dismissAlert={dismissAlert}
+          hitEnd={hitEnd}
+          size={size}
+          setSize={setSize}
+        />
       )}
 
       <ConfirmationModal

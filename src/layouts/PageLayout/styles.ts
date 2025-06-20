@@ -14,14 +14,16 @@ export const LayoutWrapper = styled.div`
 
 export const PageWrapper = styled.div`
   flex-grow: 1;
-  overflow-y: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 export const Footer = styled.footer`
   background: ${({ theme }) => theme.cardBackground};
   padding: 1rem 0;
   margin-top: auto;
-  border-top: 1px solid ${({ theme }) => theme.borderColor};
 
   p {
     margin-bottom: 0;
