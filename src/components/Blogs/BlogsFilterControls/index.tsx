@@ -1,5 +1,4 @@
 import { Row, Col, Form } from 'react-bootstrap';
-import { DateRangePicker } from 'common/DateRangePicker';
 import { FilterWrapper, FeaturedToggleWrapper } from './styles';
 
 type SortOption =
@@ -16,8 +15,6 @@ interface BlogsFilterControlsProps {
   onSortChange: (value: SortOption) => void;
   isFeaturedOnly: boolean;
   onToggleFeatured: () => void;
-  dateRange: [Date | null, Date | null];
-  onDateRangeChange: (range: [Date | null, Date | null]) => void;
 }
 
 export const BlogsFilterControls = ({
@@ -27,12 +24,10 @@ export const BlogsFilterControls = ({
   onSortChange,
   isFeaturedOnly,
   onToggleFeatured,
-  dateRange,
-  onDateRangeChange,
 }: BlogsFilterControlsProps) => {
   return (
     <FilterWrapper>
-      <Row className="align-items-center w-100">
+      <Row className="align-items-center justify-content w-100">
         <Col className="mb-2">
           <Form.Control
             type="text"
@@ -41,11 +36,6 @@ export const BlogsFilterControls = ({
             onChange={e => onSearchChange(e.target.value)}
           />
         </Col>
-
-        <Col md={2} className="mb-2">
-          <DateRangePicker dateRange={dateRange} onChange={onDateRangeChange} />
-        </Col>
-
         <Col md={2} className="mb-2">
           <Form.Select
             value={sortOption}

@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useGetBlogsPages } from 'utils/Pagination';
 import { BlogList } from 'components/Blogs/BlogList';
-import { BlogsFilterControls } from 'components/Blog';
+import { BlogsFilterControls } from 'components/Blogs/BlogsFilterControls';
 
 interface DashboardProps {
   mode: 'admin' | 'public';
@@ -21,7 +21,6 @@ interface DashboardProps {
 export const Dashboard = ({
   mode,
   theme,
-  preview,
   authenticated = true,
   initialBlogs = [],
   onEdit,
