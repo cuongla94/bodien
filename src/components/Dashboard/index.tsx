@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Button } from 'react-bootstrap';
 import { useGetBlogsPages } from 'utils/Pagination';
 import { BlogList } from 'components/Blogs/BlogList';
@@ -34,6 +34,11 @@ export const Dashboard = ({
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState({ view: { list: 0 }, date: { asc: 0 } });
+  const [sortOption, setSortOption] = useState<
+    'date_desc' | 'date_asc' | 'title_asc' | 'title_desc' | 'popularity'
+  >('date_desc');
+  const [isFeaturedOnly, setIsFeaturedOnly] = useState(false);
+  const [isFiltering, setIsFiltering] = useState(false);
 
   const { data, size, setSize, hitEnd } = isAdmin
     ? useGetBlogsPages({ filter })
@@ -44,13 +49,36 @@ export const Dashboard = ({
         hitEnd: true,
       };
 
-  const flatBlogs = data?.flat() || [];
+  useEffect(() => {
+    setIsFiltering(true);
+    const timeout = setTimeout(() => setIsFiltering(false), 300);
+    return () => clearTimeout(timeout);
+  }, [searchTerm, sortOption, isFeaturedOnly]);
+
+  const flatBlogs = useMemo(() => data?.flat() || [], [data]);
 
   const filteredBlogs = flatBlogs
     .filter(blog => !blog.hidden || isAdmin)
     .filter(blog =>
       blog.title?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    )
+    .filter(blog => (isFeaturedOnly ? blog.featured : true))
+    .sort((a, b) => {
+      switch (sortOption) {
+        case 'date_asc':
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        case 'date_desc':
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        case 'title_asc':
+          return a.title.localeCompare(b.title);
+        case 'title_desc':
+          return b.title.localeCompare(a.title);
+        case 'popularity':
+          return (b.views || 0) - (a.views || 0);
+        default:
+          return 0;
+      }
+    });
 
   const totalBlogs = filteredBlogs.length;
   const hasMorePosts = !hitEnd && totalBlogs > 3;
@@ -60,13 +88,10 @@ export const Dashboard = ({
       <BlogsFilterControls
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
-        sortAsc={!!filter.date.asc}
-        onToggleSort={() =>
-          setFilter(prev => ({
-            ...prev,
-            date: { asc: prev.date.asc ? 0 : 1 },
-          }))
-        }
+        sortOption={sortOption}
+        onSortChange={setSortOption}
+        isFeaturedOnly={isFeaturedOnly}
+        onToggleFeatured={() => setIsFeaturedOnly(prev => !prev)}
       />
 
       {totalBlogs > 0 ? (
@@ -106,13 +131,15 @@ export const Dashboard = ({
           )}
         </>
       ) : (
-        <div className="text-center py-5">
-          <h4>No Posts Available</h4>
-          <p className="text-muted mb-0">
-            There are currently no blog posts to display. Please check back
-            later!
-          </p>
-        </div>
+        !isFiltering && (
+          <div className="text-center py-5">
+            <h4>No Posts Available</h4>
+            <p className="text-muted mb-0">
+              There are currently no blog posts to display. Please check back
+              later!
+            </p>
+          </div>
+        )
       )}
     </>
   );

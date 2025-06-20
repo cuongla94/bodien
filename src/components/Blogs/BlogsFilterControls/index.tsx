@@ -36,6 +36,7 @@ export const BlogsFilterControls = ({
             onChange={e => onSearchChange(e.target.value)}
           />
         </Col>
+
         <Col md={2} className="mb-2">
           <Form.Select
             value={sortOption}
