@@ -1,22 +1,45 @@
 import { Form } from 'react-bootstrap';
-import { CoverWrapper, CoverImage, CloseIcon } from './styles';
+import { FaPlus } from 'react-icons/fa';
+import {
+  FullWidthWrapper,
+  CoverImagePreview,
+  UploadArea,
+  UploadIconButton,
+  RemoveIcon
+} from './styles';
 
-export const BlogFormCoverImage = ({ formData, setFormData, handleFileChange }) => (
-  <Form.Group className="mb-3">
-    <Form.Label>Cover Image</Form.Label>
-    <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
+export const BlogFormCoverImage = ({ formData, setFormData, handleFileChange }) => {
+  const removeCoverImage = () => {
+    setFormData(prev => ({ ...prev, coverImage: null, coverPreview: '' }));
+  };
 
-    {formData.coverPreview && (
-      <CoverWrapper>
-        <CoverImage src={formData.coverPreview} alt="Cover Preview" />
-        <CloseIcon
-          size={18}
-          color="red"
-          onClick={() =>
-            setFormData(prev => ({ ...prev, coverImage: null, coverPreview: '' }))
-          }
-        />
-      </CoverWrapper>
-    )}
-  </Form.Group>
-);
+  return (
+    <Form.Group className="mb-3 w-100">
+      <Form.Control
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        id="cover-upload"
+        style={{ display: 'none' }}
+      />
+
+      <label htmlFor="cover-upload" style={{ cursor: 'pointer', width: '100%' }}>
+        {formData.coverPreview ? (
+          <FullWidthWrapper>
+            <CoverImagePreview src={formData.coverPreview} alt="Cover Preview" />
+            <RemoveIcon onClick={removeCoverImage}>×</RemoveIcon>
+          </FullWidthWrapper>
+        ) : (
+          <UploadArea>
+            <UploadIconButton>
+              <FaPlus size={16} color="#fff" />
+            </UploadIconButton>
+            <div style={{ marginTop: '8px', fontSize: '0.9rem', color: '#666' }}>
+              Upload Cover Image
+            </div>
+          </UploadArea>
+        )}
+      </label>
+    </Form.Group>
+  );
+};

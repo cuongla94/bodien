@@ -1,40 +1,82 @@
-import { FaTimes } from 'react-icons/fa';
 import styled from 'styled-components';
 
 export const CoverWrapper = styled.div`
-  max-width: 400px;
-  margin-top: 1rem;
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 4 / 5;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: ${({ theme }) =>
-    theme.cardShadow || '0 1px 4px rgba(0, 0, 0, 0.1)'};
+  border: 1px solid #ddd;
 `;
 
-export const CoverImage = styled.img`
+export const CoverImagePreview = styled.img`
   width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.borderColor};
+  height: 100%;
   object-fit: cover;
+  border-radius: 8px;
 `;
 
-export const CloseIcon = styled(FaTimes)`
-  position: absolute;
-  top: 6px;
-  right: 6px;
+export const UploadArea = styled.div`
+  width: 100%;
+  max-width: 100%;
+  height: 260px; /* ✅ Reduce height */
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: border-color 0.2s ease;
   cursor: pointer;
-  background-color: ${({ theme }) => theme.cardBackground};
-  color: ${({ theme }) => theme.mainTextColor};
-  border-radius: 50%;
-  padding: 4px;
-  font-size: 0.9rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: ${({ theme }) => theme.highlight};
-    color: #000;
+    border-color: #aaa;
   }
+
+  div {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #666;
+  }
+`;
+
+export const UploadIconButton = styled.div`
+  background-color: black;
+  color: white;
+  border-radius: 50%;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    color: white; /* ✅ ensure child icons get white fallback */
+  }
+`;
+
+
+export const RemoveIcon = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: white;
+  border-radius: 50%;
+  padding: 4px 8px;
+  font-size: 18px;
+  font-weight: bold;
+  color: red;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+`;
+
+export const FullWidthWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 `;

@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
 import { ControlsWrapper, ThemedButton } from './styles';
+import { BlogCardItem } from 'config/blog-config';
 
 interface CardItemControlsProps {
   isAdmin?: boolean;
@@ -35,7 +36,7 @@ export const CardItemControls: React.FC<CardItemControlsProps> = ({
             bg={theme?.primaryColor}
             text={theme?.buttonText}
           >
-            Read More
+            {BlogCardItem.readMoreText}
           </ThemedButton>
         </Link>
       </ControlsWrapper>
@@ -51,7 +52,7 @@ export const CardItemControls: React.FC<CardItemControlsProps> = ({
           bg={theme?.primaryColor}
           text={theme?.buttonText}
         >
-          Edit
+          {BlogCardItem.adminEditControlText}
         </ThemedButton>
         <Button
           size="sm"
@@ -59,7 +60,7 @@ export const CardItemControls: React.FC<CardItemControlsProps> = ({
           onClick={onDelete}
           style={{ color: '#fff', border: 'none' }}
         >
-          Delete
+          {BlogCardItem.adminDeleteControlText}
         </Button>
         <Button size="sm" variant="secondary" onClick={onToggleHidden}>
           {hidden ? 'Unhide' : 'Hide'}

@@ -8,6 +8,7 @@ import 'react-quill/dist/quill.snow.css';
 import { BlogFormCoverImage } from './BlogFormCoverImage';
 import { BlogFormTags } from './BlogFormTags';
 import { BlogFormSections } from './BlogFormSections';
+import {BlogFormCategories} from './BlogFormCategories';
 
 export const BlogForm = ({ mode = 'create', initialData = null }) => {
   const router = useRouter();
@@ -16,6 +17,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
     title: '',
     subtitle: '',
     tags: '',
+    category: '',
     sections: [],
     coverImage: null,
     coverPreview: '',
@@ -34,17 +36,17 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
         title: initialData.title || '',
         subtitle: initialData.subtitle || '',
         tags: '',
+        category: initialData.category || '',
         sections: (initialData.sections || []).map(section => {
-if (section._type === 'product') {
-  return {
-    ...section,
-    image: section.image || null,
-    imagePreview: section.image?.asset?.url || '',
-    description: section.description || '',
-    affiliateLinks: section.affiliateLinks || [],
-  };
-}
-
+          if (section._type === 'product') {
+            return {
+              ...section,
+              image: section.image || null,
+              imagePreview: section.image?.asset?.url || '',
+              description: section.description || '',
+              affiliateLinks: section.affiliateLinks || [],
+            };
+          }
 
           if (section._type === 'content') {
             return {
@@ -85,7 +87,7 @@ if (section._type === 'product') {
       ...prev,
       sections: [...prev.sections, { _type: 'content', description: '' }],
     }));
-    scrollToSection(formData.sections.length); // scroll to new
+    scrollToSection(formData.sections.length);
   };
 
   const addProductSection = () => {
@@ -102,7 +104,7 @@ if (section._type === 'product') {
         },
       ],
     }));
-    scrollToSection(formData.sections.length); // scroll to new
+    scrollToSection(formData.sections.length);
   };
 
   const updateSection = (index, field, value) => {
@@ -201,6 +203,7 @@ if (section._type === 'product') {
       formDataToSend.append('title', formData.title);
       formDataToSend.append('subtitle', formData.subtitle);
       formDataToSend.append('tags', tags.join(','));
+      formDataToSend.append('category', formData.category);
       if (formData.coverImage) {
         formDataToSend.append('coverImage', formData.coverImage);
       }
@@ -254,13 +257,28 @@ if (section._type === 'product') {
           />
         </Form.Group>
 
-        <BlogFormTags tags={tags} setTags={setTags} tagInput={tagInput} setTagInput={setTagInput} />
+        <div className="d-flex gap-4 mb-4 align-items-start flex-wrap">
+          <div className="flex-grow-1" style={{ minWidth: 250 }}>
+            <BlogFormCoverImage
+              formData={formData}
+              setFormData={setFormData}
+              handleFileChange={handleFileChange}
+            />
+          </div>
 
-        <BlogFormCoverImage
-          formData={formData}
-          setFormData={setFormData}
-          handleFileChange={handleFileChange}
-        />
+          <div className="flex-grow-1" style={{ minWidth: 250 }}>
+            <BlogFormCategories
+              editCategory={formData.category}
+              onChange={(value) => setFormData((prev) => ({ ...prev, category: value }))}
+            />
+            <BlogFormTags
+              tags={tags}
+              setTags={setTags}
+              tagInput={tagInput}
+              setTagInput={setTagInput}
+            />
+          </div>
+        </div>
 
         <BlogFormSections
           formData={formData}

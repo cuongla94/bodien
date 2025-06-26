@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { Button } from 'react-bootstrap';
 import { useGetBlogsPages } from 'utils/Pagination';
 import { BlogList } from 'components/Blogs/BlogList';
-import { BlogsFilterControls } from 'components/Blogs/BlogsFilterControls';
+import { LatestPosts, BlogsFilterControls } from 'components/Blogs';
 
 interface DashboardProps {
   mode: 'admin' | 'public';
@@ -85,6 +85,9 @@ export const Dashboard = ({
 
   return (
     <>
+      {mode === 'public' && flatBlogs.length > 0 && (
+        <LatestPosts posts={flatBlogs} />
+      )}
       <BlogsFilterControls
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -93,7 +96,6 @@ export const Dashboard = ({
         isFeaturedOnly={isFeaturedOnly}
         onToggleFeatured={() => setIsFeaturedOnly(prev => !prev)}
       />
-
       {totalBlogs > 0 ? (
         <>
           <BlogList

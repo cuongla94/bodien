@@ -1,5 +1,6 @@
 import { Row, Col, Form } from 'react-bootstrap';
 import { FilterWrapper, FeaturedToggleWrapper } from './styles';
+import { BlogControls } from 'config/blog-config';
 
 type SortOption =
   | 'date_desc'
@@ -42,11 +43,9 @@ export const BlogsFilterControls = ({
             value={sortOption}
             onChange={e => onSortChange(e.target.value as SortOption)}
           >
-            <option value="date_desc">Newest First</option>
-            <option value="date_asc">Oldest First</option>
-            <option value="title_asc">Title A-Z</option>
-            <option value="title_desc">Title Z-A</option>
-            <option value="popularity">Most Popular</option>
+            {BlogControls.filters.map(item => (
+              <option>{item}</option>
+            ))}
           </Form.Select>
         </Col>
 
@@ -55,7 +54,7 @@ export const BlogsFilterControls = ({
             <Form.Check
               type="switch"
               id="featured-only"
-              label="Featured Only"
+              label={BlogControls.featuredOnly}
               checked={isFeaturedOnly}
               onChange={onToggleFeatured}
             />

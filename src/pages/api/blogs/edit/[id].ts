@@ -46,11 +46,16 @@ export default async function handler(
 
     const title = fields.title?.[0] || '';
     const subtitle = fields.subtitle?.[0] || '';
+    const category = fields.category?.[0] || '';
     const tagsRaw = fields.tags?.[0] || '';
     const tags = tagsRaw
       .split(',')
       .map(t => t.trim())
       .filter(Boolean);
+
+    if (!title || !category) {
+      return res.status(400).json({ error: 'Missing title or category' });
+    }
 
     let coverImageRef = null;
 
@@ -146,7 +151,7 @@ export default async function handler(
 
     const patch = sanityClient
       .patch(blogId)
-      .set({ title, subtitle, tags, sections })
+      .set({ title, subtitle, tags, category, sections })
       .setIfMissing({ numOfViews: 0, numOfShares: 0 });
 
     if (coverImageRef) {

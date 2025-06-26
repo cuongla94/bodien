@@ -8,6 +8,8 @@ import 'react-quill/dist/quill.snow.css';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/700.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 function MyAppWrapper({ Component, pageProps }) {
   const { theme } = useContext(ThemeContext);

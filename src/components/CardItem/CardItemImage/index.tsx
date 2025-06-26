@@ -1,6 +1,7 @@
 import React from 'react';
 import { urlFor } from 'apis';
 import { CardImageWrapper, StyledCardImage, PlaceholderText } from './styles';
+import { BlogCardItem } from 'config/blog-config';
 
 interface CardItemImageProps {
   image?: any;
@@ -17,7 +18,7 @@ export const CardItemImage: React.FC<CardItemImageProps> = ({ image }) => {
           alt="Card image"
         />
       ) : (
-        <PlaceholderText>No Image Available</PlaceholderText>
+        <PlaceholderText>{BlogCardItem.noImageAvailable}</PlaceholderText>
       )}
     </CardImageWrapper>
   );

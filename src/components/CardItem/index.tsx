@@ -63,13 +63,13 @@ export const CardItem = ({
             numOfViews={numOfViews}
             numOfShares={numOfShares}
           />
-          <div className="d-flex justify-content-between align-items-center mt-4">
+          <div className="d-flex justify-content-between align-items-end mt-4">
             {date && (
               <Card.Text
                 className="small mb-0"
                 style={{ color: theme?.subTextColor }}
               >
-                Added on {date}
+               {date}
               </Card.Text>
             )}
             <CardItemControls

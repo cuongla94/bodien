@@ -45,9 +45,14 @@ export default async function handler(
     const subtitle = Array.isArray(fields.subtitle)
       ? fields.subtitle[0]
       : fields.subtitle;
+    const category = Array.isArray(fields.category)
+      ? fields.category[0]
+      : fields.category;
 
-    if (!title || !fields.sections) {
-      return res.status(400).json({ error: 'Missing title or sections' });
+    if (!title || !fields.sections || !category) {
+      return res
+        .status(400)
+        .json({ error: 'Missing title, category, or sections' });
     }
 
     const tagsRaw = Array.isArray(fields.tags) ? fields.tags[0] : fields.tags;
@@ -176,6 +181,7 @@ export default async function handler(
       slug: { _type: 'slug', current: slug },
       publishedAt: new Date().toISOString(),
       tags,
+      category,
       numOfViews: 0,
       numOfShares: 0,
       hidden,
