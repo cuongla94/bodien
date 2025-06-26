@@ -2,10 +2,10 @@
 import { Container } from 'react-bootstrap';
 import { AppNavbar } from 'common/Navbar';
 import { ReactNode } from 'react';
-import { MainInfo } from 'config';
 import { useThemeProvider } from 'hooks/useThemeProvider';
 import { ScrollToTopButton } from 'common/ScrollToTopButton';
-import { LayoutWrapper, PageWrapper, Footer } from './styles';
+import { LayoutWrapper, PageWrapper } from './styles';
+import { Footer } from 'layouts/Footer';
 
 interface IPageLayoutProps {
   children: ReactNode;
@@ -19,20 +19,11 @@ export default function PageLayout({ children, className }: IPageLayoutProps) {
     <LayoutWrapper>
       <Container className="flex-grow-1 d-flex flex-column">
         <AppNavbar />
-        <hr />
         <PageWrapper className={`page-wrapper ${className || ''}`}>
           {children}
         </PageWrapper>
       </Container>
-
-      <Footer>
-        <Container>
-          <p>
-            &copy; {new Date().getFullYear()} {MainInfo.footerCopyRight}
-          </p>
-        </Container>
-      </Footer>
-
+      <Footer />
       <ScrollToTopButton />
     </LayoutWrapper>
   );

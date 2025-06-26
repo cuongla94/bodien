@@ -11,7 +11,7 @@ export default function HomePage({ blogs, preview }) {
   return (
     <PageLayout>
       {preview && <PreviewAlert />}
-      <AuthorIntro />
+      {/* <AuthorIntro /> */}
       <Dashboard
         mode="public"
         theme={theme}

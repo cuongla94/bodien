@@ -4,7 +4,7 @@ export const BlogFormData = {
 }
 
 export const BlogCardItem = {
-    readMoreText: 'Read',
+    readMoreText: 'Read More',
     adminEditControlText: 'Edit',
     adminDeleteControlText: 'Delete',
     blogViewText: 'view',

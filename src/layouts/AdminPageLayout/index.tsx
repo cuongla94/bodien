@@ -6,7 +6,8 @@ import { ITheme } from 'types/theme';
 import { useThemeProvider } from 'hooks/useThemeProvider';
 import { AdminControls } from 'components/Admin/AdminControls';
 import { ScrollToTopButton } from 'common/ScrollToTopButton';
-import { LayoutWrapper, PageWrapper, Footer, FooterText } from './styles';
+import { LayoutWrapper, PageWrapper } from './styles';
+import { Footer } from 'layouts/Footer';
 
 interface IAdminPageLayoutProps {
   children: ReactNode;
@@ -33,17 +34,10 @@ export function AdminPageLayout({
     <LayoutWrapper className={theme.type}>
       <Container className="flex-grow-1 d-flex flex-column">
         <AppNavbar />
-        <hr />
         <AdminControls />
         <PageWrapper className={className || ''}>{children}</PageWrapper>
       </Container>
-      <Footer>
-        <Container>
-          <FooterText>
-            &copy; {new Date().getFullYear()} {MainInfo.footerCopyRight}
-          </FooterText>
-        </Container>
-      </Footer>
+        <Footer />
       <ScrollToTopButton />
     </LayoutWrapper>
   );

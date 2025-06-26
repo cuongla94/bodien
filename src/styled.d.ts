@@ -2,18 +2,37 @@
 import 'styled-components';
 
 export interface Theme {
+  // Theme type
   type: 'light' | 'dark';
-  fontFamily: string;
+
+  // Typography
+  fontFamily: string;        // Body font
+  headingFont: string;       // Headings and titles
+  codeFont: string;          // Monospaced font for code
   fontSizeBase: string;
   lineHeightBase: string;
+  highlight: string;
+
+  // Text colors
   mainTextColor: string;
   subTextColor: string;
-  background: string;
+  headingColor?: string;
+
+  // Backgrounds
+  background: string;              // Solid fallback background
+  backgroundGradient?: string;     // Optional background gradient
   cardBackground: string;
+
+  // Borders & Shadows
   borderColor: string;
-  highlight: string;
+  boxShadow?: string;
+  cardShadow?: string;
+
+  // Code blocks
   codeBackground: string;
   codeTextColor: string;
+
+  // Brand colors
   primaryColor: string;
   secondaryColor: string;
 
@@ -27,14 +46,7 @@ export interface Theme {
   linkColor: string;
   linkHover: string;
 
-  // Typography
-  headingColor?: string;
-
-  // Shadow
-  boxShadow?: string;
-  cardShadow?: string;
-
-  // Status
+  // UI State colors
   successColor?: string;
   warningColor?: string;
   errorColor?: string;
@@ -44,7 +56,7 @@ export interface Theme {
   transition?: string;
 }
 
-// This makes it compatible with styled-components
+// This makes it compatible with styled-components' DefaultTheme
 declare module 'styled-components' {
   export interface DefaultTheme extends Theme {}
 }

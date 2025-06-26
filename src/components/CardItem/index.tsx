@@ -57,7 +57,7 @@ export const CardItem = ({
           >
             {title}
           </Card.Title>
-          <CardItemTags tags={tags} />
+          {/* <CardItemTags tags={tags} /> */}
           <CardItemAnalytics
             isAdmin={isAdmin}
             numOfViews={numOfViews}

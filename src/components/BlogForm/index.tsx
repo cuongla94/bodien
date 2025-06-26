@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Form, Button, Alert, Container } from 'react-bootstrap';
+import { Form, Button, Container } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { BlogFormData } from 'config/blog-config';
@@ -8,7 +8,8 @@ import 'react-quill/dist/quill.snow.css';
 import { BlogFormCoverImage } from './BlogFormCoverImage';
 import { BlogFormTags } from './BlogFormTags';
 import { BlogFormSections } from './BlogFormSections';
-import {BlogFormCategories} from './BlogFormCategories';
+import { BlogFormCategories } from './BlogFormCategories';
+import { Toast } from 'common/Toast';
 
 export const BlogForm = ({ mode = 'create', initialData = null }) => {
   const router = useRouter();
@@ -24,8 +25,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [toast, setToast] = useState(null);
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState([]);
   const sectionRefs = useRef([]);
@@ -47,20 +47,17 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
               affiliateLinks: section.affiliateLinks || [],
             };
           }
-
           if (section._type === 'content') {
             return {
               ...section,
               description: section.description || '',
             };
           }
-
           return section;
         }),
         coverImage: null,
         coverPreview: initialData.coverImage || '',
       });
-
       setTags(initialData.tags || []);
     }
   }, [initialData, mode]);
@@ -195,8 +192,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
   const handleSubmit = async e => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError('');
-    setSuccess('');
+    setToast(null);
 
     try {
       const formDataToSend = new FormData();
@@ -221,17 +217,17 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
         await axios.put(`/api/blogs/edit/${initialData._id}`, formDataToSend, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-        setSuccess('Blog post updated successfully!');
+        setToast({ type: 'success', message: 'Blog post updated successfully!' });
       } else {
         await axios.post('/api/blogs/create', formDataToSend, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-        setSuccess('Blog post created successfully!');
+        setToast({ type: 'success', message: 'Blog post created successfully!' });
       }
 
       setTimeout(() => router.push('/admin'), 2000);
     } catch (err) {
-      setError('An error occurred.');
+      setToast({ type: 'error', message: 'An error occurred while submitting.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -242,8 +238,16 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
       <h2 className="mb-4">
         {mode === 'edit' ? BlogFormData.editFormTitle : BlogFormData.createFormTitle}
       </h2>
-      {error && <Alert variant="danger">{error}</Alert>}
-      {success && <Alert variant="success">{success}</Alert>}
+
+      {toast && (
+        <div style={{ position: 'fixed', top: '1rem', right: '1rem', zIndex: 9999 }}>
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        </div>
+      )}
 
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
@@ -269,7 +273,9 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
           <div className="flex-grow-1" style={{ minWidth: 250 }}>
             <BlogFormCategories
               editCategory={formData.category}
-              onChange={(value) => setFormData((prev) => ({ ...prev, category: value }))}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, category: value }))
+              }
             />
             <BlogFormTags
               tags={tags}

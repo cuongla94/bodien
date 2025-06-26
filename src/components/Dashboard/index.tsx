@@ -88,6 +88,9 @@ export const Dashboard = ({
       {mode === 'public' && flatBlogs.length > 0 && (
         <LatestPosts posts={flatBlogs} />
       )}
+      {mode === 'public' && (
+        <h2 className="mb-4">All Posts</h2>
+      )}
       <BlogsFilterControls
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}

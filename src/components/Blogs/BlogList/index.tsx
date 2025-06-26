@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { Col, Row, Button, Alert } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Col, Row, Button } from 'react-bootstrap';
 import { CardItem } from 'components/CardItem';
 import { Wrapper, MessageBox } from './styles';
 import moment from 'moment';
 import { ITheme } from 'types/theme';
+import { Toast } from 'common/Toast';
 
 interface Blog {
   _id?: string;
@@ -56,10 +57,22 @@ export const BlogList = ({
   size = 1,
   setSize = () => {},
 }: BlogListProps) => {
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const blogs = Array.isArray(data[0]) ? data.flat() : data;
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      setToast({ type: 'success', message: deleteSuccess });
+      dismissAlert('success');
+    }
+    if (deleteError) {
+      setToast({ type: 'error', message: deleteError });
+      dismissAlert('error');
+    }
+  }, [deleteSuccess, deleteError, dismissAlert]);
+
   const getFormattedDate = (blog: Blog) => {
-    const dateValue =
-      blog.publishedAt || blog.date || blog.createdAt || blog._createdAt;
+    const dateValue = blog.publishedAt || blog.date || blog.createdAt || blog._createdAt;
     const momentDate = moment(dateValue);
     return momentDate.isValid() ? momentDate.format('LL') : 'No date';
   };
@@ -68,27 +81,14 @@ export const BlogList = ({
 
   return (
     <Wrapper md={12}>
-      {isAdmin && (
-        <>
-          {deleteSuccess && (
-            <Alert
-              variant="success"
-              dismissible
-              onClose={() => dismissAlert('success')}
-            >
-              {deleteSuccess}
-            </Alert>
-          )}
-          {deleteError && (
-            <Alert
-              variant="danger"
-              dismissible
-              onClose={() => dismissAlert('error')}
-            >
-              {deleteError}
-            </Alert>
-          )}
-        </>
+      {toast && (
+        <div style={{ position: 'fixed', top: '1rem', right: '1rem', zIndex: 9999 }}>
+          <Toast
+            type={toast.type}
+            message={toast.message}
+            onClose={() => setToast(null)}
+          />
+        </div>
       )}
 
       {blogs.length > 0 ? (
@@ -105,13 +105,9 @@ export const BlogList = ({
                   tags={blog.tags || []}
                   isAdmin={isAdmin}
                   onEdit={isAdmin ? () => onEdit(blog._id!) : undefined}
-                  onDelete={
-                    isAdmin ? () => onDelete(blog._id!, blog.title) : undefined
-                  }
+                  onDelete={isAdmin ? () => onDelete(blog._id!, blog.title) : undefined}
                   onToggleHidden={
-                    isAdmin
-                      ? () => onToggleHidden(blog._id!, !blog.hidden)
-                      : undefined
+                    isAdmin ? () => onToggleHidden(blog._id!, !blog.hidden) : undefined
                   }
                   hidden={isAdmin ? blog.hidden : undefined}
                   theme={theme}
