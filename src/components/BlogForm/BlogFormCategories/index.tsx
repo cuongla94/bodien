@@ -4,27 +4,35 @@ import { BlogFormCategorySelections } from 'config/blog-config';
 import { CategoryListContainer } from './styles';
 
 interface BlogFormCategoriesProps {
-  editCategory: string;
-  onChange: (category: string) => void;
+  editCategory: { title: string; value: string };
+  onChange: (category: { title: string; value: string }) => void;
 }
 
-export const BlogFormCategories = ({ editCategory, onChange }: BlogFormCategoriesProps) => {
+export const BlogFormCategories = ({
+  editCategory,
+  onChange,
+}: BlogFormCategoriesProps) => {
+  const transformedCategories = BlogFormCategorySelections.map((title) => ({
+    title,
+    value: title.toLowerCase().replace(/[^\w]+/g, '-'),
+  }));
+
   const [search, setSearch] = useState('');
-  const [selected, setSelected] = useState('');
+  const [selected, setSelected] = useState<{ title: string; value: string } | null>(null);
 
   useEffect(() => {
     setSelected(editCategory);
   }, [editCategory]);
 
   const filtered = useMemo(() => {
-    return BlogFormCategorySelections.filter((cat) =>
-      cat.toLowerCase().includes(search.toLowerCase())
+    return transformedCategories.filter(({ title }) =>
+      title.toLowerCase().includes(search.toLowerCase())
     );
   }, [search]);
 
-  const handleSelect = (value: string) => {
-    setSelected(value);
-    onChange(value);
+  const handleSelect = (item: { title: string; value: string }) => {
+    setSelected(item);
+    onChange(item);
   };
 
   return (
@@ -72,16 +80,16 @@ export const BlogFormCategories = ({ editCategory, onChange }: BlogFormCategorie
             No results found
           </div>
         ) : (
-          filtered.map((category) => (
+          filtered.map((item) => (
             <div
-              key={category}
+              key={item.value}
               className={`p-2 rounded mb-1 cursor-pointer ${
-                selected === category ? 'bg-primary text-white' : 'hover-bg-light'
+                selected?.value === item.value ? 'bg-primary text-white' : 'hover-bg-light'
               }`}
-              onClick={() => handleSelect(category)}
+              onClick={() => handleSelect(item)}
               style={{ cursor: 'pointer' }}
             >
-              {category}
+              {item.title}
             </div>
           ))
         )}

@@ -9,7 +9,7 @@ import { CardItem } from 'components/CardItem';
 interface Post {
   _id: string;
   title: string;
-  category?: string;
+  category?: { title: string; value: string };
   slug: { current: string };
   coverImage?: { asset: { url: string } };
   publishedAt: string;
@@ -44,7 +44,11 @@ export const LatestPosts = ({ posts, theme }: LatestPostsProps) => {
               category={post.category}
               image={post.coverImage}
               date={format(new Date(post.publishedAt), 'PPP')}
-              link={post.slug ? { href: `/blogs/${post.slug}` } : undefined}
+              link={
+                post.slug?.current
+                  ? { href: `/blogs/${post.slug.current}` }
+                  : undefined
+              }
               theme={theme}
             />
           </div>
@@ -55,7 +59,7 @@ export const LatestPosts = ({ posts, theme }: LatestPostsProps) => {
         <Swiper
           spaceBetween={20}
           slidesPerView={4}
-          navigation={carouselPosts.length > 0}
+          navigation={true}
           modules={[Navigation]}
           style={{ padding: '1rem 0' }}
         >
@@ -66,7 +70,11 @@ export const LatestPosts = ({ posts, theme }: LatestPostsProps) => {
                 category={post.category}
                 image={post.coverImage}
                 date={format(new Date(post.publishedAt), 'PPP')}
-                link={post.slug?.current ? { href: `/blogs/${post.slug.current}` } : undefined}
+                link={
+                  post.slug?.current
+                    ? { href: `/blogs/${post.slug.current}` }
+                    : undefined
+                }
                 theme={theme}
               />
             </SwiperSlide>

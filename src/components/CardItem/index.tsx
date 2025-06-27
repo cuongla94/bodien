@@ -6,7 +6,7 @@ import { CardItemControls } from './CardItemControls';
 
 interface ICardItemProps {
   title: string;
-  category?: string;
+  category?: { title: string; value: string };
   image?: any;
   date: string;
   link?: any;
@@ -39,6 +39,10 @@ export const CardItem = ({
 }: ICardItemProps) => {
   const hasImage = !!image;
 
+  // Support both string and object category types (for backward compatibility)
+  const displayCategory =
+    typeof category === 'string' ? category : category?.title || '';
+
   return (
     <Card
       className="fj-card"
@@ -50,7 +54,8 @@ export const CardItem = ({
     >
       <div className="card-body-wrapper">
         <CardItemImage image={image} />
-          <Card.Body style={{ padding: '8px' }}>
+        <Card.Body style={{ padding: '8px' }}>
+          {displayCategory && (
             <div
               style={{
                 fontSize: '0.75rem',
@@ -61,51 +66,51 @@ export const CardItem = ({
                 marginBottom: '0.25rem',
               }}
             >
-              - {category}
+              - {displayCategory}
             </div>
+          )}
 
-            <Card.Title
-              className="card-main-title"
-              style={{
-                color: theme?.mainTextColor,
-                margin: '.5rem 0 .8rem 0',
-                fontSize: '1.1rem',
-                fontWeight: 600,
-              }}
-            >
-              {title}
-            </Card.Title>
+          <Card.Title
+            className="card-main-title"
+            style={{
+              color: theme?.mainTextColor,
+              margin: '.5rem 0 .8rem 0',
+              fontSize: '1.1rem',
+              fontWeight: 600,
+            }}
+          >
+            {title}
+          </Card.Title>
 
-            <CardItemAnalytics
+          <CardItemAnalytics
+            isAdmin={isAdmin}
+            numOfViews={numOfViews}
+            numOfShares={numOfShares}
+          />
+
+          <div className="d-flex justify-content-between align-items-end mt-4">
+            {date && (
+              <Card.Text
+                className="small mb-0"
+                style={{
+                  color: theme?.subTextColor || '#9CA3AF',
+                  fontSize: '0.8rem',
+                }}
+              >
+                {date}
+              </Card.Text>
+            )}
+            <CardItemControls
               isAdmin={isAdmin}
-              numOfViews={numOfViews}
-              numOfShares={numOfShares}
+              link={link}
+              theme={theme}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onToggleHidden={onToggleHidden}
+              hidden={hidden}
             />
-
-            <div className="d-flex justify-content-between align-items-end mt-4">
-              {date && (
-                <Card.Text
-                  className="small mb-0"
-                  style={{
-                    color: theme?.subTextColor || '#9CA3AF',
-                    fontSize: '0.8rem',
-                  }}
-                >
-                  {date}
-                </Card.Text>
-              )}
-
-              <CardItemControls
-                isAdmin={isAdmin}
-                link={link}
-                theme={theme}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                onToggleHidden={onToggleHidden}
-                hidden={hidden}
-              />
-            </div>
-          </Card.Body>
+          </div>
+        </Card.Body>
       </div>
     </Card>
   );

@@ -1,30 +1,37 @@
 import styled from 'styled-components';
 
 export const CategoryListContainer = styled.div`
-  height: 150px;
-  overflow-y: scroll !important;
-  padding: 0.5rem;
+  max-height: 160px;
+  overflow-y: auto;
+  padding: 0.75rem;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 8px;
   background-color: #fff;
-  display: block;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease;
+  scroll-behavior: smooth;
 
-  /* Scrollbar styling */
+  &:hover {
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Firefox scrollbar */
   scrollbar-width: thin;
-  scrollbar-color: #ccc #f1f1f1;
+  scrollbar-color: #bbb #f5f5f5;
 
+  /* Webkit scrollbar */
   &::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
   }
 
   &::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #f5f5f5;
     border-radius: 10px;
   }
 
   &::-webkit-scrollbar-thumb {
-    border-radius: 10px;
     background: linear-gradient(to bottom, #ff4e91, #6e8efb);
+    border-radius: 10px;
   }
 
   &::-webkit-scrollbar-thumb:hover {

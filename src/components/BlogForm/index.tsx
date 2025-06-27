@@ -16,9 +16,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
 
   const [formData, setFormData] = useState({
     title: '',
-    subtitle: '',
-    tags: '',
-    category: '',
+    category: { title: '', value: '' },
     sections: [],
     coverImage: null,
     coverPreview: '',
@@ -34,9 +32,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
     if (mode === 'edit' && initialData) {
       setFormData({
         title: initialData.title || '',
-        subtitle: initialData.subtitle || '',
-        tags: '',
-        category: initialData.category || '',
+        category: initialData.category || { title: '', value: '' },
         sections: (initialData.sections || []).map(section => {
           if (section._type === 'product') {
             return {
@@ -56,7 +52,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
           return section;
         }),
         coverImage: null,
-        coverPreview: initialData.coverImage || '',
+        coverPreview: initialData.coverImage?.asset?.url || '',
       });
       setTags(initialData.tags || []);
     }
@@ -140,7 +136,6 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
       );
       if (hasEmpty) return prev;
       section.affiliateLinks = [...section.affiliateLinks, { label: '', url: '' }];
-      updated[index] = section;
       return { ...prev, sections: updated };
     });
   };
@@ -189,81 +184,75 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
     scrollToSection(index + 1);
   };
 
-const handleSubmit = async e => {
-  e.preventDefault();
-  setIsSubmitting(true);
-  setToast(null);
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setToast(null);
 
-  try {
-    const formDataToSend = new FormData();
-    formDataToSend.append('title', formData.title);
-    formDataToSend.append('subtitle', formData.subtitle);
-    formDataToSend.append('category', formData.category);
-    formDataToSend.append('hidden', 'false'); // or true, if needed
-    formDataToSend.append('tags', tags.join(','));
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('category', JSON.stringify(formData.category));
+      formDataToSend.append('hidden', 'false');
+      formDataToSend.append('tags', tags.join(','));
 
-    if (formData.coverImage) {
-      formDataToSend.append('coverImage', formData.coverImage);
-    }
-
-    const serializedSections = formData.sections.map((section, index) => {
-      const base = {
-        _type: section._type,
-        description: section.description || '',
-      };
-
-      if (section._type === 'product') {
-        if (section.image) {
-          formDataToSend.append(`productImage-${index}`, section.image);
-        }
-
-        return {
-          ...base,
-          name: section.name || '',
-          affiliateLinks: section.affiliateLinks || [],
-          imagePreview: section.imagePreview || '',
-        };
+      if (formData.coverImage) {
+        formDataToSend.append('coverImage', formData.coverImage);
       }
 
-      return base;
-    });
+      const serializedSections = formData.sections.map((section, index) => {
+        const base = {
+          _type: section._type,
+          description: section.description || '',
+        };
 
-    formDataToSend.append('sections', JSON.stringify(serializedSections));
+        if (section._type === 'product') {
+          if (section.image) {
+            formDataToSend.append(`productImage-${index}`, section.image);
+          }
+          return {
+            ...base,
+            name: section.name || '',
+            affiliateLinks: section.affiliateLinks || [],
+            imagePreview: section.imagePreview || '',
+          };
+        }
 
-    if (mode === 'edit' && initialData?._id) {
-      await axios.put(`/api/blogs/edit/${initialData._id}`, formDataToSend, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        return base;
       });
-      setToast({ type: 'success', message: 'Blog post updated successfully!' });
-    } else {
-      await axios.post('/api/blogs/create', formDataToSend, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      setToast({ type: 'success', message: 'Blog post created successfully!' });
+
+      formDataToSend.append('sections', JSON.stringify(serializedSections));
+
+      if (mode === 'edit' && initialData?._id) {
+        await axios.put(`/api/blogs/edit/${initialData._id}`, formDataToSend, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        setToast({ type: 'success', message: 'Blog post updated successfully!' });
+      } else {
+        await axios.post('/api/blogs/create', formDataToSend, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        setToast({ type: 'success', message: 'Blog post created successfully!' });
+      }
+
+      setTimeout(() => router.push('/admin'), 2000);
+    } catch (err) {
+      console.error('❌ Form submit error:', err);
+      setToast({ type: 'error', message: 'An error occurred while submitting.' });
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setTimeout(() => router.push('/admin'), 2000);
-  } catch (err) {
-    console.error('❌ Form submit error:', err);
-    setToast({ type: 'error', message: 'An error occurred while submitting.' });
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   return (
     <Container className="py-4">
       <h2 className="mb-4">
-        {mode === 'edit' ? `${BlogFormData.editFormTitle} Id ${initialData?._id}`  : BlogFormData.createFormTitle}
+        {mode === 'edit' ? `${BlogFormData.editFormTitle} Id ${initialData?._id}` : BlogFormData.createFormTitle}
       </h2>
 
       {toast && (
         <div style={{ position: 'fixed', top: '1rem', right: '1rem', zIndex: 9999 }}>
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
+          <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
         </div>
       )}
 
@@ -291,8 +280,8 @@ const handleSubmit = async e => {
           <div className="flex-grow-1" style={{ minWidth: 250 }}>
             <BlogFormCategories
               editCategory={formData.category}
-              onChange={(value) =>
-                setFormData((prev) => ({ ...prev, category: value }))
+              onChange={(categoryObj) =>
+                setFormData(prev => ({ ...prev, category: categoryObj }))
               }
             />
             <BlogFormTags

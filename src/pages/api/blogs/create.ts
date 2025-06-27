@@ -24,10 +24,7 @@ async function uploadImageToSanity(filePath: string, filename: string) {
   return asset;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -42,32 +39,32 @@ export default async function handler(
     const [fields, files] = await form.parse(req);
 
     const title = Array.isArray(fields.title) ? fields.title[0] : fields.title;
-    const subtitle = Array.isArray(fields.subtitle)
-      ? fields.subtitle[0]
-      : fields.subtitle;
-    const category = Array.isArray(fields.category)
-      ? fields.category[0]
-      : fields.category;
+
+    let category = null;
+    try {
+      const rawCategory = Array.isArray(fields.category) ? fields.category[0] : fields.category;
+      if (rawCategory) {
+        const parsed = JSON.parse(rawCategory);
+        if (parsed?.title && parsed?.value) {
+          category = parsed;
+        }
+      }
+    } catch {
+      return res.status(400).json({ error: 'Invalid category format (must be object)' });
+    }
 
     if (!title || !fields.sections || !category) {
-      return res
-        .status(400)
-        .json({ error: 'Missing title, category, or sections' });
+      return res.status(400).json({ error: 'Missing title, category, or sections' });
     }
 
     const tagsRaw = Array.isArray(fields.tags) ? fields.tags[0] : fields.tags;
     const tags = tagsRaw
-      ? tagsRaw
-          .split(',')
-          .map(tag => tag.trim())
-          .filter(Boolean)
+      ? tagsRaw.split(',').map(tag => tag.trim()).filter(Boolean)
       : [];
 
     const slug = generateSlug(title);
 
-    const hiddenRaw = Array.isArray(fields.hidden)
-      ? fields.hidden[0]
-      : fields.hidden;
+    const hiddenRaw = Array.isArray(fields.hidden) ? fields.hidden[0] : fields.hidden;
     const hidden = String(hiddenRaw).toLowerCase() === 'true';
 
     let coverImageRef = null;
@@ -89,9 +86,7 @@ export default async function handler(
       }
     }
 
-    const rawSections = Array.isArray(fields.sections)
-      ? fields.sections[0]
-      : fields.sections;
+    const rawSections = Array.isArray(fields.sections) ? fields.sections[0] : fields.sections;
     const parsedSections = JSON.parse(rawSections || '[]');
     const sections = [];
 
@@ -139,10 +134,7 @@ export default async function handler(
           try {
             fs.unlinkSync(imageFile.filepath);
           } catch (err) {
-            console.warn(
-              `Failed to delete temp file for productImage-${i}`,
-              err
-            );
+            console.warn(`Failed to delete temp file for productImage-${i}`, err);
           }
         } else if (section.imagePreview) {
           const match = section.imagePreview.match(
@@ -177,7 +169,6 @@ export default async function handler(
     const blogPost = {
       _type: 'blog',
       title,
-      subtitle,
       slug: { _type: 'slug', current: slug },
       publishedAt: new Date().toISOString(),
       tags,

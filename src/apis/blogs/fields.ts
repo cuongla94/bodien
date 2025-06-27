@@ -2,7 +2,10 @@ export const blogFields = `
   _id,
   _type,
   title,
-  category,
+  category {
+    title,
+    value
+  },
   'slug': slug.current,
   publishedAt,
   _updatedAt,

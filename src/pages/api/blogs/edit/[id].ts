@@ -17,16 +17,12 @@ async function uploadImageToSanity(filePath: string, filename: string) {
   return asset;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'PUT') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const blogId = req.query.id as string;
-
   if (!blogId) {
     return res.status(400).json({ error: 'Missing or invalid blog ID' });
   }
@@ -45,26 +41,31 @@ export default async function handler(
     const [fields, files] = await form.parse(req);
 
     const title = fields.title?.[0] || '';
-    const subtitle = fields.subtitle?.[0] || '';
-    const category = fields.category?.[0] || '';
+
+    let category = null;
+    try {
+      const rawCategory = fields.category?.[0];
+      if (rawCategory) {
+        const parsed = JSON.parse(rawCategory);
+        if (parsed?.title && parsed?.value) {
+          category = parsed;
+        }
+      }
+    } catch {
+      return res.status(400).json({ error: 'Invalid category format' });
+    }
+
     const tagsRaw = fields.tags?.[0] || '';
-    const tags = tagsRaw
-      .split(',')
-      .map(t => t.trim())
-      .filter(Boolean);
+    const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
 
     if (!title || !category) {
       return res.status(400).json({ error: 'Missing title or category' });
     }
 
     let coverImageRef = null;
-
     if (files.coverImage?.[0]?.filepath) {
       const file = files.coverImage[0];
-      const uploaded = await uploadImageToSanity(
-        file.filepath,
-        file.originalFilename || 'cover'
-      );
+      const uploaded = await uploadImageToSanity(file.filepath, file.originalFilename || 'cover');
       coverImageRef = {
         _type: 'image',
         asset: { _type: 'reference', _ref: uploaded._id },
@@ -130,13 +131,12 @@ export default async function handler(
           };
         }
 
-        const affiliateLinks =
-          section.affiliateLinks?.map(link => ({
-            _type: 'affiliateLink',
-            label: link.label,
-            url: link.url,
-            clicks: 0,
-          })) || [];
+        const affiliateLinks = section.affiliateLinks?.map(link => ({
+          _type: 'affiliateLink',
+          label: link.label,
+          url: link.url,
+          clicks: 0,
+        })) || [];
 
         sections.push({
           _type: 'product',
@@ -151,7 +151,7 @@ export default async function handler(
 
     const patch = sanityClient
       .patch(blogId)
-      .set({ title, subtitle, tags, category, sections })
+      .set({ title, tags, category, sections })
       .setIfMissing({ numOfViews: 0, numOfShares: 0 });
 
     if (coverImageRef) {

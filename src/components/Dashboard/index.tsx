@@ -64,7 +64,11 @@ export const Dashboard = ({
     )
     .filter(blog => (isFeaturedOnly ? blog.featured : true))
     .filter(blog =>
-      selectedCategory ? blog.category?.toLowerCase() === selectedCategory.toLowerCase() : true
+      selectedCategory
+        ? typeof blog.category === 'object'
+          ? blog.category.value === selectedCategory
+          : blog.category?.toLowerCase() === selectedCategory.toLowerCase()
+        : true
     )
     .sort((a, b) => {
       switch (sortOption) {
@@ -89,7 +93,7 @@ export const Dashboard = ({
   return (
     <>
       {mode === 'public' && flatBlogs.length > 0 && (
-        <LatestPosts posts={flatBlogs} />
+        <LatestPosts posts={flatBlogs} theme={theme} />
       )}
 
       {mode === 'public' && (
