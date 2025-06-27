@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap';
 import { useGetBlogsPages } from 'utils/Pagination';
 import { BlogList } from 'components/Blogs/BlogList';
 import { LatestPosts, BlogsFilterControls } from 'components/Blogs';
+import { BlogControlSortOptions } from 'types/blog';
 
 interface DashboardProps {
   mode: 'admin' | 'public';
@@ -34,9 +35,8 @@ export const Dashboard = ({
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState({ view: { list: 0 }, date: { asc: 0 } });
-  const [sortOption, setSortOption] = useState<
-    'date_desc' | 'date_asc' | 'title_asc' | 'title_desc' | 'popularity'
-  >('date_desc');
+  const [sortOption, setSortOption] = useState<BlogControlSortOptions>('relevant');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [isFeaturedOnly, setIsFeaturedOnly] = useState(false);
   const [isFiltering, setIsFiltering] = useState(false);
 
@@ -53,7 +53,7 @@ export const Dashboard = ({
     setIsFiltering(true);
     const timeout = setTimeout(() => setIsFiltering(false), 300);
     return () => clearTimeout(timeout);
-  }, [searchTerm, sortOption, isFeaturedOnly]);
+  }, [searchTerm, sortOption, isFeaturedOnly, selectedCategory]);
 
   const flatBlogs = useMemo(() => data?.flat() || [], [data]);
 
@@ -63,6 +63,9 @@ export const Dashboard = ({
       blog.title?.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .filter(blog => (isFeaturedOnly ? blog.featured : true))
+    .filter(blog =>
+      selectedCategory ? blog.category?.toLowerCase() === selectedCategory.toLowerCase() : true
+    )
     .sort((a, b) => {
       switch (sortOption) {
         case 'date_asc':
@@ -88,9 +91,11 @@ export const Dashboard = ({
       {mode === 'public' && flatBlogs.length > 0 && (
         <LatestPosts posts={flatBlogs} />
       )}
+
       {mode === 'public' && (
         <h2 className="mb-4">All Posts</h2>
       )}
+
       <BlogsFilterControls
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -98,7 +103,10 @@ export const Dashboard = ({
         onSortChange={setSortOption}
         isFeaturedOnly={isFeaturedOnly}
         onToggleFeatured={() => setIsFeaturedOnly(prev => !prev)}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
       />
+
       {totalBlogs > 0 ? (
         <>
           <BlogList
@@ -140,8 +148,7 @@ export const Dashboard = ({
           <div className="text-center py-5">
             <h4>No Posts Available</h4>
             <p className="text-muted mb-0">
-              There are currently no blog posts to display. Please check back
-              later!
+              There are currently no blog posts to display. Please check back later!
             </p>
           </div>
         )

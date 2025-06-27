@@ -34,8 +34,8 @@ export function AdminPageLayout({
     <LayoutWrapper className={theme.type}>
       <Container className="flex-grow-1 d-flex flex-column">
         <AppNavbar />
-        <AdminControls />
-        <PageWrapper className={className || ''}>{children}</PageWrapper>
+          <AdminControls />
+          <PageWrapper className={className || ''}>{children}</PageWrapper>
       </Container>
         <Footer />
       <ScrollToTopButton />

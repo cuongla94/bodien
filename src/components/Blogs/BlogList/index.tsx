@@ -98,7 +98,7 @@ export const BlogList = ({
               <Col key={blog._id || blog.slug} lg="4" md="6" className="mb-4">
                 <CardItem
                   title={blog.title}
-                  subtitle={blog.subtitle}
+                  category={blog.category}
                   date={getFormattedDate(blog)}
                   image={blog.coverImage}
                   link={isAdmin ? undefined : { href: `/blogs/${blog.slug}` }}

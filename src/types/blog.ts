@@ -55,3 +55,11 @@ export interface IBlogFormData {
   products: IProductSection[];
   coverImage?: File;
 }
+
+export type BlogControlSortOptions =
+  | 'relevant'
+  | 'popularity'
+  | 'date_desc'
+  | 'date_asc'
+  | 'title_asc'
+  | 'title_desc';

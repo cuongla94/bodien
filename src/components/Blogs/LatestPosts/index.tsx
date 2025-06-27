@@ -9,7 +9,7 @@ import { CardItem } from 'components/CardItem';
 interface Post {
   _id: string;
   title: string;
-  subtitle?: string;
+  category?: string;
   slug: { current: string };
   coverImage?: { asset: { url: string } };
   publishedAt: string;
@@ -41,7 +41,7 @@ export const LatestPosts = ({ posts, theme }: LatestPostsProps) => {
           <div className="col-md-3 mb-3" key={post._id}>
             <CardItem
               title={post.title}
-              subtitle={post.subtitle}
+              category={post.category}
               image={post.coverImage}
               date={format(new Date(post.publishedAt), 'PPP')}
               link={post.slug ? { href: `/blogs/${post.slug}` } : undefined}
@@ -63,7 +63,7 @@ export const LatestPosts = ({ posts, theme }: LatestPostsProps) => {
             <SwiperSlide key={post._id}>
               <CardItem
                 title={post.title}
-                subtitle={post.subtitle}
+                category={post.category}
                 image={post.coverImage}
                 date={format(new Date(post.publishedAt), 'PPP')}
                 link={post.slug?.current ? { href: `/blogs/${post.slug.current}` } : undefined}

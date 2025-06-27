@@ -1,21 +1,21 @@
-import { Row, Col, Form } from 'react-bootstrap';
-import { FilterWrapper, FeaturedToggleWrapper } from './styles';
+import { Row, Col } from 'react-bootstrap';
+import { FilterWrapper } from './styles';
 import { BlogControls } from 'config/blog-config';
-
-type SortOption =
-  | 'date_desc'
-  | 'date_asc'
-  | 'title_asc'
-  | 'title_desc'
-  | 'popularity';
+import { BlogControlSortOptions } from 'types/blog';
+import { BlogSortDropdown } from './BlogSortDropDown';
+import { BlogSearchbar } from './BlogSearchbar';
+import { BlogFeaturedToggle } from './BlogFeaturedToggle';
+import { BlogCategoryFilters } from './BlogCategoryFilters';
 
 interface BlogsFilterControlsProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
-  sortOption: SortOption;
-  onSortChange: (value: SortOption) => void;
+  sortOption: BlogControlSortOptions;
+  onSortChange: (value: BlogControlSortOptions) => void;
   isFeaturedOnly: boolean;
   onToggleFeatured: () => void;
+  selectedCategory: string;
+  onCategoryChange: (value: string) => void;
 }
 
 export const BlogsFilterControls = ({
@@ -25,41 +25,37 @@ export const BlogsFilterControls = ({
   onSortChange,
   isFeaturedOnly,
   onToggleFeatured,
+  selectedCategory,
+  onCategoryChange,
 }: BlogsFilterControlsProps) => {
   return (
     <FilterWrapper>
       <Row className="align-items-center justify-content w-100">
         <Col className="mb-2">
-          <Form.Control
-            type="text"
-            placeholder="Search blogs..."
+          <BlogSearchbar
             value={searchTerm}
-            onChange={e => onSearchChange(e.target.value)}
+            onChange={onSearchChange}
+            placeholder={BlogControls.searchPlaceHolder}
+          />
+        </Col>
+
+        <Col md={3} className="mb-2">
+          <BlogCategoryFilters
+            value={selectedCategory}
+            onChange={onCategoryChange}
           />
         </Col>
 
         <Col md={2} className="mb-2">
-          <Form.Select
-            value={sortOption}
-            onChange={e => onSortChange(e.target.value as SortOption)}
-          >
-            {BlogControls.filters.map(item => (
-              <option>{item}</option>
-            ))}
-          </Form.Select>
+          <BlogSortDropdown value={sortOption} onChange={onSortChange} />
         </Col>
 
-        <Col md={2} className="text-end">
-          <FeaturedToggleWrapper>
-            <Form.Check
-              type="switch"
-              id="featured-only"
-              label={BlogControls.featuredOnly}
-              checked={isFeaturedOnly}
-              onChange={onToggleFeatured}
-            />
-          </FeaturedToggleWrapper>
-        </Col>
+        {/* <Col md={2} className="text-end">
+          <BlogFeaturedToggle
+            checked={isFeaturedOnly}
+            onToggle={onToggleFeatured}
+          />
+        </Col> */}
       </Row>
     </FilterWrapper>
   );

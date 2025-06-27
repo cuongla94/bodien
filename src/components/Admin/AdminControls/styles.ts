@@ -9,6 +9,7 @@ export const ControlsContainer = styled.div`
   flex-wrap: wrap;
   gap: 1rem;
   padding: 0px 2px;
+  margin-top: 2rem;
 `;
 
 export const ControlsGroup = styled.div`

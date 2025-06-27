@@ -189,54 +189,72 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
     scrollToSection(index + 1);
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setToast(null);
+const handleSubmit = async e => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  setToast(null);
 
-    try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('subtitle', formData.subtitle);
-      formDataToSend.append('tags', tags.join(','));
-      formDataToSend.append('category', formData.category);
-      if (formData.coverImage) {
-        formDataToSend.append('coverImage', formData.coverImage);
-      }
+  try {
+    const formDataToSend = new FormData();
+    formDataToSend.append('title', formData.title);
+    formDataToSend.append('subtitle', formData.subtitle);
+    formDataToSend.append('category', formData.category);
+    formDataToSend.append('hidden', 'false'); // or true, if needed
+    formDataToSend.append('tags', tags.join(','));
 
-      const serializedSections = formData.sections.map((section, i) => {
-        if (section._type === 'product' && section.image) {
-          formDataToSend.append(`productImage-${i}`, section.image);
-        }
-        return section;
-      });
-
-      formDataToSend.append('sections', JSON.stringify(serializedSections));
-
-      if (mode === 'edit' && initialData?._id) {
-        await axios.put(`/api/blogs/edit/${initialData._id}`, formDataToSend, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        setToast({ type: 'success', message: 'Blog post updated successfully!' });
-      } else {
-        await axios.post('/api/blogs/create', formDataToSend, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        setToast({ type: 'success', message: 'Blog post created successfully!' });
-      }
-
-      setTimeout(() => router.push('/admin'), 2000);
-    } catch (err) {
-      setToast({ type: 'error', message: 'An error occurred while submitting.' });
-    } finally {
-      setIsSubmitting(false);
+    if (formData.coverImage) {
+      formDataToSend.append('coverImage', formData.coverImage);
     }
-  };
+
+    const serializedSections = formData.sections.map((section, index) => {
+      const base = {
+        _type: section._type,
+        description: section.description || '',
+      };
+
+      if (section._type === 'product') {
+        if (section.image) {
+          formDataToSend.append(`productImage-${index}`, section.image);
+        }
+
+        return {
+          ...base,
+          name: section.name || '',
+          affiliateLinks: section.affiliateLinks || [],
+          imagePreview: section.imagePreview || '',
+        };
+      }
+
+      return base;
+    });
+
+    formDataToSend.append('sections', JSON.stringify(serializedSections));
+
+    if (mode === 'edit' && initialData?._id) {
+      await axios.put(`/api/blogs/edit/${initialData._id}`, formDataToSend, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setToast({ type: 'success', message: 'Blog post updated successfully!' });
+    } else {
+      await axios.post('/api/blogs/create', formDataToSend, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setToast({ type: 'success', message: 'Blog post created successfully!' });
+    }
+
+    setTimeout(() => router.push('/admin'), 2000);
+  } catch (err) {
+    console.error('❌ Form submit error:', err);
+    setToast({ type: 'error', message: 'An error occurred while submitting.' });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <Container className="py-4">
       <h2 className="mb-4">
-        {mode === 'edit' ? BlogFormData.editFormTitle : BlogFormData.createFormTitle}
+        {mode === 'edit' ? `${BlogFormData.editFormTitle} Id ${initialData?._id}`  : BlogFormData.createFormTitle}
       </h2>
 
       {toast && (

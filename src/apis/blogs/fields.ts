@@ -2,7 +2,7 @@ export const blogFields = `
   _id,
   _type,
   title,
-  subtitle,
+  category,
   'slug': slug.current,
   publishedAt,
   _updatedAt,
@@ -20,9 +20,9 @@ export const blogFields = `
     _type,
     _key,
     content[] {
-      ..., 
+      ...,
       children[] {
-        ..., 
+        ...,
         marks[]
       }
     },

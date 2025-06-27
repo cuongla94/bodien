@@ -14,16 +14,18 @@ export const BlogCardItem = {
 
 export const BlogControls = {
     filters: [
-        'Newest First',
-        'Oldest First',
-        'Title A-Z',
-        'Title Z-A',
-        'Most Popular'
+        { title: 'Most Relevant', value: 'relevant' },
+        { title: 'Most Popular', value: 'popularity' },
+        { title: 'Newest First', value: 'date_desc' },
+        { title: 'Oldest First', value: 'date_asc' },
+        { title: 'Title A-Z', value: 'title_asc' },
+        { title: 'Title Z-A', value: 'title_desc' }
     ],
-    featuredOnly: "Featured Only"
+    featuredOnly: "Featured Only",
+    searchPlaceHolder: 'Search blogs...'
 }
 
-export const BlogCategories = [
+export const BlogFormCategorySelections = [
   "Fitness Gear",
   "Home Health Devices",
   "Sleep & Wellness",
