@@ -96,20 +96,22 @@ export const StyledSelectViewport = styled(Select.Viewport)`
 `;
 
 export const StyledSelectItem = styled(Select.Item)`
-  padding: 10px 12px;
-  font-size: 15px;
-  color: ${({ theme }) => theme.mainTextColor};
+  padding: 8px 12px;
+  border-radius: 4px;
   cursor: pointer;
-  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-  &:hover,
   &[data-highlighted] {
-    background-color: ${({ theme }) => theme.codeBackground};
+    background-color: #2a2e35; // or any dark-light contrast bg
+    color: #fff; // make sure it's readable
   }
 
-  &[data-disabled] {
-    color: ${({ theme }) => theme.disabledText};
-    pointer-events: none;
+  &[data-state='checked'] {
+    background-color: #3c3f47;
+    font-weight: 600;
+    color: #fff;
   }
 `;
 

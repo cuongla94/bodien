@@ -1,9 +1,10 @@
-import { useEffect, useState, useMemo } from 'react';
-import { Button } from 'react-bootstrap';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { useGetBlogsPages } from 'utils/Pagination';
 import { BlogList } from 'components/Blogs/BlogList';
 import { LatestPosts, BlogsFilterControls } from 'components/Blogs';
 import { BlogControlSortOptions } from 'types/blog';
+import { MainDashboard } from 'config/main-config';
+import { Spinner } from 'common/Spinner';
 
 interface DashboardProps {
   mode: 'admin' | 'public';
@@ -32,26 +33,25 @@ export const Dashboard = ({
   dismissAlert,
 }: DashboardProps) => {
   const isAdmin = mode === 'admin';
-
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState({ view: { list: 0 }, date: { asc: 0 } });
   const [sortOption, setSortOption] = useState<BlogControlSortOptions>('relevant');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isFeaturedOnly, setIsFeaturedOnly] = useState(false);
   const [isFiltering, setIsFiltering] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { data, size, setSize, hitEnd } = isAdmin
-    ? useGetBlogsPages({ filter })
-    : {
-        data: [initialBlogs],
-        size: 1,
-        setSize: () => {},
-        hitEnd: true,
-      };
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  const { data, size, setSize, hitEnd } = useGetBlogsPages({ filter });
 
   useEffect(() => {
     setIsFiltering(true);
-    const timeout = setTimeout(() => setIsFiltering(false), 300);
+    setIsLoading(true);
+    const timeout = setTimeout(() => {
+      setIsFiltering(false);
+      setIsLoading(false);
+    }, 500);
     return () => clearTimeout(timeout);
   }, [searchTerm, sortOption, isFeaturedOnly, selectedCategory]);
 
@@ -59,9 +59,7 @@ export const Dashboard = ({
 
   const filteredBlogs = flatBlogs
     .filter(blog => !blog.hidden || isAdmin)
-    .filter(blog =>
-      blog.title?.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    .filter(blog => blog.title?.toLowerCase().includes(searchTerm.toLowerCase()))
     .filter(blog => (isFeaturedOnly ? blog.featured : true))
     .filter(blog =>
       selectedCategory
@@ -88,7 +86,33 @@ export const Dashboard = ({
     });
 
   const totalBlogs = filteredBlogs.length;
-  const hasMorePosts = !hitEnd && totalBlogs > 3;
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        const entry = entries[0];
+        const isVisible = entry.isIntersecting;
+
+        const isFullBatchLoaded = totalBlogs > 0 && totalBlogs % MainDashboard.numsOfPost === 0;
+
+        if (isVisible && isFullBatchLoaded && !hitEnd) {
+          setSize(prev => prev + 1);
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 1.0,
+      }
+    );
+
+    const node = loadMoreRef.current;
+    if (node) observer.observe(node);
+
+    return () => {
+      if (node) observer.unobserve(node);
+    };
+  }, [totalBlogs, hitEnd, setSize]);
 
   return (
     <>
@@ -96,9 +120,7 @@ export const Dashboard = ({
         <LatestPosts posts={flatBlogs} theme={theme} />
       )}
 
-      {mode === 'public' && (
-        <h2 className="mb-4">All Posts</h2>
-      )}
+      {mode === 'public' && <h2 className="mb-4">{MainDashboard.allPostsTitle}</h2>}
 
       <BlogsFilterControls
         searchTerm={searchTerm}
@@ -110,6 +132,20 @@ export const Dashboard = ({
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
       />
+
+{isLoading && (
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      // minHeight: '50vh',
+    }}
+  >
+    <Spinner color={theme?.spinnerColor || '#999'} size={28} />
+  </div>
+)}
+
 
       {totalBlogs > 0 ? (
         <>
@@ -129,15 +165,9 @@ export const Dashboard = ({
             setSize={setSize}
           />
 
-          {hasMorePosts && (
-            <div className="text-center mb-4">
-              <Button
-                onClick={() => setSize(size + 1)}
-                size="lg"
-                variant="outline-secondary"
-              >
-                Load More ({totalBlogs} posts loaded)
-              </Button>
+          {!hitEnd && totalBlogs % MainDashboard.numsOfPost === 0 && (
+            <div className="text-center my-4" ref={loadMoreRef}>
+              <p className="text-muted">Loading More Posts...</p>
             </div>
           )}
 
@@ -150,9 +180,9 @@ export const Dashboard = ({
       ) : (
         !isFiltering && (
           <div className="text-center py-5">
-            <h4>No Posts Available</h4>
-            <p className="text-muted mb-0">
-              There are currently no blog posts to display. Please check back later!
+            <h4>{MainDashboard.noPostAvailableText}</h4>
+            <p className="mb-0">
+              {MainDashboard.noPostAvailableSubtext}
             </p>
           </div>
         )

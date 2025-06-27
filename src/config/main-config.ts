@@ -4,8 +4,10 @@ export const MainInfo = {
     footerCopyRight: "All rights reserved."
 }
 
-
-
-export const BlogInfo = {
-
+export const MainDashboard = {
+    latestPostsTitle: 'Latest Posts',
+    allPostsTitle: "What's going on",
+    noPostAvailableText: 'No Posts Available',
+    noPostAvailableSubtext: 'There are currently no blog posts to display. Please check back later!',
+    numsOfPost: 9
 }

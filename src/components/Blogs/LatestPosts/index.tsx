@@ -5,6 +5,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { format } from 'date-fns';
 import { CardItem } from 'components/CardItem';
+import { MainDashboard } from 'config/main-config';
 
 interface Post {
   _id: string;
@@ -34,7 +35,7 @@ export const LatestPosts = ({ posts, theme }: LatestPostsProps) => {
 
   return (
     <section className="my-5">
-      <h2 className="mb-4">Latest Posts</h2>
+      <h2 className="mb-4">{MainDashboard.latestPostsTitle}</h2>
 
       <div className="row">
         {staticPosts.map(post => (

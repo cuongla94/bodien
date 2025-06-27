@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
-import { FiChevronDown } from 'react-icons/fi';
+import { FiCheck, FiChevronDown } from 'react-icons/fi';
 import {
   StyledSelectTrigger,
   StyledSelectContent,
@@ -64,7 +64,11 @@ export const BlogCategoryFilters = ({
               {filteredCategories.map(({ title, value }) => (
                 <StyledSelectItem key={value} value={value}>
                   <Select.ItemText>{title}</Select.ItemText>
+                  <Select.ItemIndicator className="ms-auto">
+                    <FiCheck />
+                  </Select.ItemIndicator>
                 </StyledSelectItem>
+
               ))}
             </Select.Group>
           </StyledSelectViewport>

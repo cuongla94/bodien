@@ -117,18 +117,6 @@ export const BlogList = ({
               </Col>
             ))}
           </Row>
-
-          {isAdmin && !hitEnd && (
-            <MessageBox>
-              <Button
-                onClick={() => setSize(size + 1)}
-                variant="outline-secondary"
-                size="lg"
-              >
-                Load More
-              </Button>
-            </MessageBox>
-          )}
         </>
       ) : (
         <MessageBox>

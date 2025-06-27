@@ -1,7 +1,7 @@
 export const BlogFormData = {
     createFormTitle: 'Create New Blog',
     editFormTitle: 'Edit Blog'
-}
+};
 
 export const BlogCardItem = {
     readMoreText: 'Read More',
@@ -10,7 +10,7 @@ export const BlogCardItem = {
     blogViewText: 'view',
     blogShareText: 'share',
     noImageAvailable: 'No Image Available'
-}
+};
 
 export const BlogControls = {
     filters: [
@@ -23,7 +23,7 @@ export const BlogControls = {
     ],
     featuredOnly: "Featured Only",
     searchPlaceHolder: 'Search blogs...'
-}
+};
 
 export const BlogFormCategorySelections = [
   "Fitness Gear",
@@ -50,4 +50,4 @@ export const BlogFormCategorySelections = [
   "Smart Cleaning Devices",
   "Health Monitoring Apps",
   "Wearables & Trackers"
-]
+];
