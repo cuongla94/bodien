@@ -6,7 +6,7 @@ export const MainInfo = {
 
 export const MainDashboard = {
     latestPostsTitle: 'Latest Posts',
-    allPostsTitle: "What's going on",
+    allPostsTitle: "All Posts",
     noPostAvailableText: 'No Posts Available',
     noPostAvailableSubtext: 'There are currently no blog posts to display. Please check back later!',
     numsOfPost: 9

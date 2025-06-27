@@ -22,6 +22,7 @@ export interface Theme {
   background: string;              // Solid fallback background
   backgroundGradient?: string;     // Optional background gradient
   cardBackground: string;
+  footerBackground: string;
 
   // Borders & Shadows
   borderColor: string;

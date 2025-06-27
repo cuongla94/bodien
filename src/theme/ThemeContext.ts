@@ -29,6 +29,7 @@ export const themes: { light: Theme; dark: Theme } = {
     cardShadow: '0 1px 4px rgba(0, 0, 0, 0.03)',
     primaryColor: '#2563EB',
     secondaryColor: '#10B981',
+    footerBackground: '#f3f4f6'
   },
   dark: {
     type: 'dark',
@@ -56,6 +57,7 @@ export const themes: { light: Theme; dark: Theme } = {
     cardShadow: '0 1px 4px rgba(255, 255, 255, 0.05)',
     primaryColor: '#3B82F6',
     secondaryColor: '#10B981',
+    footerBackground: '#1e1e1e'
   },
 };
 

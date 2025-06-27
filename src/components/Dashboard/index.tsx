@@ -1,10 +1,10 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
-import { useGetBlogsPages } from 'utils/Pagination';
 import { BlogList } from 'components/Blogs/BlogList';
 import { LatestPosts, BlogsFilterControls } from 'components/Blogs';
 import { BlogControlSortOptions } from 'types/blog';
 import { MainDashboard } from 'config/main-config';
 import { Spinner } from 'common/Spinner';
+import { useGetBlogsPages } from 'hooks/blogHooks/useGetBlogPages';
 
 interface DashboardProps {
   mode: 'admin' | 'public';
