@@ -11,3 +11,35 @@ export const MainDashboard = {
     noPostAvailableSubtext: 'There are currently no blog posts to display. Please check back later!',
     numsOfPost: 9
 }
+
+export const AffiliatePrograms = [
+    'Amazon Associates',
+    'Best Buy Affiliate Program'
+];
+
+export const privacyContent = {
+    effctiveDate: '06272025'
+}
+
+export const AppLinks = {
+    home: {
+        title: 'Home',
+        link: '/'
+    },
+    affiliateDisclosure: {
+        title: 'Affiliate Disclosure',
+        link: '/affiliate-disclosure'
+    },
+    privacyContent: {
+        title: 'Privacy Content',
+        link: '/privacy-content'
+    },
+    termsOfService: {
+        title: 'Terms Of Service',
+        link: '/terms-of-service'
+    },
+    contact: {
+        title: 'Contact Us',
+        link: '/contact-us'
+    }
+}
