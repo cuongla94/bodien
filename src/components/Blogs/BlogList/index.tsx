@@ -73,9 +73,10 @@ export const BlogList = ({
   }, [deleteSuccess, deleteError, dismissAlert]);
 
   const getFormattedDate = (blog: Blog) => {
+    console.log('blog', blog);
     const dateValue = blog.publishedAt || blog.date || blog.createdAt || blog._createdAt;
-    console.log('dateValue', dateValue);
     const momentDate = moment(dateValue);
+
     return momentDate.isValid() ? momentDate.format('LL') : 'No date';
   };
 
@@ -96,28 +97,32 @@ export const BlogList = ({
       {blogs.length > 0 ? (
         <>
           <Row>
-            {blogs.map(blog => (
-              <Col key={blog._id || blog.slug} lg="4" md="6" className="mb-4">
-                <CardItem
-                  title={blog.title}
-                  category={blog.category}
-                  date={getFormattedDate(blog)}
-                  image={blog.coverImage}
-                  url={isAdmin ? undefined : `${AppLinks.blogs.link}/${blog.slug}`}
-                  tags={blog.tags || []}
-                  isAdmin={isAdmin}
-                  onEdit={isAdmin ? () => onEdit(blog._id!) : undefined}
-                  onDelete={isAdmin ? () => onDelete(blog._id!, blog.title) : undefined}
-                  onToggleHidden={
-                    isAdmin ? () => onToggleHidden(blog._id!, !blog.hidden) : undefined
-                  }
-                  hidden={isAdmin ? blog.hidden : undefined}
-                  theme={theme}
-                  numOfViews={blog.numOfViews || 0}
-                  numOfShares={blog.numOfShares || 0}
-                />
-              </Col>
-            ))}
+            {blogs.map(blog => {
+              console.log('Rendering blog:', blog); // This will confirm if the component is rendering
+
+              return (
+                <Col key={blog._id || blog.slug} lg="4" md="6" className="mb-4">
+                  <CardItem
+                    title={blog.title}
+                    category={blog.category}
+                    date={getFormattedDate(blog)} // This will only call if we're here
+                    image={blog.coverImage}
+                    url={isAdmin ? undefined : `${AppLinks.blogs.link}/${blog.slug}`}
+                    tags={blog.tags || []}
+                    isAdmin={isAdmin}
+                    onEdit={isAdmin ? () => onEdit(blog._id!) : undefined}
+                    onDelete={isAdmin ? () => onDelete(blog._id!, blog.title) : undefined}
+                    onToggleHidden={
+                      isAdmin ? () => onToggleHidden(blog._id!, !blog.hidden) : undefined
+                    }
+                    hidden={isAdmin ? blog.hidden : undefined}
+                    theme={theme}
+                    numOfViews={blog.numOfViews || 0}
+                    numOfShares={blog.numOfShares || 0}
+                  />
+                </Col>
+              );
+            })}
           </Row>
         </>
       ) : (

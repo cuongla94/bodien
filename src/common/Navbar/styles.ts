@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Image from 'next/image';
 
-export const BrandWrapper = styled.a`
+export const BrandWrapper = styled.span`
   display: flex;
   align-items: center;
   gap: 0.5rem;

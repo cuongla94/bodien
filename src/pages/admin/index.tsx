@@ -7,6 +7,7 @@ import { AdminPageLayout } from 'layouts';
 import { Blogs } from 'components/Blogs';
 import { AdminPasswordForm } from 'components/Admin/AdminPasswordForm';
 import { ConfirmationModal } from 'common/modals';
+import { AdminLinks } from 'config/navigation-config';
 
 export default function AdminPage() {
   const { theme } = useThemeProvider();
@@ -29,7 +30,7 @@ export default function AdminPage() {
   };
 
   const handleEdit = (id: string) => {
-    router.push(`/admin/blogs/edit/${id}`);
+    router.push(`${AdminLinks.edit.link}/${id}`);
   };
 
   const handleDelete = (id: string, title: string) => {

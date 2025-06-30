@@ -39,7 +39,7 @@ export const PlaceholderImage = styled.div`
   font-style: italic;
 `;
 
-export const TitleStyled = styled.a`
+export const TitleStyled = styled.span`
   font-size: 1rem;
   font-weight: 600;
   color: #1d4ed8;
@@ -84,7 +84,7 @@ export const FooterStyled = styled.div`
   margin-top: auto;
 `;
 
-export const ReadMoreLink = styled.a`
+export const ReadMoreLink = styled.span`
   margin-top: 0.75rem;
   font-size: 0.875rem;
   font-weight: 500;

@@ -17,6 +17,7 @@ import {
   ThemedButton,
   TitleStyled,
 } from './styles';
+import Link from 'next/link';
 
 interface CardItemProps {
   type?: 'blog' | 'news';
@@ -89,15 +90,11 @@ export const CardItem: React.FC<CardItemProps> = ({
         </CategoryStyled>
       )}
 
-      {/* Title */}
-      <TitleStyled
-        as={isNews && url ? 'a' : 'div'}
-        href={isNews ? url : undefined}
-        target={isNews ? '_blank' : undefined}
-        rel={isNews ? 'noopener noreferrer' : undefined}
-      >
-        {title}
-      </TitleStyled>
+      <Link href={url} passHref legacyBehavior>
+        <TitleStyled as="a" target="_blank" rel="noopener noreferrer">
+          {title}
+        </TitleStyled>
+      </Link>
 
       {/* News description */}
       {isNews && description && <DescriptionStyled>{description}</DescriptionStyled>}
@@ -132,19 +129,23 @@ export const CardItem: React.FC<CardItemProps> = ({
           </div>
 
           {/* Blog read more link inside footer */}
-          {!isNews && !isAdmin && url && (
-            <ReadMoreLink href={url} target="_blank" rel="noopener noreferrer">
-              {BlogCardItem.readMoreText}
-            </ReadMoreLink>
+          {!isNews && url && (
+            <Link href={url} passHref legacyBehavior>
+              <ReadMoreLink as="a" target="_blank" rel="noopener noreferrer">
+                Read more
+              </ReadMoreLink>
+            </Link>
           )}
         </FooterStyled>
       )}
 
-      {/* News read more (outside footer) */}
-      {!isAdmin && isNews && url && (
-        <ReadMoreLink href={url} target="_blank" rel="noopener noreferrer">
-          {BlogCardItem.readMoreText}
-        </ReadMoreLink>
+      {/* News title (only outside footer) */}
+      {isNews && url && (
+        <Link href={url} passHref legacyBehavior>
+              <ReadMoreLink as="a" target="_blank" rel="noopener noreferrer">
+                Read more
+              </ReadMoreLink>
+        </Link>
       )}
 
       {/* Admin Controls */}

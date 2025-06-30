@@ -18,7 +18,7 @@ export const HomeTitle = styled.h2`
   margin: 0;
 `;
 
-export const HomeSeeMore = styled.a`
+export const HomeSeeMore = styled.span`
   font-size: 0.875rem;
   font-weight: 500;
   color: #2563eb;

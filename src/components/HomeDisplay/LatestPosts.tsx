@@ -50,7 +50,7 @@ export const LatestPosts = ({ theme }: LatestPostsProps) => {
               category={post.category}
               image={post.coverImage}
               date={format(new Date(post.publishedAt), 'PPP')}
-              url={post.slug ? `/blogs/${post.slug}` : undefined}
+              url={post.slug ? `${AppLinks.blogs.link}/${post.slug}` : undefined}
               theme={theme}
               isAdmin={false}
               numOfViews={post.numOfViews}

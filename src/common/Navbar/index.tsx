@@ -11,7 +11,7 @@ export const AppNavbar = () => {
   const { theme } = useThemeProvider();
 
   const Brand = (
-    <Link href="/" passHref legacyBehavior>
+    <Link href="/">
       <BrandWrapper>
         <Logo src={LogoImage} alt="Logo" width={32} height={32} />
         <BrandTitle color={theme?.mainTextColor}>

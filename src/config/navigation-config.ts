@@ -30,3 +30,10 @@ export const AppLinks = {
         link: `${appRoute}/contact-us`
     }
 }
+
+export const AdminLinks = {
+    edit: {
+        title: 'Edit',
+        link: `/admin/blogs/edit/`
+    }
+}
