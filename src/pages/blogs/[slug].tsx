@@ -5,7 +5,6 @@ import { getBlogBySlug, getAllBlogs, onBlogUpdate } from 'apis';
 import { urlFor } from 'apis';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import PreviewAlert from 'components/PreviewAlert';
 import { useTrackBlogView } from 'hooks';
 import BlogSections from 'components/BlogDetails/BlogSections';
 
@@ -22,7 +21,7 @@ const BlogDetail = ({ blog: initialBlog, preview }) => {
     if (preview) {
       sub = onBlogUpdate(initialBlog.slug).subscribe((update) => {
         setBlog(update.result);
-        setLoading(false); 
+        setLoading(false);
       });
     } else {
       if (initialBlog) setLoading(false);
@@ -40,7 +39,6 @@ const BlogDetail = ({ blog: initialBlog, preview }) => {
 
   return (
     <PageLayout className="blog-detail-page">
-      {preview && <PreviewAlert />}
       <BlogHeader
         title={blog.title}
         subtitle={blog.subtitle}

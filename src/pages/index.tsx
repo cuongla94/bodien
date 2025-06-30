@@ -1,21 +1,16 @@
-import { Dashboard } from 'components/Dashboard';
-import PreviewAlert from 'components/PreviewAlert';
+import { HomeDisplay } from 'components/HomeDisplay';
 import PageLayout from 'layouts/PageLayout';
 import { useThemeProvider } from 'hooks/useThemeProvider';
 import { getPaginatedBlogs } from 'apis';
 import { fetchLatestNews } from 'apis/news/fetchNews';
 
-export default function HomePage({ blogs, preview, latestNews }) {
+export default function HomePage({ preview, latestNews }) {
   const { theme } = useThemeProvider();
 
   return (
     <PageLayout>
-      {preview && <PreviewAlert />}
-      <Dashboard
-        mode="public"
+      <HomeDisplay
         theme={theme}
-        preview={preview}
-        initialBlogs={blogs}
         latestNews={latestNews}
       />
     </PageLayout>
@@ -34,6 +29,6 @@ export async function getStaticProps({ preview = false }) {
       latestNews,
       preview,
     },
-    revalidate: 60 * 60, // every hour
+    revalidate: 60 * 60
   };
 }

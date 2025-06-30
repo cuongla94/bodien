@@ -13,7 +13,7 @@ const AffiliateDisclosurePage = () => {
     <PageLayout>
         <div className='mt-5'>
             <Breadcrumbs items={breadcrumbItems} className="mb-3" />
-            <h2 className="mb-4 text-primary">Affiliate Disclosure</h2>
+            <h2 className="mb-4">Affiliate Disclosure</h2>
 
             <p>
             At <strong>{MainInfo.brandName}</strong>, we believe in transparency and honesty. To comply with the Federal Trade Commission (FTC) guidelines and earn your trust, this page outlines how affiliate links work on our site.

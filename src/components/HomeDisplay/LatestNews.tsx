@@ -29,7 +29,7 @@ export const LatestNews: React.FC<LatestNewsProps> = ({ articles }) => {
   return (
     <HomeSection className="container">
       <HomeHeader className="d-flex justify-content-between align-items-end mb-3">
-        <HomeTitle className="mb-0">Latest News</HomeTitle>
+        <HomeTitle className="mb-0">Latest Tech News</HomeTitle>
         <Link href={AppLinks.news.link} passHref>
           <HomeSeeMore>See more</HomeSeeMore>
         </Link>

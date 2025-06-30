@@ -1,20 +1,15 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
-import { BlogList } from 'components/Blogs/BlogList';
-import { BlogsFilterControls } from 'components/Blogs';
-import { BlogControlSortOptions } from 'types/blog';
-import { MainDashboard } from 'config/main-config';
+import { BlogList } from './BlogList';
+import { BlogsFilterControls } from './BlogsFilterControls';
 import { Spinner } from 'common/Spinner';
+import { MainDashboard } from 'config/main-config';
 import { useGetBlogsPages } from 'hooks/blogHooks/useGetBlogPages';
-import { LatestNews } from './LatestNews';
-import { LatestPosts } from './LatestPosts';
+import { BlogControlSortOptions } from 'types/blog';
 
-interface DashboardProps {
-  mode: 'admin' | 'public';
-  theme: any;
-  preview?: boolean;
+interface BlogsProps {
+  isAdmin?: boolean;
+  theme?: any;
   authenticated?: boolean;
-  initialBlogs?: any[];
-  latestNews?: any[];
   onEdit?: (id: string) => void;
   onDelete?: (id: string, title: string) => void;
   onToggleHidden?: (id: string, hidden: boolean) => void;
@@ -23,20 +18,17 @@ interface DashboardProps {
   dismissAlert?: (type: 'success' | 'error') => void;
 }
 
-export const Dashboard = ({
-  mode,
+export const Blogs = ({
+  isAdmin = false,
   theme,
-  authenticated = true,
-  initialBlogs = [],
-  latestNews = [],
+  authenticated,
   onEdit,
   onDelete,
   onToggleHidden,
   deleteSuccess,
   deleteError,
   dismissAlert,
-}: DashboardProps) => {
-  const isAdmin = mode === 'admin';
+}: BlogsProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState({ view: { list: 0 }, date: { asc: 0 } });
   const [sortOption, setSortOption] = useState<BlogControlSortOptions>('relevant');
@@ -47,16 +39,6 @@ export const Dashboard = ({
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const { data, size, setSize, hitEnd } = useGetBlogsPages({ filter });
-
-  useEffect(() => {
-    setIsFiltering(true);
-    setIsLoading(true);
-    const timeout = setTimeout(() => {
-      setIsFiltering(false);
-      setIsLoading(false);
-    }, 500);
-    return () => clearTimeout(timeout);
-  }, [searchTerm, sortOption, isFeaturedOnly, selectedCategory]);
 
   const flatBlogs = useMemo(() => data?.flat() || [], [data]);
 
@@ -91,6 +73,16 @@ export const Dashboard = ({
   const totalBlogs = filteredBlogs.length;
 
   useEffect(() => {
+    setIsFiltering(true);
+    setIsLoading(true);
+    const timeout = setTimeout(() => {
+      setIsFiltering(false);
+      setIsLoading(false);
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, [searchTerm, sortOption, isFeaturedOnly, selectedCategory]);
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0];
@@ -102,11 +94,7 @@ export const Dashboard = ({
           setSize(prev => prev + 1);
         }
       },
-      {
-        root: null,
-        rootMargin: '0px',
-        threshold: 1.0,
-      }
+      { root: null, rootMargin: '0px', threshold: 1.0 }
     );
 
     const node = loadMoreRef.current;
@@ -119,14 +107,6 @@ export const Dashboard = ({
 
   return (
     <>
-      {mode === 'public' && latestNews && latestNews.length > 0 && (
-        <LatestNews articles={latestNews} />
-      )}
-
-      {mode === 'public' && <LatestPosts theme={theme} />}
-
-      {mode === 'public' && <h2 className="mb-4">{MainDashboard.allPostsTitle}</h2>}
-
       <BlogsFilterControls
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -139,7 +119,7 @@ export const Dashboard = ({
       />
 
       {isLoading && (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div className="d-flex justify-content-center my-4">
           <Spinner color={theme?.spinnerColor || '#999'} size={28} />
         </div>
       )}

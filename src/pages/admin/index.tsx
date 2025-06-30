@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useThemeProvider } from 'hooks/useThemeProvider';
 import { useAdminAuth } from 'hooks/useAdminAuth';
 import { AdminPageLayout } from 'layouts';
-import { Dashboard } from 'components/Dashboard';
+import { Blogs } from 'components/Blogs';
 import { AdminPasswordForm } from 'components/Admin/AdminPasswordForm';
 import { ConfirmationModal } from 'common/modals';
 
@@ -18,20 +18,19 @@ export default function AdminPage() {
   const [deleteError, setDeleteError] = useState('');
   const [deleteSuccess, setDeleteSuccess] = useState('');
   const [showConfirm, setShowConfirm] = useState(false);
-  const [selectedBlog, setSelectedBlog] = useState<{
-    id: string;
-    title: string;
-  } | null>(null);
+  const [selectedBlog, setSelectedBlog] = useState<{ id: string; title: string } | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const handlePasswordSubmit = (password: string) => {
+  const handlePasswordSubmit = async (password: string) => {
     setFormLoading(true);
-    const success = login(password);
+    const success = await login(password);
     if (!success) setError('Incorrect password');
     setFormLoading(false);
   };
 
-  const handleEdit = (id: string) => router.push(`/admin/blogs/edit/${id}`);
+  const handleEdit = (id: string) => {
+    router.push(`/admin/blogs/edit/${id}`);
+  };
 
   const handleDelete = (id: string, title: string) => {
     setSelectedBlog({ id, title });
@@ -80,8 +79,8 @@ export default function AdminPage() {
       />
 
       {authenticated && (
-        <Dashboard
-          mode="admin"
+        <Blogs
+          isAdmin={true}
           theme={theme}
           authenticated={authenticated}
           onEdit={handleEdit}

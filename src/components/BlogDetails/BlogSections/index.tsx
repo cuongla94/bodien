@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { PortableText } from '@portabletext/react';
-import { portableTextComponents } from 'utils/portableTextComponent';
+import { portableTextComponents } from 'utils/html/portableTextComponent';
 
 import {
   SectionWrapper,
