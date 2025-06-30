@@ -3,7 +3,9 @@
 import axios from 'axios';
 
 const BASE_URL = 'https://api.mediastack.com/v1/news';
-const ACCESS_KEY = process.env.MEDIASTACK_ACCESS_KEY; // secure env var
+const ACCESS_KEY = process.env.NEXT_PUBLIC_MEDIASTACK_ACCESS_KEY;
+
+console.log(`ACCESS_KEY: ${ACCESS_KEY}`);
 
 interface NewsArticle {
   author: string;
@@ -21,13 +23,44 @@ interface NewsArticle {
 export async function fetchTechNews(): Promise<NewsArticle[]> {
   const params = {
     access_key: ACCESS_KEY,
-    categories: 'technology,business',  // tech + product/business related
+    categories: 'technology,business',
     languages: 'en',
-    keywords: 'AI,artificial intelligence,software,hardware,product,tech gadget,consumer electronics',
     sort: 'published_desc',
-    limit: 50
+    limit: 100, // increase to the max allowed by free tier
   };
 
   const resp = await axios.get(BASE_URL, { params });
-  return resp.data.data as NewsArticle[];
+
+  const keywords = [
+    'gadget',
+    'smartphone',
+    'ai',
+    'hardware',
+    'software',
+    'device',
+    'tool',
+    'app',
+    'robot',
+    'wearable',
+    'technology',
+    'electronics',
+    'tech',
+    'laptop',
+    'tablet',
+    'product',
+  ];
+
+  const allArticles = resp.data.data as NewsArticle[];
+
+  const filteredArticles = allArticles.filter(article =>
+    keywords.some(keyword =>
+      (article.title + article.description).toLowerCase().includes(keyword)
+    )
+  );
+
+  console.log(`Mediastack returned: ${allArticles.length} articles`);
+  console.log(`Filtered down to: ${filteredArticles.length} tech/product articles`);
+
+  return filteredArticles;
 }
+

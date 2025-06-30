@@ -1,117 +1,143 @@
-import { Card } from 'react-bootstrap';
-import { CardItemAnalytics } from './CardItemAnalytics';
-import { CardItemImage } from './CardItemImage';
-import { CardItemTags } from './CardItemTags';
-import { CardItemControls } from './CardItemControls';
+import React from 'react';
+import { FiEye, FiShare2 } from 'react-icons/fi';
+import Link from 'next/link';
+import { urlFor } from 'apis';
+import { BlogCardItem } from 'config/blog-config';
+import { Button } from 'react-bootstrap';
+import { AnalyticsItem, AnalyticsWrapper, CardWrapper, CategoryStyled, ControlsWrapper, DescriptionStyled, FooterStyled, ImageStyled, PlaceholderImage, ReadMoreLink, ThemedButton, TitleStyled } from './styles';
 
-interface ICardItemProps {
+// Types
+interface CardItemProps {
+  type?: 'blog' | 'news';
   title: string;
-  category?: { title: string; value: string };
+  description?: string;
+  author?: string;
+  source?: string;
+  url?: string;
   image?: any;
   date: string;
-  link?: any;
-  theme?: any;
-  tags?: string[];
+  category?: { title: string; value: string } | string;
   isAdmin?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
   onToggleHidden?: () => void;
   hidden?: boolean;
+  theme?: any;
+  tags?: string[];
   numOfViews?: number;
   numOfShares?: number;
 }
 
-export const CardItem = ({
+// Component
+export const CardItem: React.FC<CardItemProps> = ({
+  type = 'blog',
   title,
-  category,
+  description,
+  author,
+  source,
+  url,
   image,
   date,
-  link,
-  theme,
-  tags = [],
+  category,
   isAdmin = false,
   onEdit,
   onDelete,
   onToggleHidden,
   hidden,
+  theme,
   numOfViews,
   numOfShares,
-}: ICardItemProps) => {
+}) => {
+  const isNews = type === 'news';
   const hasImage = !!image;
-
-  // Support both string and object category types (for backward compatibility)
-  const displayCategory =
-    typeof category === 'string' ? category : category?.title || '';
+  const displayCategory = typeof category === 'string' ? category : category?.title || '';
+  const formattedDate = new Date(date).toLocaleString();
 
   return (
-    <Card
-      className="fj-card"
-      style={{
-        backgroundColor: theme?.cardBackground,
-        color: theme?.mainTextColor,
-        borderColor: theme?.borderColor,
-      }}
-    >
-      <div className="card-body-wrapper">
-        <CardItemImage image={image} />
-        <Card.Body style={{ padding: '8px' }}>
-          {displayCategory && (
-            <div
-              style={{
-                fontSize: '0.75rem',
-                color: theme?.subTextColor || '#9CA3AF',
-                textTransform: 'uppercase',
-                fontWeight: 600,
-                letterSpacing: '0.03em',
-                marginBottom: '0.25rem',
-              }}
-            >
-              - {displayCategory}
-            </div>
+    <CardWrapper>
+      {hasImage ? (
+        <ImageStyled
+          src={isNews ? image : urlFor(image).height(180).url()}
+          alt={title}
+        />
+      ) : (
+        <PlaceholderImage>No Image Available</PlaceholderImage>
+      )}
+
+      <TitleStyled as={isNews ? 'a' : 'div'} href={isNews ? url : undefined} target="_blank" rel="noopener noreferrer">
+        {title}
+      </TitleStyled>
+
+      {isNews && description && <DescriptionStyled>{description}</DescriptionStyled>}
+
+      {!isNews && displayCategory && (
+        <CategoryStyled style={{ color: theme?.subTextColor || '#9CA3AF' }}>
+          - {displayCategory}
+        </CategoryStyled>
+      )}
+
+      {!isNews && isAdmin && (numOfViews || numOfShares) && (
+        <AnalyticsWrapper>
+          {typeof numOfViews === 'number' && (
+            <AnalyticsItem>
+              <FiEye /> {numOfViews} {BlogCardItem.blogViewText}{numOfViews !== 1 ? 's' : ''}
+            </AnalyticsItem>
           )}
+          {typeof numOfShares === 'number' && (
+            <AnalyticsItem>
+              <FiShare2 /> {numOfShares} {BlogCardItem.blogShareText}{numOfShares !== 1 ? 's' : ''}
+            </AnalyticsItem>
+          )}
+        </AnalyticsWrapper>
+      )}
 
-          <Card.Title
-            className="card-main-title"
-            style={{
-              color: theme?.mainTextColor,
-              margin: '.5rem 0 .8rem 0',
-              fontSize: '1.1rem',
-              fontWeight: 600,
-            }}
-          >
-            {title}
-          </Card.Title>
+      <FooterStyled>
+        {isNews && (
+          <>
+            {author && <span>By {author} • </span>}
+            {source && <span>{source} • </span>}
+          </>
+        )}
+        {formattedDate}
+      </FooterStyled>
 
-          <CardItemAnalytics
-            isAdmin={isAdmin}
-            numOfViews={numOfViews}
-            numOfShares={numOfShares}
-          />
-
-          <div className="d-flex justify-content-between align-items-end mt-4">
-            {date && (
-              <Card.Text
-                className="small mb-0"
-                style={{
-                  color: theme?.subTextColor || '#9CA3AF',
-                  fontSize: '0.8rem',
-                }}
+      {isNews && url ? (
+        <ReadMoreLink href={url} target="_blank" rel="noopener noreferrer">
+          Read more →
+        </ReadMoreLink>
+      ) : (
+        <ControlsWrapper>
+          {!isAdmin && url && (
+            <Link href={url} passHref>
+              <ThemedButton
+                size="sm"
+                bg={theme?.primaryColor}
+                text={theme?.buttonText}
               >
-                {date}
-              </Card.Text>
-            )}
-            <CardItemControls
-              isAdmin={isAdmin}
-              link={link}
-              theme={theme}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onToggleHidden={onToggleHidden}
-              hidden={hidden}
-            />
-          </div>
-        </Card.Body>
-      </div>
-    </Card>
+                {BlogCardItem.readMoreText}
+              </ThemedButton>
+            </Link>
+          )}
+          {isAdmin && (
+            <>
+              <ThemedButton size="sm" onClick={onEdit} bg={theme?.primaryColor} text={theme?.buttonText}>
+                {BlogCardItem.adminEditControlText}
+              </ThemedButton>
+              <Button
+                size="sm"
+                variant="danger"
+                onClick={onDelete}
+                style={{ color: '#fff', border: 'none' }}
+              >
+                {BlogCardItem.adminDeleteControlText}
+              </Button>
+              <Button size="sm" variant="secondary" onClick={onToggleHidden}>
+                {hidden ? 'Unhide' : 'Hide'}
+              </Button>
+            </>
+          )}
+        </ControlsWrapper>
+      )}
+    </CardWrapper>
   );
 };

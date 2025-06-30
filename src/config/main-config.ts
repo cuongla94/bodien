@@ -19,27 +19,4 @@ export const AffiliatePrograms = [
 
 export const privacyContent = {
     effctiveDate: '06272025'
-}
-
-export const AppLinks = {
-    home: {
-        title: 'Home',
-        link: '/'
-    },
-    affiliateDisclosure: {
-        title: 'Affiliate Disclosure',
-        link: '/affiliate-disclosure'
-    },
-    privacyContent: {
-        title: 'Privacy Content',
-        link: '/privacy-content'
-    },
-    termsOfService: {
-        title: 'Terms Of Service',
-        link: '/terms-of-service'
-    },
-    contact: {
-        title: 'Contact Us',
-        link: '/contact-us'
-    }
-}
+};

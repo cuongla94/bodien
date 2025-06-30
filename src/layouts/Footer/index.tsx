@@ -1,4 +1,5 @@
-import { MainInfo, AppLinks } from 'config/main-config';
+import { MainInfo } from 'config/main-config';
+import { AppLinks } from 'config/navigation-config';
 import { FooterContainer, FooterWrapper, FooterLeft, FooterRight, FooterLinks, FooterInputGroup, FooterInput, FollowButton, BottomNote } from './styles';
 import Link from 'next/link';
 import { Container } from 'react-bootstrap';
