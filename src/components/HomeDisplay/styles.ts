@@ -23,6 +23,8 @@ export const HomeSeeMore = styled.span`
   font-weight: 500;
   color: #2563eb;
   text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline;

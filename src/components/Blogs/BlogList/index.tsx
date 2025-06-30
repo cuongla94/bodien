@@ -2,46 +2,10 @@ import { useState, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { CardItem } from 'components/CardItem';
 import { Wrapper, MessageBox } from './styles';
-import moment from 'moment';
-import { ITheme } from 'types/theme';
 import { Toast } from 'common/Toast';
 import { AppLinks } from 'config/navigation-config';
-
-interface Blog {
-  _id?: string;
-  slug?: string;
-  title: string;
-  subtitle?: string;
-  publishedAt?: string;
-  createdAt?: string;
-  date?: string;
-  _createdAt?: string;
-  coverImage?: string;
-  tags?: string[];
-  hidden?: boolean;
-  numOfViews?: number;
-  numOfShares?: number;
-}
-
-interface BlogListProps {
-  data: any[];
-  theme: ITheme;
-  isAdmin?: boolean;
-  authenticated?: boolean;
-  searchTerm?: string;
-  setSearchTerm?: (term: string) => void;
-  filter?: any;
-  setFilter?: (filter: any) => void;
-  onEdit?: (id: string) => void;
-  onDelete?: (id: string, title: string) => void;
-  onToggleHidden?: (id: string, hidden: boolean) => void;
-  deleteSuccess?: string;
-  deleteError?: string;
-  dismissAlert?: (type: 'success' | 'error') => void;
-  hitEnd?: boolean;
-  size?: number;
-  setSize?: (size: number) => void;
-}
+import { IBlogListProps, IBlogPost } from 'types/blog';
+import { getFormattedDate } from 'utils/dates';
 
 export const BlogList = ({
   data = [],
@@ -57,7 +21,7 @@ export const BlogList = ({
   hitEnd = true,
   size = 1,
   setSize = () => {},
-}: BlogListProps) => {
+}: IBlogListProps) => {
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const blogs = Array.isArray(data[0]) ? data.flat() : data;
 
@@ -71,14 +35,6 @@ export const BlogList = ({
       dismissAlert('error');
     }
   }, [deleteSuccess, deleteError, dismissAlert]);
-
-  const getFormattedDate = (blog: Blog) => {
-    console.log('blog', blog);
-    const dateValue = blog.publishedAt || blog.date || blog.createdAt || blog._createdAt;
-    const momentDate = moment(dateValue);
-
-    return momentDate.isValid() ? momentDate.format('LL') : 'No date';
-  };
 
   if (isAdmin && !authenticated) return null;
 
@@ -97,15 +53,15 @@ export const BlogList = ({
       {blogs.length > 0 ? (
         <>
           <Row>
-            {blogs.map(blog => {
-              console.log('Rendering blog:', blog); // This will confirm if the component is rendering
-
+            {blogs.map((blog) => {
+              console.log('Rendering blog:', blog);
               return (
                 <Col key={blog._id || blog.slug} lg="4" md="6" className="mb-4">
                   <CardItem
                     title={blog.title}
                     category={blog.category}
-                    date={getFormattedDate(blog)} // This will only call if we're here
+                    publishedDate={getFormattedDate(blog)}
+                    updatedDate={blog._updatedAt}
                     image={blog.coverImage}
                     url={isAdmin ? undefined : `${AppLinks.blogs.link}/${blog.slug}`}
                     tags={blog.tags || []}

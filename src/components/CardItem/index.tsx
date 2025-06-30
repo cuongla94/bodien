@@ -27,7 +27,8 @@ interface CardItemProps {
   source?: string;
   url?: string;
   image?: any;
-  date: string;
+  publishedDate: string;
+  updatedDate?: string;
   category?: { title: string; value: string } | string;
   isAdmin?: boolean;
   onEdit?: () => void;
@@ -48,7 +49,7 @@ export const CardItem: React.FC<CardItemProps> = ({
   source,
   url,
   image,
-  date,
+  publishedDate,
   category,
   isAdmin = false,
   onEdit,
@@ -62,14 +63,14 @@ export const CardItem: React.FC<CardItemProps> = ({
   const isNews = type === 'news';
   const hasImage = !!image;
   const displayCategory = typeof category === 'string' ? category : category?.title || '';
-  const formattedDate = new Date(date).toLocaleDateString(undefined, {
+  const formattedDate = new Date(publishedDate).toLocaleDateString(undefined, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
 
   const showAnalytics = isAdmin && (numOfViews || numOfShares);
-  const showFooter = isNews || date;
+  const showFooter = isNews || publishedDate;
 
   return (
     <CardWrapper>

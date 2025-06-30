@@ -30,7 +30,7 @@ export const LatestNews: React.FC<LatestNewsProps> = ({ articles }) => {
     <HomeSection className="container">
       <HomeHeader className="d-flex justify-content-between align-items-end mb-3">
         <HomeTitle className="mb-0">Latest Tech News</HomeTitle>
-        <Link href={AppLinks.news.link} passHref>
+        <Link href={AppLinks.news.link} passHref legacyBehavior>
           <HomeSeeMore>See more</HomeSeeMore>
         </Link>
       </HomeHeader>
@@ -44,7 +44,7 @@ export const LatestNews: React.FC<LatestNewsProps> = ({ articles }) => {
               author={article.author}
               source={article.source}
               image={article.image}
-              date={article.published_at}
+              publishedDate={article.published_at}
               url={article.url}
             />
           </div>
