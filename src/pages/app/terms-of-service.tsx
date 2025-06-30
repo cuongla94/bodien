@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 import { AppLinks, MainInfo } from 'config';
 import { getEffectiveDate } from 'utils/getDates';
-import { Breadcrumbs } from 'common/Breadcrums';
+import { Breadcrumbs } from 'common/Breadcrumbs';
 
 const TermsOfServicePage = () => {
   const breadcrumbItems = [

@@ -7,6 +7,7 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useTrackBlogView } from 'hooks';
 import BlogSections from 'components/BlogDetails/BlogSections';
+import { Spinner } from 'common/Spinner';
 
 const BlogDetail = ({ blog: initialBlog, preview }) => {
   const router = useRouter();
@@ -34,18 +35,20 @@ const BlogDetail = ({ blog: initialBlog, preview }) => {
     blog?.coverImage?.asset ? urlFor(blog.coverImage).height(600).url() : null;
 
   if (router.isFallback || loading) {
-    return <PageLayout className="blog-detail-page">Loading...</PageLayout>;
+    return <PageLayout className="blog-detail-page"><Spinner /></PageLayout>;
   }
 
   return (
     <PageLayout className="blog-detail-page">
-      <BlogHeader
-        title={blog.title}
-        subtitle={blog.subtitle}
-        coverImage={getCoverImageUrl()}
-        date={moment(blog.date || blog.publishedAt).format('LL')}
-      />
-      {blog.sections && <BlogSections sections={blog.sections} />}
+      <div className='mt-5'>
+        <BlogHeader
+          title={blog.title}
+          subtitle={blog.subtitle}
+          coverImage={getCoverImageUrl()}
+          date={moment(blog.date || blog.publishedAt).format('LL')}
+        />
+        {blog.sections && <BlogSections sections={blog.sections} />}
+      </div>
     </PageLayout>
   );
 };

@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Col, Row, Button } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { CardItem } from 'components/CardItem';
 import { Wrapper, MessageBox } from './styles';
 import moment from 'moment';
 import { ITheme } from 'types/theme';
 import { Toast } from 'common/Toast';
+import { AppLinks } from 'config/navigation-config';
 
 interface Blog {
   _id?: string;
@@ -73,6 +74,7 @@ export const BlogList = ({
 
   const getFormattedDate = (blog: Blog) => {
     const dateValue = blog.publishedAt || blog.date || blog.createdAt || blog._createdAt;
+    console.log('dateValue', dateValue);
     const momentDate = moment(dateValue);
     return momentDate.isValid() ? momentDate.format('LL') : 'No date';
   };
@@ -101,7 +103,7 @@ export const BlogList = ({
                   category={blog.category}
                   date={getFormattedDate(blog)}
                   image={blog.coverImage}
-                  link={isAdmin ? undefined : { href: `/blogs/${blog.slug}` }}
+                  url={isAdmin ? undefined : `${AppLinks.blogs.link}/${blog.slug}`}
                   tags={blog.tags || []}
                   isAdmin={isAdmin}
                   onEdit={isAdmin ? () => onEdit(blog._id!) : undefined}

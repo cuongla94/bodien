@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 
 import PageLayout from 'layouts/PageLayout';
-import { Breadcrumbs } from 'common/Breadcrums';
+import { Breadcrumbs } from 'common/Breadcrumbs';
 import { CardItem } from 'components/CardItem';
 import { fetchArticlesFromSupabase, TechNewsRow } from 'utils/news';
 

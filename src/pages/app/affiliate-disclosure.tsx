@@ -1,4 +1,4 @@
-import { Breadcrumbs } from 'common/Breadcrums';
+import { Breadcrumbs } from 'common/Breadcrumbs';
 import { AffiliatePrograms, MainInfo } from 'config/main-config';
 import PageLayout from 'layouts/PageLayout';
 import React from 'react';

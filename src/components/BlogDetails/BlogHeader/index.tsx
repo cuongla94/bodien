@@ -1,5 +1,3 @@
-import Link from 'next/link';
-import { BlogBreadcrumb } from '../BlogBreadcrum';
 import {
   BlogHeaderWrapper,
   BlogTitle,
@@ -7,6 +5,7 @@ import {
   CoverImageWrapper,
   CoverImage,
 } from './styles';
+import { Breadcrumbs } from 'common/Breadcrumbs';
 
 interface BlogHeaderProps {
   title: string;
@@ -30,11 +29,12 @@ export function BlogHeader({
   return (
     <BlogHeaderWrapper>
       {showBreadcrumb && (
-        <BlogBreadcrumb
-          title={title}
-          subtitle={subtitle}
-          homeHref={breadcrumbHome}
-          homeLabel={breadcrumbHomeLabel}
+        <Breadcrumbs
+          className="mb-3"
+          items={[
+            { label: breadcrumbHomeLabel, href: breadcrumbHome },
+            { label: title },
+          ]}
         />
       )}
 
