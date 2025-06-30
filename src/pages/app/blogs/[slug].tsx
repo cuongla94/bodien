@@ -46,6 +46,7 @@ const BlogDetail = ({ blog: initialBlog, preview }) => {
           subtitle={blog.subtitle}
           coverImage={getCoverImageUrl()}
           date={moment(blog.date || blog.publishedAt).format('LL')}
+          updatedAt={moment(blog._updatedAt).format('LL')}
         />
         {blog.sections && <BlogSections sections={blog.sections} />}
       </div>

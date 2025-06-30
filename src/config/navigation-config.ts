@@ -1,4 +1,5 @@
 const appRoute = '/app';
+const legalRoute = `${appRoute}/legal`;
 
 export const AppLinks = {
     home: {
@@ -13,21 +14,32 @@ export const AppLinks = {
         title: 'Blogs',
         link: `${appRoute}/blogs`
     },
+    contact: {
+        title: 'Contact',
+        link: `${appRoute}/contact-us`
+    }
+}
+
+export const LegalLinks = {
     affiliateDisclosure: {
         title: 'Affiliate Disclosure',
-        link: `${appRoute}/affiliate-disclosure`
+        link: `${legalRoute}/affiliate-disclosure`
     },
     privacyContent: {
         title: 'Privacy Content',
-        link: `${appRoute}/privacy-content`
+        link: `${legalRoute}/privacy-content`
     },
     termsOfService: {
         title: 'Terms Of Service',
-        link: `${appRoute}/terms-of-service`
+        link: `${legalRoute}/terms-of-service`
     },
-    contact: {
-        title: 'Contact Us',
-        link: `${appRoute}/contact-us`
+    accessibilityDisclaimer: {
+        title: 'Accessibility Disclaimer',
+        link: `${legalRoute}/accessibility-disclaimer`
+    },
+    disclaimer: {
+        title: 'Disclaimer',
+        link: `${legalRoute}/disclaimer`
     }
 }
 

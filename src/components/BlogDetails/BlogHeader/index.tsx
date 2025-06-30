@@ -12,6 +12,7 @@ interface BlogHeaderProps {
   subtitle?: string;
   coverImage?: string | null;
   date: string;
+  updatedAt?: string;
   showBreadcrumb?: boolean;
   breadcrumbHome?: string;
   breadcrumbHomeLabel?: string;
@@ -22,6 +23,7 @@ export function BlogHeader({
   subtitle,
   coverImage,
   date,
+  updatedAt,
   showBreadcrumb = true,
   breadcrumbHome = '/',
   breadcrumbHomeLabel = 'Home',
@@ -39,7 +41,7 @@ export function BlogHeader({
       )}
 
       <BlogTitle>{title}</BlogTitle>
-      <BlogDate>Added on {date}</BlogDate>
+      <BlogDate>Published on {date}</BlogDate>
 
       {coverImage && (
         <CoverImageWrapper>

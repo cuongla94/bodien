@@ -62,28 +62,29 @@ export const FollowButton = styled.button`
   }
 `;
 
-export const FooterRight = styled.div`
-  flex: 1;
-  min-width: 200px;
-`;
-
 export const FooterLinks = styled.ul`
   list-style: none;
   padding: 0;
-  margin-bottom: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* two columns */
+  gap: 0.5rem 1.5rem;
 
   li {
-    margin-bottom: 0.5rem;
-
     a {
       color: ${({ theme }) => theme.linkColor};
       font-size: 0.9rem;
+      text-decoration: none;
 
       &:hover {
         color: ${({ theme }) => theme.linkHover};
         text-decoration: underline;
       }
     }
+  }
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr; /* fallback to 1 column on small screens */
   }
 `;
 
@@ -92,4 +93,44 @@ export const BottomNote = styled.div`
   font-size: 0.8rem;
   color: ${({ theme }) => theme.subTextColor};
   margin-top: 2rem;
+`;
+
+export const FooterLinksColumn = styled.div`
+  flex: 1;
+
+  h6 {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    color: ${({ theme }) => theme.mainTextColor};
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin-bottom: 0.4rem;
+
+      a {
+        color: ${({ theme }) => theme.linkColor};
+        font-size: 0.9rem;
+        text-decoration: none;
+
+        &:hover {
+          color: ${({ theme }) => theme.linkHover};
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+`;
+
+export const FooterRight = styled.div`
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
 `;

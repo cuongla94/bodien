@@ -21,4 +21,8 @@ export const ScrollButton = styled.button<ScrollButtonProps>`
   transition: opacity 0.3s ease-in-out;
   opacity: ${({ $show }) => ($show ? 1 : 0)};
   pointer-events: ${({ $show }) => ($show ? 'auto' : 'none')};
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

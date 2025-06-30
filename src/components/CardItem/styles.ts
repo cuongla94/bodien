@@ -5,7 +5,7 @@ export const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #fff;
-  border-radius: 1rem;
+  // border-radius: 1rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
   padding: 1rem;
   height: 100%;
@@ -21,14 +21,14 @@ export const ImageStyled = styled.img`
   width: 100%;
   height: 180px;
   object-fit: cover;
-  border-radius: 0.5rem;
+  // border-radius: 0.5rem;
   margin-bottom: 0.75rem;
 `;
 
 export const PlaceholderImage = styled.div`
   width: 100%;
   height: 180px;
-  border-radius: 0.5rem;
+  // border-radius: 0.5rem;
   margin-bottom: 0.75rem;
   background-color: #f2f2f2;
   color: #888;

@@ -1,6 +1,16 @@
 import { MainInfo } from 'config/main-config';
-import { AppLinks } from 'config/navigation-config';
-import { FooterContainer, FooterWrapper, FooterLeft, FooterRight, FooterLinks, FooterInputGroup, FooterInput, FollowButton, BottomNote } from './styles';
+import { AppLinks, LegalLinks } from 'config/navigation-config';
+import {
+  FooterContainer,
+  FooterWrapper,
+  FooterLeft,
+  FooterRight,
+  FooterLinksColumn,
+  FooterInputGroup,
+  FooterInput,
+  FollowButton,
+  BottomNote
+} from './styles';
 import Link from 'next/link';
 import { Container } from 'react-bootstrap';
 
@@ -26,13 +36,27 @@ export const Footer = () => {
           </FooterLeft>
 
           <FooterRight>
-            <FooterLinks>
-              {Object.values(AppLinks).map((link) => (
-                <li key={link.link}>
-                  <Link href={link.link} className="text-decoration-none">{link.title}</Link>
-                </li>
-              ))}
-            </FooterLinks>
+            <FooterLinksColumn>
+              <h6>Navigation</h6>
+              <ul>
+                {Object.values(AppLinks).map((link) => (
+                  <li key={link.link}>
+                    <Link href={link.link}>{link.title}</Link>
+                  </li>
+                ))}
+              </ul>
+            </FooterLinksColumn>
+
+            <FooterLinksColumn>
+              <h6>Legal</h6>
+              <ul>
+                {Object.values(LegalLinks).map((link) => (
+                  <li key={link.link}>
+                    <Link href={link.link}>{link.title}</Link>
+                  </li>
+                ))}
+              </ul>
+            </FooterLinksColumn>
           </FooterRight>
         </FooterWrapper>
 

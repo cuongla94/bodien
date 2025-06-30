@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 
 export const HomeSection = styled.section`
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding: 2rem 0;
 `;
 
 export const HomeHeader = styled.div`

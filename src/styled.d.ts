@@ -23,6 +23,7 @@ export interface Theme {
   backgroundGradient?: string;     // Optional background gradient
   cardBackground: string;
   footerBackground: string;
+  navbarBackground: string;
 
   // Borders & Shadows
   borderColor: string;
