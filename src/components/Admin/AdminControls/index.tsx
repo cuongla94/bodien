@@ -1,9 +1,8 @@
 // components/Admin/AdminControls.tsx
 import { Button } from 'react-bootstrap';
 import { FaPlus, FaSignOutAlt, FaHome } from 'react-icons/fa';
-import { FiExternalLink } from 'react-icons/fi';
 import { useRouter } from 'next/router';
-import { AdminControlsData } from 'config/admin-config';
+import { AdminControlsData, AdminLinks } from 'config/admin-config';
 import { ControlsContainer, ControlsGroup } from './styles';
 
 interface AdminControlsProps {
@@ -22,19 +21,10 @@ export const AdminControls = ({ onLogout }: AdminControlsProps) => {
   return (
     <ControlsContainer>
       <ControlsGroup>
-        <Button
-          variant="outline-secondary"
-          onClick={() => router.push('/')}
-          className="d-flex align-items-center gap-2"
-        >
-          <FiExternalLink />
-          Public Site
-        </Button>
-
         {isDashboard ? (
           <Button
             variant="primary"
-            onClick={() => router.push('/admin/blogs/create')}
+            onClick={() => router.push(`${AdminLinks.blogCreate}`)}
             className="d-flex align-items-center gap-2"
           >
             <FaPlus />
@@ -43,7 +33,7 @@ export const AdminControls = ({ onLogout }: AdminControlsProps) => {
         ) : (
           <Button
             variant="secondary"
-            onClick={() => router.push('/admin')}
+            onClick={() => router.push(`${AdminLinks.adminDashboard}`)}
             className="d-flex align-items-center gap-2"
           >
             <FaHome />

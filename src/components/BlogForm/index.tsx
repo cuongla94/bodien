@@ -1,18 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
-import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { Form, Container, Row, Col } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { BlogFormData } from 'config/blog-config';
 import { isValidUrl } from 'utils/isValidUrl';
-import 'react-quill/dist/quill.snow.css';
 import { BlogFormCoverImage } from './BlogFormCoverImage';
 import { BlogFormTags } from './BlogFormTags';
 import { BlogFormSections } from './BlogFormSections';
 import { BlogFormCategories } from './BlogFormCategories';
 import { Toast } from 'common/Toast';
 import { BlogFormPreview } from './BlogFormPreview'; // <-- NEW IMPORT
+import { BlogFormControlButtons } from './BlogFormControlButton';
+import { AdminLinks } from 'config/admin-config';
 
-export const BlogForm = ({ mode = 'create', initialData = null }) => {
+interface BlogFormProps {
+  mode: 'create' | 'edit',
+  initialData?: any
+}
+export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps) => {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -81,6 +86,22 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
     setFormData(prev => ({
       ...prev,
       sections: [...prev.sections, { _type: 'content', description: '' }],
+    }));
+    scrollToSection(formData.sections.length);
+  };
+
+  const addImageSection = () => {
+    setFormData(prev => ({
+      ...prev,
+      sections: [
+        ...prev.sections,
+        {
+          _type: 'image',
+          image: null,
+          imagePreview: '',
+          description: '',
+        },
+      ],
     }));
     scrollToSection(formData.sections.length);
   };
@@ -186,6 +207,14 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
     scrollToSection(index + 1);
   };
 
+  const isFormValid = () => {
+  return (
+    formData.title.trim().length > 0 &&
+    formData.category?.value?.trim().length > 0
+  );
+};
+
+
   const handleSubmit = async e => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -259,44 +288,42 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
       )}
 
       <Form onSubmit={handleSubmit}>
-<Row className="mb-4">
-  <Col md={7}>
-    <Form.Group className="mb-3">
-      <Form.Label>Title *</Form.Label>
-      <Form.Control
-        type="text"
-        name="title"
-        value={formData.title}
-        onChange={handleInputChange}
-        required
-      />
-    </Form.Group>
+        <Row className="mb-4">
+          <Col md={7}>
+            <Form.Group className="mb-3">
+              <Form.Label>Title *</Form.Label>
+              <Form.Control
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                required
+              />
+            </Form.Group>
 
-    <BlogFormCategories
-      editCategory={formData.category}
-      onChange={(categoryObj) =>
-        setFormData(prev => ({ ...prev, category: categoryObj }))
-      }
-    />
+            <BlogFormCategories
+              editCategory={formData.category}
+              onChange={(categoryObj) =>
+                setFormData(prev => ({ ...prev, category: categoryObj }))
+              }
+            />
 
-    <BlogFormTags
-      tags={tags}
-      setTags={setTags}
-      tagInput={tagInput}
-      setTagInput={setTagInput}
-    />
-  </Col>
+            <BlogFormTags
+              tags={tags}
+              setTags={setTags}
+              tagInput={tagInput}
+              setTagInput={setTagInput}
+            />
+          </Col>
 
-  <Col md={5}>
-    <BlogFormCoverImage
-      formData={formData}
-      setFormData={setFormData}
-      handleFileChange={handleFileChange}
-    />
-  </Col>
-</Row>
-
-
+          <Col md={5}>
+            <BlogFormCoverImage
+              formData={formData}
+              setFormData={setFormData}
+              handleFileChange={handleFileChange}
+            />
+          </Col>
+        </Row>
         <BlogFormSections
           formData={formData}
           updateSection={updateSection}
@@ -312,28 +339,17 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
           sectionRefs={sectionRefs}
         />
         <hr className="mt-5" />
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <div className="d-flex gap-2 flex-wrap">
-            <Button variant="success" onClick={addProductSection}>
-              + Add Product Section
-            </Button>
-            <Button variant="primary" onClick={addContentSection}>
-              + Add Content Section
-            </Button>
-            <Button variant="warning" onClick={() => setIsPreviewOpen(true)}>
-              Preview Blog
-            </Button>
-          </div>
-
-          <div className="d-flex gap-2">
-            <Button type="submit" variant="primary" disabled={isSubmitting || !formData.title}>
-              {mode === 'edit' ? 'Update Blog Post' : 'Create Blog Post'}
-            </Button>
-            <Button variant="outline-secondary" onClick={() => router.push('/admin')}>
-              Cancel
-            </Button>
-          </div>
-        </div>
+       <BlogFormControlButtons
+          addProductSection={addProductSection}
+          addContentSection={addContentSection}
+          addImageSection={addImageSection}
+          setIsPreviewOpen={setIsPreviewOpen}
+          isSubmitting={isSubmitting}
+          formTitle={formData.title}
+          mode={mode}
+          onCancel={() => router.push(`${AdminLinks.adminDashboard}`)}
+          isFormValid={isFormValid()}
+        />
       </Form>
 
       {/* Blog Preview Modal */}

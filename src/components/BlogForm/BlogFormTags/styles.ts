@@ -7,14 +7,14 @@ export const TagContainer = styled.div`
   gap: 0.5rem;
   background: ${({ theme }) => theme.codeBackground};
   border-radius: 2rem;
-  padding: 0.75rem;
+  padding: 0.4rem;
   border: 1px solid ${({ theme }) => theme.borderColor};
   transition: background 0.3s ease;
 `;
 
 export const TagPill = styled.span`
   background-color: ${({ theme }) => theme.highlight};
-  padding: 0.4rem 0.9rem;
+  padding: 0.4rem 0.7rem;
   border-radius: 2rem;
   font-weight: 500;
   display: flex;

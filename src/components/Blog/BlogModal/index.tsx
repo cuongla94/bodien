@@ -43,8 +43,8 @@ export const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, children 
   const triggerClose = () => {
     setAnimation('out');
     setTimeout(() => {
-      onClose(); // Parent state updates
-    }, 300); // Wait for animation to finish
+      onClose();
+    }, 100);
   };
 
   return (

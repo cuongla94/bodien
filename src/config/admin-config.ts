@@ -10,3 +10,22 @@ export const AdminControlsData = {
     },
     logout: 'Log Out'
 }
+
+export const AdminBlogForm = {
+    controls: {
+        affiliateLink: 'Add Affiliate Link',
+        addText: 'Add Text',
+        addProductReviews: 'Add Product Reviews',
+        addImage: 'Add Image',
+        previewBlog: 'Preview',
+        cancel: 'Cancel',
+        addBlogPost: 'Add Blog Post',
+        updateBlogPost: 'Update Blog Post'
+    }
+}
+
+export const AdminLinks = {
+    adminDashboard: '/admin',
+    blogCreate: '/admin/blogs/create',
+    blogEdit: '/admin/blogs/edit'
+}

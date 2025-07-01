@@ -1,6 +1,6 @@
 import { BlogForm } from 'components/BlogForm';
-import { AdminPageLayout } from 'layouts';
 import { getBlogById } from 'apis';
+import PageLayout from 'layouts/PageLayout';
 
 export async function getServerSideProps(context) {
   const { id } = context.params;
@@ -25,8 +25,8 @@ export async function getServerSideProps(context) {
 
 export default function EditBlogPage({ initialData }) {
   return (
-    <AdminPageLayout>
+    <PageLayout isAdmin>
       <BlogForm mode="edit" initialData={initialData} />
-    </AdminPageLayout>
+    </PageLayout>
   );
 }

@@ -148,13 +148,12 @@ export const BlogFormSections = ({
 
                   <Col md={9}>
                     <Form.Group className="mb-3">
-<ReactQuill
-  value={section.description || ''}
-  onChange={val => updateSection(index, 'description', val)}
-  placeholder="Write a product overview here..."
-  modules={quillModules}
-/>
-
+                      <ReactQuill
+                        value={section.description || ''}
+                        onChange={val => updateSection(index, 'description', val)}
+                        placeholder="Write a product overview here..."
+                        modules={quillModules}
+                      />
                     </Form.Group>
                   </Col>
                 </Row>

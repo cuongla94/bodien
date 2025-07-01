@@ -3,11 +3,11 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useThemeProvider } from 'hooks/useThemeProvider';
 import { useAdminAuth } from 'hooks/useAdminAuth';
-import { AdminPageLayout } from 'layouts';
 import { Blogs } from 'components/Blogs';
 import { AdminPasswordForm } from 'components/Admin/AdminPasswordForm';
 import { ConfirmationModal } from 'common/modals';
 import { AdminLinks } from 'config/navigation-config';
+import PageLayout from 'layouts/PageLayout';
 
 export default function AdminPage() {
   const { theme } = useThemeProvider();
@@ -71,7 +71,7 @@ export default function AdminPage() {
   if (authLoading) return null;
 
   return (
-    <AdminPageLayout>
+    <PageLayout isAdmin>
       <AdminPasswordForm
         show={!authenticated}
         onSubmit={handlePasswordSubmit}
@@ -106,6 +106,6 @@ export default function AdminPage() {
           setSelectedBlog(null);
         }}
       />
-    </AdminPageLayout>
+    </PageLayout>
   );
 }

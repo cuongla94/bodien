@@ -1,10 +1,10 @@
 import { BlogForm } from 'components/BlogForm';
-import { AdminPageLayout } from 'layouts';
+import PageLayout from 'layouts/PageLayout';
 
 export default function CreateBlogPage() {
   return (
-    <AdminPageLayout>
+    <PageLayout isAdmin>
       <BlogForm mode="create" />
-    </AdminPageLayout>
+    </PageLayout>
   );
 }

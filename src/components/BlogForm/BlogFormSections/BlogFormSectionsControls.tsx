@@ -1,3 +1,4 @@
+import { AdminBlogForm } from 'config/admin-config';
 import { Row, Col, Button } from 'react-bootstrap';
 import { FaArrowUp, FaArrowDown, FaTrash } from 'react-icons/fa';
 
@@ -30,7 +31,7 @@ export const BlogFormSectionsControls = ({
             disabled={!canAddAffiliateLink}
             onClick={() => addAffiliateLink?.(index)}
           >
-            + Add Affiliate Link
+            + {AdminBlogForm.controls.affiliateLink}
           </Button>
         </Col>
       )}
