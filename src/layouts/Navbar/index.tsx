@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navbar } from 'react-bootstrap';
+import { Container, Navbar } from 'react-bootstrap';
 import Link from 'next/link';
 import { ThemeToggle } from 'common/ThemeToggle';
 import { MainInfo } from 'config';
@@ -44,19 +44,19 @@ export const AppNavbar = () => {
       variant={theme.type === 'dark' ? 'dark' : 'light'}
       expand="lg"
     >
-      <div className="container-fluid d-flex justify-content-between align-items-center">
-        {Brand}
+      <Container style={{ padding: '1rem 0'}}>
+        <div className="container-fluid d-flex justify-content-between align-items-center">
+          {Brand}
 
-        <NavLinks>
-          {[AppLinks.home, AppLinks.news, AppLinks.blogs].map((item) => (
-            <Link key={item.link} href={item.link} passHref legacyBehavior>
-              <NavLinkItem>{item.title}</NavLinkItem>
-            </Link>
-          ))}
-        </NavLinks>
-
-        <ThemeToggle />
-      </div>
+          <NavLinks>
+            {[AppLinks.home, AppLinks.news, AppLinks.blogs].map((item) => (
+              <Link key={item.link} href={item.link} passHref legacyBehavior>
+                <NavLinkItem>{item.title}</NavLinkItem>
+              </Link>
+            ))}
+          </NavLinks>
+        </div>
+      </Container>
     </StyledNavbar>
   );
 };

@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { HomeSection, HomeHeader, HomeTitle, HomeSeeMore } from './styles';
 import { AppLinks } from 'config/navigation-config';
 import { CardItem } from 'components/CardItem';
+import { SectionHeader } from 'common/SectionHeader';
+import { HomeConfig } from 'config/home-config';
 
 interface NewsCardProps {
   title: string;
@@ -28,12 +30,10 @@ export const LatestNews: React.FC<LatestNewsProps> = ({ articles }) => {
 
   return (
     <HomeSection className="container">
-      <HomeHeader className="d-flex justify-content-between align-items-end mb-3">
-        <HomeTitle className="mb-0">Latest Tech News</HomeTitle>
-        <Link href={AppLinks.news.link} passHref legacyBehavior>
-          <HomeSeeMore>See more</HomeSeeMore>
-        </Link>
-      </HomeHeader>
+      <SectionHeader
+        title={HomeConfig.newsTitle}
+        hideLink={false}
+        href={AppLinks.news.link} />
       <div className="row g-4">
         {sortedArticles.map((article) => (
           <div key={article.url} className="col-12 col-sm-6 col-lg-4">

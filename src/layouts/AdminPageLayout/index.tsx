@@ -1,5 +1,5 @@
 import { Container } from 'react-bootstrap';
-import { AppNavbar } from 'common/Navbar';
+import { AppNavbar } from 'layouts/Navbar';
 import { ReactNode, useEffect } from 'react';
 import { MainInfo } from 'config';
 import { ITheme } from 'types/theme';

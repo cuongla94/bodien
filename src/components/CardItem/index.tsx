@@ -1,23 +1,24 @@
 import React from 'react';
 import { FiEye, FiShare2 } from 'react-icons/fi';
 import { urlFor } from 'apis';
-import { BlogCardItem } from 'config/blog-config';
-import { Button } from 'react-bootstrap';
-import {
-  AnalyticsItem,
-  AnalyticsWrapper,
-  CardWrapper,
-  CategoryStyled,
-  ControlsWrapper,
-  DescriptionStyled,
-  FooterStyled,
-  ImageStyled,
-  PlaceholderImage,
-  ReadMoreLink,
-  ThemedButton,
-  TitleStyled,
-} from './styles';
 import Link from 'next/link';
+import { BlogCardItem } from 'config/blog-config';
+
+import {
+  CardItemWrapper,
+  CardItemImage,
+  CardItemPlaceholderImage,
+  CardItemContent,
+  CardItemCategory,
+  CardItemTitle,
+  CardItemDescription,
+  CardItemFooter,
+  CardItemFooterItem,
+  CardItemControls,
+  CardItemButton,
+  CardItemReadMoreLink,
+  CardItemFooterStyled,
+} from './styles';
 
 interface CardItemProps {
   type?: 'blog' | 'news';
@@ -70,115 +71,78 @@ export const CardItem: React.FC<CardItemProps> = ({
   });
 
   const showAnalytics = isAdmin && (numOfViews || numOfShares);
-  const showFooter = isNews || publishedDate;
 
   return (
-    <CardWrapper>
-      {/* Image or Placeholder */}
+    <CardItemWrapper>
       {hasImage ? (
-        <ImageStyled
-          src={isNews ? image : urlFor(image).height(180).url()}
+        <CardItemImage
+          src={isNews ? image : urlFor(image).height(220).url()}
           alt={title}
         />
       ) : (
-        <PlaceholderImage>No Image Available</PlaceholderImage>
+        <CardItemPlaceholderImage>No Image Available</CardItemPlaceholderImage>
       )}
 
-      {/* Category (for blog only) */}
-      {!isNews && displayCategory && (
-        <CategoryStyled style={{ color: theme?.subTextColor || '#9CA3AF' }}>
-          - {displayCategory}
-        </CategoryStyled>
-      )}
+      <CardItemContent>
+        {!isNews && displayCategory && (
+          <CardItemCategory>{displayCategory}</CardItemCategory>
+        )}
 
-      <Link href={url} passHref legacyBehavior>
-        <TitleStyled as="a" target="_blank" rel="noopener noreferrer">
-          {title}
-        </TitleStyled>
-      </Link>
+        <Link href={url || '#'} passHref legacyBehavior>
+          <CardItemTitle target="_blank" rel="noopener noreferrer">
+            {title}
+          </CardItemTitle>
+        </Link>
 
-      {/* News description */}
-      {isNews && description && <DescriptionStyled>{description}</DescriptionStyled>}
+        {isNews && description && <CardItemDescription>{description}</CardItemDescription>}
 
-      {/* Analytics for blog admin */}
-      {!isNews && showAnalytics && (
-        <AnalyticsWrapper>
-          {typeof numOfViews === 'number' && (
-            <AnalyticsItem>
-              <FiEye /> {numOfViews} {BlogCardItem.blogViewText}{numOfViews !== 1 ? 's' : ''}
-            </AnalyticsItem>
-          )}
-          {typeof numOfShares === 'number' && (
-            <AnalyticsItem>
-              <FiShare2 /> {numOfShares} {BlogCardItem.blogShareText}{numOfShares !== 1 ? 's' : ''}
-            </AnalyticsItem>
-          )}
-        </AnalyticsWrapper>
-      )}
-
-      {/* Footer */}
-      {showFooter && (
-        <FooterStyled className={isNews ? '' : 'd-flex justify-content-between align-items-end'}>
-          <div>
-            {isNews && (
-              <>
-                {author && <span>By {author} • </span>}
-                {source && <span>{source} • </span>}
-              </>
+        {showAnalytics && (
+          <CardItemFooter>
+            {typeof numOfViews === 'number' && (
+              <CardItemFooterItem>
+                <FiEye /> {numOfViews} {BlogCardItem.blogViewText}
+              </CardItemFooterItem>
             )}
-            {formattedDate}
-          </div>
+            {typeof numOfShares === 'number' && (
+              <CardItemFooterItem>
+                <FiShare2 /> {numOfShares} {BlogCardItem.blogShareText}
+              </CardItemFooterItem>
+            )}
+          </CardItemFooter>
+        )}
 
-          {/* Blog read more link inside footer */}
-          {!isNews && url && (
+        {/* Footer layout: Date left, Read More right */}
+        <CardItemFooterStyled>
+          <span>{formattedDate}</span>
+          {url && (
             <Link href={url} passHref legacyBehavior>
-              <ReadMoreLink as="a" target="_blank" rel="noopener noreferrer">
+              <CardItemReadMoreLink as="a" target="_blank" rel="noopener noreferrer">
                 Read more
-              </ReadMoreLink>
+              </CardItemReadMoreLink>
             </Link>
           )}
-        </FooterStyled>
-      )}
+        </CardItemFooterStyled>
 
-      {/* News title (only outside footer) */}
-      {isNews && url && (
-        <Link href={url} passHref legacyBehavior>
-              <ReadMoreLink as="a" target="_blank" rel="noopener noreferrer">
-                Read more
-              </ReadMoreLink>
-        </Link>
-      )}
-
-      {/* Admin Controls */}
-      {isAdmin && (
-        <ControlsWrapper>
-          <ThemedButton
-            size="sm"
-            onClick={onEdit}
-            bg={theme?.primaryColor}
-            text={theme?.buttonText}
-          >
-            {BlogCardItem.adminEditControlText}
-          </ThemedButton>
-
-          <Button
-            size="sm"
-            variant="danger"
-            onClick={onDelete}
-            style={{ color: '#fff', border: 'none' }}
-          >
-            {BlogCardItem.adminDeleteControlText}
-          </Button>
-
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={onToggleHidden}
-          >
-            {hidden ? 'Unhide' : 'Hide'}
-          </Button>
-        </ControlsWrapper>
-      )}
-    </CardWrapper>
+        {/* Admin Controls */}
+        {isAdmin && (
+          <CardItemControls>
+            <CardItemButton
+              size="sm"
+              onClick={onEdit}
+              bg={theme?.primaryColor}
+              text={theme?.buttonText}
+            >
+              {BlogCardItem.adminEditControlText}
+            </CardItemButton>
+            <CardItemButton size="sm" variant="danger" onClick={onDelete}>
+              {BlogCardItem.adminDeleteControlText}
+            </CardItemButton>
+            <CardItemButton size="sm" variant="secondary" onClick={onToggleHidden}>
+              {hidden ? 'Unhide' : 'Hide'}
+            </CardItemButton>
+          </CardItemControls>
+        )}
+      </CardItemContent>
+    </CardItemWrapper>
   );
 };

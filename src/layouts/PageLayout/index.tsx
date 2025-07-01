@@ -1,6 +1,6 @@
 // components/Layout/PageLayout.tsx
 import { Container } from 'react-bootstrap';
-import { AppNavbar } from 'common/Navbar';
+import { AppNavbar } from 'layouts/Navbar';
 import { ReactNode } from 'react';
 import { useThemeProvider } from 'hooks/useThemeProvider';
 import { ScrollToTopButton } from 'common/ScrollToTopButton';
@@ -17,8 +17,8 @@ export default function PageLayout({ children, className }: IPageLayoutProps) {
 
   return (
     <LayoutWrapper>
+      <AppNavbar />
       <Container className="flex-grow-1 d-flex flex-column">
-        <AppNavbar />
         <PageWrapper className={`page-wrapper ${className || ''}`}>
           {children}
         </PageWrapper>

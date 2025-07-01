@@ -6,6 +6,8 @@ import { MainDashboard } from 'config/main-config';
 import { AppLinks } from 'config/navigation-config';
 import { HomeSection, HomeHeader, HomeTitle, HomeSeeMore } from './styles';
 import { getFormattedDate } from 'utils/dates';
+import { SectionHeader } from 'common/SectionHeader';
+import { HomeConfig } from 'config/home-config';
 
 interface LatestPostsProps {
   theme?: any;
@@ -34,13 +36,10 @@ export const LatestPosts = ({ theme }: LatestPostsProps) => {
 
   return (
     <HomeSection className="container">
-      <HomeHeader className="d-flex justify-content-between align-items-end mb-3">
-        <HomeTitle className="mb-0">{MainDashboard.latestPostsTitle}</HomeTitle>
-        <Link href={AppLinks.blogs.link} passHref legacyBehavior>
-          <HomeSeeMore>See more</HomeSeeMore>
-        </Link>
-      </HomeHeader>
-
+      <SectionHeader
+        title={HomeConfig.postsTitle}
+        hideLink={false}
+        href={AppLinks.blogs.link} />
       <div className="row g-4">
         {posts.map((post) => (
           <div key={post._id} className="col-12 col-sm-6 col-lg-4">
