@@ -1,7 +1,6 @@
 import React from 'react';
 import { FiEye, FiShare2 } from 'react-icons/fi';
 import { urlFor } from 'apis';
-import Link from 'next/link';
 import { BlogCardItem } from 'config/blog-config';
 
 import {
@@ -35,6 +34,7 @@ interface CardItemProps {
   onEdit?: () => void;
   onDelete?: () => void;
   onToggleHidden?: () => void;
+  onReadMoreClick?: () => void;
   hidden?: boolean;
   theme?: any;
   tags?: string[];
@@ -48,7 +48,6 @@ export const CardItem: React.FC<CardItemProps> = ({
   description,
   author,
   source,
-  url,
   image,
   publishedDate,
   category,
@@ -56,6 +55,7 @@ export const CardItem: React.FC<CardItemProps> = ({
   onEdit,
   onDelete,
   onToggleHidden,
+  onReadMoreClick,
   hidden,
   theme,
   numOfViews,
@@ -88,13 +88,11 @@ export const CardItem: React.FC<CardItemProps> = ({
           <CardItemCategory>{displayCategory}</CardItemCategory>
         )}
 
-        <Link href={url || '#'} passHref legacyBehavior>
-          <CardItemTitle target="_blank" rel="noopener noreferrer">
-            {title}
-          </CardItemTitle>
-        </Link>
+        <CardItemTitle as="div">{title}</CardItemTitle>
 
-        {isNews && description && <CardItemDescription>{description}</CardItemDescription>}
+        {isNews && description && (
+          <CardItemDescription>{description}</CardItemDescription>
+        )}
 
         {showAnalytics && (
           <CardItemFooter>
@@ -111,19 +109,15 @@ export const CardItem: React.FC<CardItemProps> = ({
           </CardItemFooter>
         )}
 
-        {/* Footer layout: Date left, Read More right */}
         <CardItemFooterStyled>
           <span>{formattedDate}</span>
-          {url && (
-            <Link href={url} passHref legacyBehavior>
-              <CardItemReadMoreLink as="a" target="_blank" rel="noopener noreferrer">
-                Read more
-              </CardItemReadMoreLink>
-            </Link>
+          {onReadMoreClick && (
+            <CardItemReadMoreLink onClick={onReadMoreClick}>
+              Read more
+            </CardItemReadMoreLink>
           )}
         </CardItemFooterStyled>
 
-        {/* Admin Controls */}
         {isAdmin && (
           <CardItemControls>
             <CardItemButton

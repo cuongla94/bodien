@@ -30,16 +30,6 @@ export function BlogHeader({
 }: BlogHeaderProps) {
   return (
     <BlogHeaderWrapper>
-      {showBreadcrumb && (
-        <Breadcrumbs
-          className="mb-3"
-          items={[
-            { label: breadcrumbHomeLabel, href: breadcrumbHome },
-            { label: title },
-          ]}
-        />
-      )}
-
       <BlogTitle>{title}</BlogTitle>
       <BlogDate>Published on {date}</BlogDate>
 

@@ -134,6 +134,7 @@ export const CardItemReadMoreLink = styled.span`
   color: ${({ theme }) => theme?.linkColor || '#2563eb'};
   text-decoration: none;
   margin-left: auto;
+  cursor: pointer;
 
   &:hover {
     text-decoration: none;

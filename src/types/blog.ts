@@ -19,32 +19,48 @@ export interface IBlogAnalytics {
 
 export interface IBlogPost {
   _id: string;
+  _type?: 'blog';
   title: string;
-  slug: {
-    current: string;
+  slug: string;
+  subtitle?: string;
+
+  coverImage?: {
+    asset?: {
+      _ref?: string;
+      _type?: string;
+    };
+    [key: string]: any;
   };
-  author: {
-    name: string;
-    image?: any;
-  };
-  coverImage?: any;
-  images?: any[];
-  date: string;
-  excerpt?: string;
-  content: any[];
+
   tags?: string[];
-  category?: string;
-  status: 'draft' | 'published';
-  featured: boolean;
-  readingTime: number;
-  analytics: IBlogAnalytics;
+  hidden: boolean;
+  publishedAt: string;
   _createdAt: string;
   _updatedAt: string;
-  publishedAt: string;
+
   numOfViews: number;
   numOfShares: number;
-  hidden: boolean;
+
+  category?: {
+    title: string;
+    value: string;
+  };
+
+  sections?: Array<{
+    _key: string;
+    _type: 'content' | 'product';
+    name?: string | null;
+    image?: any;
+    description?: string | null;
+    content?: any[] | null;
+    affiliateLinks?: Array<{
+      label: string;
+      url: string;
+      clicks: number;
+    }> | null;
+  }>;
 }
+
 
 export interface IBlogPostsResponse {
   posts: IBlogPost[];
@@ -60,28 +76,9 @@ export interface IBlogFormData {
   products: IProductSection[];
   coverImage?: File;
 }
-
-export interface IBlogListItem {
-  _id?: string;
-  slug?: string;
-  title: string;
-  subtitle?: string;
-  publishedAt?: string;
-  createdAt?: string;
-  date?: string;
-  _createdAt?: string;
-  _updatedAt?: string;
-  coverImage?: string;
-  tags?: string[];
-  hidden?: boolean;
-  numOfViews?: number;
-  numOfShares?: number;
-  category?: string;
-}
-
 export interface IBlogListProps {
-  data: IBlogListItem[];
-  theme: ITheme;
+  data: IBlogPost[];
+  theme?: ITheme;
   isAdmin?: boolean;
   authenticated?: boolean;
   searchTerm?: string;
