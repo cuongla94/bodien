@@ -14,6 +14,15 @@ import {
 import { BlogFormSectionsControls } from './BlogFormSectionsControls';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, false] }],
+    ['bold', 'italic', 'underline'],
+    ['link', 'image'], // <-- enable image
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['clean'],
+  ],
+};
 
 export const BlogFormSections = ({
   formData,
@@ -78,15 +87,13 @@ export const BlogFormSections = ({
             {section._type === 'content' && (
               <Col md={12} className="p-3">
                 <Form.Group className="mb-3">
-                  <ReactQuill
-                    value={
-                      mode === 'edit' && section.description
-                        ? section.description
-                        : ''
-                    }
-                    onChange={val => updateSection(index, 'description', val)}
-                    placeholder="Write a description..."
-                  />
+<ReactQuill
+  value={section.description || ''}
+  onChange={val => updateSection(index, 'description', val)}
+  placeholder="Write a product overview here..."
+  modules={quillModules}
+/>
+
                 </Form.Group>
 
                 <BlogFormSectionsControls
@@ -141,17 +148,13 @@ export const BlogFormSections = ({
 
                   <Col md={9}>
                     <Form.Group className="mb-3">
-                      <ReactQuill
-                        value={
-                          mode === 'edit' && section.description
-                            ? section.description
-                            : ''
-                        }
-                        onChange={val =>
-                          updateSection(index, 'description', val)
-                        }
-                        placeholder="Write a product overview here..."
-                      />
+<ReactQuill
+  value={section.description || ''}
+  onChange={val => updateSection(index, 'description', val)}
+  placeholder="Write a product overview here..."
+  modules={quillModules}
+/>
+
                     </Form.Group>
                   </Col>
                 </Row>

@@ -1,25 +1,42 @@
 import styled from 'styled-components';
 
+export const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+export const StyledInput = styled.input`
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: #ccc;
+  }
+`;
+
 export const CategoryListContainer = styled.div`
-  max-height: 160px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
   overflow-y: auto;
-  padding: 0.75rem;
+  margin-top: 4px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #fff;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.2s ease;
-  scroll-behavior: smooth;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 
-  &:hover {
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.08);
-  }
-
-  /* Firefox scrollbar */
+  /* Scrollbar styles */
   scrollbar-width: thin;
   scrollbar-color: #bbb #f5f5f5;
 
-  /* Webkit scrollbar */
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -36,5 +53,17 @@ export const CategoryListContainer = styled.div`
 
   &::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(to bottom, #ff2689, #5e7ffb);
+  }
+`;
+
+export const CategoryOption = styled.div<{ selected?: boolean }>`
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+  background-color: ${({ selected }) => (selected ? '#0d6efd' : 'transparent')};
+  color: ${({ selected }) => (selected ? '#fff' : '#212529')};
+
+  &:hover {
+    background-color: ${({ selected }) => (selected ? '#0d6efd' : '#f8f9fa')};
   }
 `;

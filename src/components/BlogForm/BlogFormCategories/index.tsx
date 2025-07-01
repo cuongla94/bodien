@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Form } from 'react-bootstrap';
 import { BlogFormCategorySelections } from 'config/blog-config';
-import { CategoryListContainer } from './styles';
+import {
+  CategoryListContainer,
+  StyledInput,
+  CategoryOption,
+  InputWrapper,
+} from './styles';
 
 interface BlogFormCategoriesProps {
   editCategory: { title: string; value: string };
@@ -22,6 +27,7 @@ export const BlogFormCategories = ({
 
   useEffect(() => {
     setSelected(editCategory);
+    setSearch(editCategory.title || '');
   }, [editCategory]);
 
   const filtered = useMemo(() => {
@@ -30,70 +36,59 @@ export const BlogFormCategories = ({
     );
   }, [search]);
 
+  const capitalizeTitle = (str: string) => {
+    return str
+      .trim()
+      .split(' ')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(' ');
+  };
+
   const handleSelect = (item: { title: string; value: string }) => {
     setSelected(item);
+    setSearch(item.title);
     onChange(item);
+  };
+
+  const handleInputBlur = () => {
+    if (!selected || selected.title !== search) {
+      const capitalized = capitalizeTitle(search);
+      const value = capitalized.toLowerCase().replace(/[^\w]+/g, '-');
+      const manualEntry = { title: capitalized, value };
+      setSelected(manualEntry);
+      onChange(manualEntry);
+    }
   };
 
   return (
     <Form.Group className="mb-3">
-      <div className="d-flex justify-content-between align-items-center mb-2">
-        <Form.Label className="mb-0 me-2">Category</Form.Label>
-        <div style={{ position: 'relative', width: '50%' }}>
-          <input
-            type="text"
-            placeholder="Search category..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="form-control form-control-sm pe-4"
-          />
-          {search && (
-            <span
-              onClick={() => setSearch('')}
-              style={{
-                position: 'absolute',
-                right: 8,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                cursor: 'pointer',
-                color: '#888',
-                fontWeight: 'bold',
-              }}
-            >
-              ×
-            </span>
-          )}
-        </div>
-      </div>
-
-      <CategoryListContainer>
-        {filtered.length === 0 ? (
-          <div
-            style={{
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#6c757d',
-            }}
-          >
-            No results found
-          </div>
-        ) : (
-          filtered.map((item) => (
-            <div
-              key={item.value}
-              className={`p-2 rounded mb-1 cursor-pointer ${
-                selected?.value === item.value ? 'bg-primary text-white' : 'hover-bg-light'
-              }`}
-              onClick={() => handleSelect(item)}
-              style={{ cursor: 'pointer' }}
-            >
-              {item.title}
-            </div>
-          ))
+      <Form.Label className="mb-2">Category</Form.Label>
+      <InputWrapper>
+        <StyledInput
+          type="text"
+          placeholder="Search category..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onBlur={handleInputBlur}
+        />
+        {search && (
+          <CategoryListContainer>
+            {filtered.length > 0 ? (
+              filtered.map((item) => (
+                <CategoryOption
+                  key={item.value}
+                  onClick={() => handleSelect(item)}
+                  selected={selected?.value === item.value}
+                >
+                  {item.title}
+                </CategoryOption>
+              ))
+            ) : (
+              <div style={{ padding: '0.5rem', color: '#888' }}>No results found</div>
+            )}
+          </CategoryListContainer>
         )}
-      </CategoryListContainer>
+      </InputWrapper>
     </Form.Group>
   );
 };

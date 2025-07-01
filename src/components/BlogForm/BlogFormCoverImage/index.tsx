@@ -14,7 +14,7 @@ export const BlogFormCoverImage = ({ formData, setFormData, handleFileChange }) 
   };
 
   return (
-    <Form.Group className="mb-3 w-100">
+    <Form.Group className="mb-3 w-100" style={{ position: 'relative' }}>
       <Form.Control
         type="file"
         accept="image/*"
@@ -23,13 +23,26 @@ export const BlogFormCoverImage = ({ formData, setFormData, handleFileChange }) 
         style={{ display: 'none' }}
       />
 
-      <label htmlFor="cover-upload" style={{ cursor: 'pointer', width: '100%' }}>
-        {formData.coverPreview ? (
-          <FullWidthWrapper>
+      {formData.coverPreview ? (
+        <FullWidthWrapper>
+          {/* Only the image is wrapped in the label */}
+          <label htmlFor="cover-upload" style={{ cursor: 'pointer', display: 'block' }}>
             <CoverImagePreview src={formData.coverPreview} alt="Cover Preview" />
-            <RemoveIcon onClick={removeCoverImage}>×</RemoveIcon>
-          </FullWidthWrapper>
-        ) : (
+          </label>
+
+          {/* Remove button OUTSIDE the label, absolutely positioned */}
+          <RemoveIcon
+            onClick={(e) => {
+              e.preventDefault(); // Prevent label activation
+              e.stopPropagation();
+              removeCoverImage();
+            }}
+          >
+            ×
+          </RemoveIcon>
+        </FullWidthWrapper>
+      ) : (
+        <label htmlFor="cover-upload" style={{ cursor: 'pointer', width: '100%' }}>
           <UploadArea>
             <UploadIconButton>
               <FaPlus size={16} color="#fff" />
@@ -38,8 +51,8 @@ export const BlogFormCoverImage = ({ formData, setFormData, handleFileChange }) 
               Upload Cover Image
             </div>
           </UploadArea>
-        )}
-      </label>
+        </label>
+      )}
     </Form.Group>
   );
 };

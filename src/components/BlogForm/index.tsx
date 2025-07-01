@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Form, Button, Container } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { BlogFormData } from 'config/blog-config';
@@ -10,6 +10,7 @@ import { BlogFormTags } from './BlogFormTags';
 import { BlogFormSections } from './BlogFormSections';
 import { BlogFormCategories } from './BlogFormCategories';
 import { Toast } from 'common/Toast';
+import { BlogFormPreview } from './BlogFormPreview'; // <-- NEW IMPORT
 
 export const BlogForm = ({ mode = 'create', initialData = null }) => {
   const router = useRouter();
@@ -26,6 +27,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
   const [toast, setToast] = useState(null);
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState([]);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false); // <-- NEW STATE
   const sectionRefs = useRef([]);
 
   useEffect(() => {
@@ -257,41 +259,43 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
       )}
 
       <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3">
-          <Form.Label>Title *</Form.Label>
-          <Form.Control
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleInputChange}
-            required
-          />
-        </Form.Group>
+<Row className="mb-4">
+  <Col md={7}>
+    <Form.Group className="mb-3">
+      <Form.Label>Title *</Form.Label>
+      <Form.Control
+        type="text"
+        name="title"
+        value={formData.title}
+        onChange={handleInputChange}
+        required
+      />
+    </Form.Group>
 
-        <div className="d-flex gap-4 mb-4 align-items-start flex-wrap">
-          <div className="flex-grow-1" style={{ minWidth: 250 }}>
-            <BlogFormCoverImage
-              formData={formData}
-              setFormData={setFormData}
-              handleFileChange={handleFileChange}
-            />
-          </div>
+    <BlogFormCategories
+      editCategory={formData.category}
+      onChange={(categoryObj) =>
+        setFormData(prev => ({ ...prev, category: categoryObj }))
+      }
+    />
 
-          <div className="flex-grow-1" style={{ minWidth: 250 }}>
-            <BlogFormCategories
-              editCategory={formData.category}
-              onChange={(categoryObj) =>
-                setFormData(prev => ({ ...prev, category: categoryObj }))
-              }
-            />
-            <BlogFormTags
-              tags={tags}
-              setTags={setTags}
-              tagInput={tagInput}
-              setTagInput={setTagInput}
-            />
-          </div>
-        </div>
+    <BlogFormTags
+      tags={tags}
+      setTags={setTags}
+      tagInput={tagInput}
+      setTagInput={setTagInput}
+    />
+  </Col>
+
+  <Col md={5}>
+    <BlogFormCoverImage
+      formData={formData}
+      setFormData={setFormData}
+      handleFileChange={handleFileChange}
+    />
+  </Col>
+</Row>
+
 
         <BlogFormSections
           formData={formData}
@@ -307,25 +311,37 @@ export const BlogForm = ({ mode = 'create', initialData = null }) => {
           mode={mode}
           sectionRefs={sectionRefs}
         />
+        <hr className="mt-5" />
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <div className="d-flex gap-2 flex-wrap">
+            <Button variant="success" onClick={addProductSection}>
+              + Add Product Section
+            </Button>
+            <Button variant="primary" onClick={addContentSection}>
+              + Add Content Section
+            </Button>
+            <Button variant="warning" onClick={() => setIsPreviewOpen(true)}>
+              Preview Blog
+            </Button>
+          </div>
 
-        <div className="mb-3 d-flex gap-2">
-          <Button variant="success" onClick={addProductSection}>
-            + Add Product Section
-          </Button>
-          <Button variant="primary" onClick={addContentSection}>
-            + Add Content Section
-          </Button>
-        </div>
-
-        <div className="d-flex gap-2 mb-4">
-          <Button type="submit" variant="primary" disabled={isSubmitting || !formData.title}>
-            {mode === 'edit' ? 'Update Blog Post' : 'Create Blog Post'}
-          </Button>
-          <Button variant="outline-secondary" onClick={() => router.push('/admin')}>
-            Cancel
-          </Button>
+          <div className="d-flex gap-2">
+            <Button type="submit" variant="primary" disabled={isSubmitting || !formData.title}>
+              {mode === 'edit' ? 'Update Blog Post' : 'Create Blog Post'}
+            </Button>
+            <Button variant="outline-secondary" onClick={() => router.push('/admin')}>
+              Cancel
+            </Button>
+          </div>
         </div>
       </Form>
+
+      {/* Blog Preview Modal */}
+      <BlogFormPreview
+        isOpen={isPreviewOpen}
+        onClose={() => setIsPreviewOpen(false)}
+        formData={formData}
+      />
     </Container>
   );
 };

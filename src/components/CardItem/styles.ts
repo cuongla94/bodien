@@ -106,26 +106,37 @@ export const CardItemControls = styled.div`
   flex-wrap: wrap;
 `;
 
-export const CardItemButton = styled(Button)<{ bg?: string; text?: string }>`
-  background-color: ${({ bg, theme }) => bg || theme?.buttonBg || '#2563eb'};
-  color: ${({ text, theme }) => text || theme?.buttonText || '#fff'};
-  border: none;
-  font-size: 0.875rem;
+export const CardItemButton = styled.button<{
+  size?: string;
+  variant?: 'primary' | 'secondary' | 'danger';
+  bg?: string;
+  text?: string;
+}>`
+  font-size: 0.75rem;
   padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
   font-weight: 500;
-  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+
+  background-color: ${({ variant, bg }) => {
+    if (bg) return bg;
+    if (variant === 'danger') return '#ef4444'; // red
+    if (variant === 'secondary') return '#6b7280'; // gray
+    return '#2563eb'; // default blue
+  }};
+
+  color: ${({ variant, text }) => {
+    if (text) return text;
+    return '#ffffff';
+  }};
 
   &:hover {
     opacity: 0.9;
   }
-
-  &:disabled {
-    background-color: ${({ theme }) => theme?.disabledBg || '#ccc'};
-    color: ${({ theme }) => theme?.disabledText || '#666'};
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
 `;
+
 
 // CardItemReadMoreLink
 export const CardItemReadMoreLink = styled.span`

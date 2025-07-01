@@ -18,6 +18,7 @@ export interface IBlogAnalytics {
 }
 
 export interface IBlogPost {
+  featured: unknown;
   _id: string;
   _type?: 'blog';
   title: string;
