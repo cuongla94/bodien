@@ -1,6 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
-import { HomeSection, HomeHeader, HomeTitle, HomeSeeMore } from './styles';
+import { HomeSection } from './styles';
 import { AppLinks } from 'config/navigation-config';
 import { CardItem } from 'components/CardItem';
 import { SectionHeader } from 'common/SectionHeader';
@@ -28,12 +27,17 @@ export const LatestNews: React.FC<LatestNewsProps> = ({ articles }) => {
     )
     .slice(0, 6);
 
+  const handleReadMore = (url: string) => {
+    window.open(url, '_blank'); // opens in new tab
+  };
+
   return (
     <HomeSection className="container">
       <SectionHeader
         title={HomeConfig.newsTitle}
         hideLink={false}
-        href={AppLinks.news.link} />
+        href={AppLinks.news.link}
+      />
       <div className="row g-4">
         {sortedArticles.map((article) => (
           <div key={article.url} className="col-12 col-sm-6 col-lg-4">
@@ -46,6 +50,7 @@ export const LatestNews: React.FC<LatestNewsProps> = ({ articles }) => {
               image={article.image}
               publishedDate={article.published_at}
               url={article.url}
+              onReadMoreClick={() => handleReadMore(article.url)}
             />
           </div>
         ))}

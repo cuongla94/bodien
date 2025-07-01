@@ -1,4 +1,7 @@
 export const HomeConfig = {
-    newsTitle: 'Latest News',
-    postsTitle: 'Latest Posts',
+    newsTitle: "What Today's News",
+    postsTitle: 'Recent Posts',
+    sidebar: {
+        categoriesTitle: 'Categories'
+    }
 }

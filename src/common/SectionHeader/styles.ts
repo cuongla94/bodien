@@ -16,7 +16,7 @@ export const SectionHeaderTitle = styled.h2`
 export const SectionHeaderLink = styled.a`
   font-size: 0.875rem;
   font-weight: 500;
-  color: #2563eb;
+  color: #000;
   position: relative;
   text-transform: uppercase;
   text-decoration: none;
