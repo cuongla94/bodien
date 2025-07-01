@@ -93,11 +93,14 @@ export const BlogList = ({
           </Row>
 
           {selectedBlog && (
-            <Blog
-              blog={selectedBlog}
-              isOpen={isModalOpen}
-              onClose={handleCloseModal}
-            />
+          <Blog
+            blog={selectedBlog}
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            allPosts={blogs}
+            onReadMoreClick={handleReadMore}
+            theme={theme}
+          />
           )}
         </>
       ) : (
