@@ -59,7 +59,7 @@ export const AdminPasswordForm = ({
             required
             className="mb-3 text-center"
           />
-          <Button type="submit" variant="primary" disabled={loading}>
+          <Button type="button" variant="primary" disabled={loading}>
             {loading ? 'Verifying...' : 'Submit'}
           </Button>
         </FormWrapper>

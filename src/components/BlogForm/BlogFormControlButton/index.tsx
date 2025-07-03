@@ -30,6 +30,7 @@ export const BlogFormControlButtons = ({
       {/* Row 1: Add Buttons */}
       <div className="d-flex gap-2 flex-wrap">
         <AnimatedButton
+          type="button"
           baseColor="white"
           hoverColor="black"
           textColor="black"
@@ -41,6 +42,7 @@ export const BlogFormControlButtons = ({
         </AnimatedButton>
 
         <AnimatedButton
+          type="button"
           baseColor="white"
           hoverColor="black"
           textColor="black"
@@ -52,6 +54,7 @@ export const BlogFormControlButtons = ({
         </AnimatedButton>
 
         <AnimatedButton
+          type="button"
           baseColor="white"
           hoverColor="black"
           textColor="black"
@@ -66,6 +69,7 @@ export const BlogFormControlButtons = ({
       {/* Row 2: Preview + Submit + Cancel */}
       <div className="d-flex gap-2 flex-wrap">
         <AnimatedButton
+          type="button"
           baseColor="#f9c74f"
           hoverColor="white"
           textColor="black"
@@ -91,6 +95,7 @@ export const BlogFormControlButtons = ({
         </AnimatedButton>
 
         <AnimatedButton
+          type="button"
           baseColor="#e0e0e0"
           hoverColor="white"
           textColor="black"

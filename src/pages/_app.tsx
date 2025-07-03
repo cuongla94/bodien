@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'highlight.js/styles/atom-one-dark.css';
 import 'react-toggle/style.css';
 import 'react-quill/dist/quill.snow.css';
+import 'react-quill/dist/quill.bubble.css';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/700.css';
 import 'react-datepicker/dist/react-datepicker.css';

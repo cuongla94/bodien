@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Form, Row, Col, Button } from 'react-bootstrap';
 import { FaPlusCircle, FaTimes } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
@@ -13,6 +12,14 @@ import { BlogFormSectionsControls } from './BlogFormSectionsControls';
 import { isValidUrl } from 'utils/isValidUrl';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+const quillModules = {
+  toolbar: [
+    [{ size: ['small', false, 'large', 'huge'] }],
+    ['bold', 'italic', 'underline'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['link'],
+  ],
+};
 
 export const BlogFormProductSection = ({
   index,
@@ -30,39 +37,7 @@ export const BlogFormProductSection = ({
 }) => {
   const imagePreview = section.imagePreview || section.image?.asset?.url || '';
 
-  const quillModules = useMemo(() => ({
-    toolbar: {
-      container: [
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['link', 'image'],
-      ],
-      handlers: {
-        image: function () {
-          const input = document.createElement('input');
-          input.setAttribute('type', 'file');
-          input.setAttribute('accept', 'image/*');
-          input.click();
-
-          input.onchange = () => {
-            const file = input.files?.[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = () => {
-              const range = this.quill.getSelection();
-              const image = `<img src="${reader.result}" style="max-width: 100%; height: auto; display: block; margin: 1rem auto;" contenteditable="false" />`;
-              this.quill.clipboard.dangerouslyPasteHTML(range?.index || 0, image);
-            };
-            reader.readAsDataURL(file);
-          };
-        },
-      },
-    },
-  }), []);
-
-  const affiliateLinks = section.affiliateLinks || [];
-
-  const canAdd = affiliateLinks.every(
+  const canAdd = section.affiliateLinks?.every(
     (link) => link.label.trim() && isValidUrl(link.url)
   );
 
@@ -90,9 +65,11 @@ export const BlogFormProductSection = ({
               type="file"
               accept="image/*"
               style={{ display: 'none' }}
-              onChange={(e) =>
-                e.target.files?.[0] && handleProductImageChange(index, e.target.files[0])
-              }
+              onChange={(e) => {
+                const target = e.target as HTMLInputElement;
+                const file = target.files?.[0];
+                if (file) handleProductImageChange(index, file);
+              }}
             />
           </label>
         </Col>
@@ -110,7 +87,7 @@ export const BlogFormProductSection = ({
       </Row>
 
       <div className="p-3">
-        {affiliateLinks.map((link, linkIdx) => (
+        {section.affiliateLinks.map((link, linkIdx) => (
           <Row key={linkIdx} className="mb-2 align-items-start position-relative">
             <Col>
               <Form.Control
@@ -144,7 +121,6 @@ export const BlogFormProductSection = ({
             </Col>
           </Row>
         ))}
-
         <BlogFormSectionsControls
           index={index}
           canAddAffiliateLink={canAdd}

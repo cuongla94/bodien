@@ -40,7 +40,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const title = Array.isArray(fields.title) ? fields.title[0] : fields.title;
 
-    // Parse category
     let category = null;
     try {
       const rawCategory = Array.isArray(fields.category) ? fields.category[0] : fields.category;
@@ -68,7 +67,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const hiddenRaw = Array.isArray(fields.hidden) ? fields.hidden[0] : fields.hidden;
     const hidden = String(hiddenRaw).toLowerCase() === 'true';
 
-    // Upload cover image
     let coverImageRef = null;
     if (files.coverImage && files.coverImage[0]?.filepath) {
       const file = files.coverImage[0];
@@ -80,7 +78,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         _type: 'image',
         asset: { _type: 'reference', _ref: uploaded._id },
       };
-
       try {
         fs.unlinkSync(file.filepath);
       } catch (err) {
@@ -88,14 +85,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    // Parse and build sections
     let parsedSections: any[] = [];
     try {
-      const rawSections = Array.isArray(fields.sections)
-        ? fields.sections[0]
-        : fields.sections;
+      const rawSections = Array.isArray(fields.sections) ? fields.sections[0] : fields.sections;
       parsedSections = JSON.parse(rawSections || '[]');
-
       if (!Array.isArray(parsedSections) || parsedSections.length === 0) {
         return res.status(400).json({ error: 'Sections must be a non-empty array.' });
       }
@@ -108,33 +101,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     for (let i = 0; i < parsedSections.length; i++) {
       const section = parsedSections[i];
       const _key = Math.random().toString(36).substring(2, 10);
-
-      if (!section._type) {
-        console.warn(`Section at index ${i} missing _type`, section);
-        continue;
-      }
+      if (!section._type) continue;
 
       if (section._type === 'content') {
-        const plainText = section.description || '';
+        const html = section.description || '';
         sections.push({
           _type: 'content',
           _key,
-          content: [
-            {
-              _type: 'block',
-              _key: Math.random().toString(36).substring(2, 10),
-              style: 'normal',
-              markDefs: [],
-              children: [
-                {
-                  _type: 'span',
-                  _key: Math.random().toString(36).substring(2, 10),
-                  text: plainText,
-                  marks: [],
-                },
-              ],
-            },
-          ],
+          description: html,
         });
       } else if (section._type === 'product') {
         let imageRef = null;
@@ -150,7 +124,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             _type: 'image',
             asset: { _type: 'reference', _ref: uploaded._id },
           };
-
           try {
             fs.unlinkSync(imageFile.filepath);
           } catch (err) {
@@ -187,7 +160,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
       } else if (section._type === 'image') {
         let imageRef = null;
-
         if (section.imagePreview) {
           const match = section.imagePreview.match(
             /image-([a-zA-Z0-9]+-[a-zA-Z0-9]+-[a-zA-Z0-9]+)/

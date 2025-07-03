@@ -17,7 +17,7 @@ type BlogSection = {
   _key?: string;
   content?: any;
   name?: string;
-  description?: any; // <- updated to support rich content
+  description?: any; // now treated as rich text blocks
   image?: { asset: { url: string } };
   affiliateLinks?: { url: string; label: string; clicks: number }[];
 };
@@ -60,9 +60,10 @@ export default function BlogSections({ sections }: Props) {
               )}
 
               <ContentWrapper>
-                {section.description && (
-                  <Description
-                    dangerouslySetInnerHTML={{ __html: section.description }}
+                {section.description && Array.isArray(section.description) && (
+                  <PortableText
+                    value={section.description}
+                    components={portableTextComponents}
                   />
                 )}
 

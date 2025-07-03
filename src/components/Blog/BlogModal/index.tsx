@@ -51,14 +51,29 @@ export const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, children 
     <BlogModalOverlay onClick={handleOverlayClick}>
       <SlideWrapper animation={animation}>
         <BlogModalContent ref={contentRef}>
-          <BlogModalCloseButton onClick={triggerClose}>×</BlogModalCloseButton>
+          <BlogModalCloseButton
+            onClick={(e) => {
+              e.stopPropagation();
+              triggerClose();
+            }}
+          >
+            ×
+          </BlogModalCloseButton>
 
           <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
             {children}
           </div>
 
           <div className="d-flex justify-content-end mt-4" style={{ width: '100%' }}>
-            <BlogModalFooterButton onClick={triggerClose}>Close</BlogModalFooterButton>
+            <BlogModalFooterButton
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                triggerClose();
+              }}
+            >
+              Close
+            </BlogModalFooterButton>
           </div>
         </BlogModalContent>
       </SlideWrapper>

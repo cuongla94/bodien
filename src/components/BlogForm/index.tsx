@@ -13,6 +13,7 @@ import { BlogFormPreview } from './BlogFormPreview';
 import { BlogFormControlButtons } from './BlogFormControlButton';
 import { AdminBlogForm, AdminLinks } from 'config/admin-config';
 import { v4 as uuidv4 } from 'uuid';
+import { BlogView } from 'components/BlogView';
 
 interface BlogFormProps {
   mode: 'create' | 'edit'
@@ -68,13 +69,12 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
     }
   };
 
-const addContentSection = () => {
-  setFormData(prev => ({
-    ...prev,
-    sections: [...prev.sections, { id: uuidv4(), _type: 'content', description: '' }],
-  }));
-};
-
+  const addContentSection = () => {
+    setFormData(prev => ({
+      ...prev,
+      sections: [...prev.sections, { id: uuidv4(), _type: 'content', description: '' }],
+    }));
+  };
 
   const addProductSection = () => {
     setFormData(prev => ({
@@ -127,26 +127,25 @@ const addContentSection = () => {
   };
 
   const addAffiliateLink = (index) => {
-  setFormData((prev) => {
-    const sections = [...prev.sections];
-    const section = { ...sections[index] };
+    setFormData((prev) => {
+      const sections = [...prev.sections];
+      const section = { ...sections[index] };
 
-    if (section.affiliateLinks?.some(link => !link.label.trim() || !isValidUrl(link.url))) {
-      return prev;
-    }
+      if (section.affiliateLinks?.some(link => !link.label.trim() || !isValidUrl(link.url))) {
+        return prev;
+      }
 
-    const updatedLinks = [...(section.affiliateLinks || []), { label: '', url: '' }];
-    section.affiliateLinks = updatedLinks;
+      const updatedLinks = [...(section.affiliateLinks || []), { label: '', url: '' }];
+      section.affiliateLinks = updatedLinks;
 
-    sections[index] = section;
+      sections[index] = section;
 
-    return {
-      ...prev,
-      sections,
-    };
-  });
-};
-
+      return {
+        ...prev,
+        sections,
+      };
+    });
+  };
 
   const updateAffiliateLink = (sectionIdx, linkIdx, field, value) => {
     setFormData(prev => {
@@ -204,6 +203,8 @@ const addContentSection = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    console.log('SUBMIT TRIGGERED');
+    if (isSubmitting) return;
     setIsSubmitting(true);
     setToast(null);
 
@@ -350,11 +351,16 @@ const addContentSection = () => {
         </Row>
       </Form>
 
-      <BlogFormPreview
-        isOpen={isPreviewOpen}
-        onClose={() => setIsPreviewOpen(false)}
-        formData={formData}
-      />
+      {/* Move Preview outside of <Form> to prevent accidental submit */}
+<BlogView
+  title={formData.title}
+  date=""
+  sections={formData.sections}
+  isPreview
+  isOpen={isPreviewOpen}
+  onClose={() => setIsPreviewOpen(false)}
+/>
+
     </Container>
   );
 };

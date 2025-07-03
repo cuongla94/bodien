@@ -1,4 +1,3 @@
-// from your message:
 import styled from 'styled-components';
 
 export const SectionWrapper = styled.div`
@@ -64,51 +63,37 @@ export const LinksWrapper = styled.div`
 `;
 
 export const ContentQuillPreview = styled.div`
+  font-size: 1rem;
+  line-height: 1.6;
+
   .ql-editor {
     padding: 0;
+    line-height: 1.6;
     font-size: 1rem;
-    line-height: 1.7;
+    font-family: ${({ theme }) => theme.fontFamily || 'inherit'};
     color: '#333'};
-
-    p {
-      margin-bottom: 0.75rem;
-    }
-
-    strong {
-      font-weight: 600;
-    }
-
-    em {
-      font-style: italic;
-    }
-
-    ul,
-    ol {
-      padding-left: 1.2rem;
-      margin-bottom: 0.75rem;
-    }
-
-    h1,
-    h2,
-    h3 {
-      margin: 1rem 0 0.5rem;
-      font-weight: bold;
-    }
-
-    h1 {
-      font-size: 1.5rem;
-    }
-
-    h2 {
-      font-size: 1.25rem;
-    }
-
-    h3 {
-      font-size: 1.1rem;
-    }
   }
 
-  .ql-container {
-    border: none;
+  p {
+    margin: 0 0 10px 0;
+  }
+`;
+
+
+export const ProductQuillPreview = styled.div`
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin-bottom: 0.75rem;
+
+  .ql-editor {
+    padding: 0;
+    line-height: 1.4;
+    font-size: 0.875rem;
+    font-family: ${({ theme }) => theme.fontFamily || 'inherit'};
+    color: '#333'};
+  }
+
+  p {
+    margin: 0 0 6px 0;
   }
 `;

@@ -7,10 +7,11 @@ import {
   ImageWrapper,
   ContentWrapper,
   Title,
-  Description,
   LinksWrapper,
 } from './styles';
 import { BlogModal } from 'components/Blog/BlogModal';
+import { QuillPreview } from 'components/QuillPreview';
+import { Col, Row } from 'react-bootstrap';
 
 interface BlogFormPreviewProps {
   isOpen: boolean;
@@ -53,11 +54,9 @@ export const BlogFormPreview: React.FC<BlogFormPreviewProps> = ({
           if (section._type === 'content') {
             return (
               <SectionWrapper key={key}>
-                <Description
-                  dangerouslySetInnerHTML={{
-                    __html: section.description || '',
-                  }}
-                />
+                {section.description && (
+                  <QuillPreview value={section.description} type="content" />
+                )}
               </SectionWrapper>
             );
           }
@@ -65,41 +64,50 @@ export const BlogFormPreview: React.FC<BlogFormPreviewProps> = ({
           if (section._type === 'product') {
             return (
               <ProductWrapper key={key}>
-                {imagePreview && (
-                  <ImageWrapper>
-                    <Image
-                      src={imagePreview}
-                      alt={section.name || 'Product'}
-                      width={200}
-                      height={200}
-                      objectFit="contain"
-                    />
-                  </ImageWrapper>
-                )}
-
-                <ContentWrapper>
-                  {section.description && (
-                    <Description
-                      dangerouslySetInnerHTML={{ __html: section.description }}
-                    />
+                <Row className="align-items-start">
+                  {imagePreview && (
+                    <Col md={5}>
+                      <ImageWrapper>
+                        <Image
+                          src={imagePreview}
+                          alt={section.name || 'Product'}
+                          width={0}
+                          height={0}
+                          sizes="100vw"
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'contain',
+                          }}
+                        />
+                      </ImageWrapper>
+                    </Col>
                   )}
 
-                  {section.affiliateLinks?.length > 0 && (
-                    <LinksWrapper>
-                      {section.affiliateLinks.map((link, i) => (
-                        <a
-                          key={i}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-sm btn-outline-primary"
-                        >
-                          {link.label}
-                        </a>
-                      ))}
-                    </LinksWrapper>
-                  )}
-                </ContentWrapper>
+                  <Col md={7}>
+                    <ContentWrapper>
+                      {section.description && (
+                        <QuillPreview value={section.description} type="product" />
+                      )}
+
+                      {section.affiliateLinks?.length > 0 && (
+                        <LinksWrapper>
+                          {section.affiliateLinks.map((link, i) => (
+                            <a
+                              key={i}
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn btn-sm btn-outline-primary me-2 mb-2"
+                            >
+                              {link.label}
+                            </a>
+                          ))}
+                        </LinksWrapper>
+                      )}
+                    </ContentWrapper>
+                  </Col>
+                </Row>
               </ProductWrapper>
             );
           }

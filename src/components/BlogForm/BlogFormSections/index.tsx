@@ -1,27 +1,31 @@
 import { useEffect } from 'react';
-import { Form, Button, Row, Col } from 'react-bootstrap';
-import { FaPlusCircle, FaTimes } from 'react-icons/fa';
+import { Form, Col } from 'react-bootstrap';
+import dynamic from 'next/dynamic';
+import { FaPlusCircle } from 'react-icons/fa';
 import { isValidUrl } from 'utils/isValidUrl';
+import { BlogFormSectionsControls } from './BlogFormSectionsControls';
+import { BlogFormProductSection } from './BlogFormProductSection';
 import {
   SectionWrapper,
-  ProductImageWrapper,
-  ProductImagePreview,
   RemoveIcon,
-  UploadPlaceholder,
-  InvalidUrlText,
   FullWidthWrapper,
   CoverImagePreview,
   UploadArea,
-  UploadIconButton
+  UploadIconButton,
 } from './styles';
-import { BlogFormSectionsControls } from './BlogFormSectionsControls';
-import dynamic from 'next/dynamic';
-import { BlogFormProductSection } from './BlogFormProductSection';
 
 const ReactQuill = dynamic(() => import('react-quill'), {
   ssr: false,
   loading: () => <p>Loading editor...</p>,
 });
+const quillModules = {
+  toolbar: [
+    [{ size: ['small', false, 'large', 'huge'] }],
+    ['bold', 'italic', 'underline'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['link'],
+  ],
+};
 
 export const BlogFormSections = ({
   formData,
@@ -62,46 +66,11 @@ export const BlogFormSections = ({
     }
   }, [formData.sections]);
 
-  const quillModules = {
-    toolbar: {
-      container: [
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['link', 'image']
-      ],
-      handlers: {
-        image: function () {
-          const input = document.createElement('input');
-          input.setAttribute('type', 'file');
-          input.setAttribute('accept', 'image/*');
-          input.click();
-
-          input.onchange = () => {
-            const file = input.files?.[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = () => {
-              const range = this.quill.getSelection();
-              const image = `<img src="${reader.result}" style="max-width: 100%; height: auto; resize: both; display: block; margin: 1rem auto;" contenteditable="false" />`;
-              this.quill.clipboard.dangerouslyPasteHTML(range?.index || 0, image);
-            };
-            reader.readAsDataURL(file);
-          };
-        }
-      }
-    }
-  };
-
   if (!formData.sections || formData.sections.length === 0) return null;
 
   return (
     <>
       {formData.sections.map((section, index) => {
-        const canAdd = section.affiliateLinks?.every(
-          (link) => link.label.trim() && isValidUrl(link.url)
-        );
-
         const imagePreview =
           section.imagePreview || section.image?.asset?.url || '';
 
@@ -115,7 +84,6 @@ export const BlogFormSections = ({
               sectionRefs.current[index] = el || null;
             }}
           >
-            {/* Content Section */}
             {section._type === 'content' && (
               <Col md={12} className="p-3">
                 <Form.Group className="mb-3">
@@ -124,6 +92,7 @@ export const BlogFormSections = ({
                     value={section.description || ''}
                     onChange={(val) => updateSection(index, 'description', val)}
                     modules={quillModules}
+                    formats={['size', 'bold', 'italic', 'underline', 'list', 'bullet', 'link']}
                   />
                 </Form.Group>
                 <BlogFormSectionsControls
@@ -137,7 +106,6 @@ export const BlogFormSections = ({
               </Col>
             )}
 
-            {/* Product Section */}
             {section._type === 'product' && (
               <BlogFormProductSection
                 section={section}
@@ -155,33 +123,30 @@ export const BlogFormSections = ({
               />
             )}
 
-            {/* Image Upload Section */}
             {section._type === 'image' && (
               <Col md={12} className="p-3">
                 <Form.Group className="mb-3 w-100" style={{ position: 'relative' }}>
-<Form.Control
-  type="file"
-  accept="image/*"
-  id={`image-upload-${index}`}
-  style={{ display: 'none' }}
-  onChange={(e) => {
-    const target = e.target as HTMLInputElement;
-    const file = target.files?.[0];
-    if (file) {
-      const previewUrl = URL.createObjectURL(file);
-      updateSection(index, 'image', file);
-      updateSection(index, 'imagePreview', previewUrl);
-    }
-  }}
-/>
-
+                  <Form.Control
+                    type="file"
+                    accept="image/*"
+                    id={`image-upload-${index}`}
+                    style={{ display: 'none' }}
+                    onChange={(e) => {
+                      const target = e.target as HTMLInputElement;
+                      const file = target.files?.[0];
+                      if (file) {
+                        const previewUrl = URL.createObjectURL(file);
+                        updateSection(index, 'image', file);
+                        updateSection(index, 'imagePreview', previewUrl);
+                      }
+                    }}
+                  />
 
                   {section.imagePreview ? (
                     <FullWidthWrapper>
                       <label htmlFor={`image-upload-${index}`} style={{ cursor: 'pointer', display: 'block' }}>
                         <CoverImagePreview src={section.imagePreview} alt="Image Preview" />
                       </label>
-
                       <RemoveIcon
                         onClick={(e) => {
                           e.preventDefault();

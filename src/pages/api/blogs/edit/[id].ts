@@ -94,26 +94,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!section._type) continue;
 
       if (section._type === 'content') {
-        const text = section.description || '';
+        const html = section.description || '';
         sections.push({
           _type: 'content',
           _key,
-          content: [
-            {
-              _type: 'block',
-              _key: Math.random().toString(36).substring(2, 10),
-              style: 'normal',
-              markDefs: [],
-              children: [
-                {
-                  _type: 'span',
-                  _key: Math.random().toString(36).substring(2, 10),
-                  text,
-                  marks: [],
-                },
-              ],
-            },
-          ],
+          description: html,
         });
       } else if (section._type === 'product') {
         let imageRef = null;
@@ -132,10 +117,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           try {
             fs.unlinkSync(imageFile.filepath);
           } catch {}
-        } else if (section.image?.asset?._id) {
+        } else if (section.image?.asset?._ref || section.image?.asset?._id) {
           imageRef = {
             _type: 'image',
-            asset: { _type: 'reference', _ref: section.image.asset._id },
+            asset: {
+              _type: 'reference',
+              _ref: section.image.asset._ref || section.image.asset._id,
+            },
           };
         } else if (section.imagePreview) {
           const match = section.imagePreview.match(
@@ -168,7 +156,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
       } else if (section._type === 'image') {
         let imageRef = null;
-
         if (section.image?.asset?._id) {
           imageRef = {
             _type: 'image',
