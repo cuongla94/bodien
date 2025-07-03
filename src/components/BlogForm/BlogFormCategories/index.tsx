@@ -24,6 +24,7 @@ export const BlogFormCategories = ({
 
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<{ title: string; value: string } | null>(null);
+  const [focused, setFocused] = useState(false);
 
   useEffect(() => {
     setSelected(editCategory);
@@ -34,7 +35,7 @@ export const BlogFormCategories = ({
     return transformedCategories.filter(({ title }) =>
       title.toLowerCase().includes(search.toLowerCase())
     );
-  }, [search]);
+  }, [search, transformedCategories]);
 
   const capitalizeTitle = (str: string) => {
     return str
@@ -48,9 +49,11 @@ export const BlogFormCategories = ({
     setSelected(item);
     setSearch(item.title);
     onChange(item);
+    setFocused(false);
   };
 
   const handleInputBlur = () => {
+    setFocused(false);
     if (!selected || selected.title !== search) {
       const capitalized = capitalizeTitle(search);
       const value = capitalized.toLowerCase().replace(/[^\w]+/g, '-');
@@ -69,22 +72,21 @@ export const BlogFormCategories = ({
           placeholder="Search category..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          onFocus={() => setFocused(true)}
           onBlur={handleInputBlur}
         />
-        {search && (
+        {focused && search && search !== selected?.title && (
           <CategoryListContainer>
-            {filtered.length > 0 ? (
+            {filtered.length > 0 && (
               filtered.map((item) => (
                 <CategoryOption
                   key={item.value}
-                  onClick={() => handleSelect(item)}
+                  onMouseDown={() => handleSelect(item)}
                   selected={selected?.value === item.value}
                 >
                   {item.title}
                 </CategoryOption>
               ))
-            ) : (
-              <div style={{ padding: '0.5rem', color: '#888' }}>No results found</div>
             )}
           </CategoryListContainer>
         )}

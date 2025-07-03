@@ -78,12 +78,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const rawSections = fields.sections?.[0] || '[]';
-    const parsedSections = JSON.parse(rawSections);
-    const sections = [];
+    let parsedSections: any[] = [];
+    try {
+      parsedSections = JSON.parse(rawSections);
+    } catch (err) {
+      return res.status(400).json({ error: 'Invalid JSON in sections' });
+    }
+
+    const sections: any[] = [];
 
     for (let i = 0; i < parsedSections.length; i++) {
       const section = parsedSections[i];
       const _key = section._key || Math.random().toString(36).substring(2, 10);
+
+      if (!section._type) continue;
 
       if (section._type === 'content') {
         const text = section.description || '';
@@ -129,23 +137,62 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             _type: 'image',
             asset: { _type: 'reference', _ref: section.image.asset._id },
           };
+        } else if (section.imagePreview) {
+          const match = section.imagePreview.match(
+            /image-([a-zA-Z0-9]+-[a-zA-Z0-9]+-[a-zA-Z0-9]+)/
+          );
+          if (match?.[1]) {
+            imageRef = {
+              _type: 'image',
+              asset: { _type: 'reference', _ref: `image-${match[1]}` },
+            };
+          }
         }
 
-        const affiliateLinks = section.affiliateLinks?.map(link => ({
-          _type: 'affiliateLink',
-          label: link.label,
-          url: link.url,
-          clicks: 0,
-        })) || [];
+        const affiliateLinks = (section.affiliateLinks || [])
+          .filter(link => link.label?.trim() && link.url?.trim())
+          .map(link => ({
+            _type: 'affiliateLink',
+            label: link.label,
+            url: link.url,
+            clicks: 0,
+          }));
 
         sections.push({
           _type: 'product',
           _key,
           name: section.name || '',
-          description: section.description,
+          description: section.description || '',
           image: imageRef,
           affiliateLinks,
         });
+      } else if (section._type === 'image') {
+        let imageRef = null;
+
+        if (section.image?.asset?._id) {
+          imageRef = {
+            _type: 'image',
+            asset: { _type: 'reference', _ref: section.image.asset._id },
+          };
+        } else if (section.imagePreview) {
+          const match = section.imagePreview.match(
+            /image-([a-zA-Z0-9]+-[a-zA-Z0-9]+-[a-zA-Z0-9]+)/
+          );
+          if (match?.[1]) {
+            imageRef = {
+              _type: 'image',
+              asset: { _type: 'reference', _ref: `image-${match[1]}` },
+            };
+          }
+        }
+
+        if (imageRef) {
+          sections.push({
+            _type: 'image',
+            _key,
+            image: imageRef,
+          });
+        }
       }
     }
 

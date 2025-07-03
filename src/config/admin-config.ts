@@ -12,6 +12,8 @@ export const AdminControlsData = {
 }
 
 export const AdminBlogForm = {
+    addBlogTitle: 'Create New Blog',
+    editBlogTitle: 'Edit Blog',
     controls: {
         affiliateLink: 'Add Affiliate Link',
         addText: 'Add Text',

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { AdminLinks } from 'config/admin-config';
 
 const ADMIN_KEY = 'bodien-admin-auth';
-const EXPIRY = 72 * 60 * 60 * 1000; // 72 hours
+const EXPIRY = 72 * 60 * 60 * 1000;
 
 export const useAdminAuth = () => {
   const router = useRouter();
@@ -40,7 +41,7 @@ export const useAdminAuth = () => {
   const logout = () => {
     localStorage.removeItem(ADMIN_KEY);
     setAuthenticated(false);
-    router.push('/admin'); // optional
+    router.push(`${AdminLinks.adminDashboard}`);
   };
 
   return {

@@ -4,6 +4,7 @@ import { FaPlus, FaSignOutAlt, FaHome } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import { AdminControlsData, AdminLinks } from 'config/admin-config';
 import { ControlsContainer, ControlsGroup } from './styles';
+import { AppLinks } from 'config/navigation-config';
 
 interface AdminControlsProps {
   onLogout?: () => void;
@@ -11,11 +12,11 @@ interface AdminControlsProps {
 
 export const AdminControls = ({ onLogout }: AdminControlsProps) => {
   const router = useRouter();
-  const isDashboard = router.pathname === '/admin';
+  const isDashboard = router.pathname === `${AdminLinks.adminDashboard}`;
 
   const logout = () => {
     localStorage.removeItem('bodien-admin-auth');
-    window.location.href = '/';
+    window.location.href = `${AppLinks.home}`;
   };
 
   return (

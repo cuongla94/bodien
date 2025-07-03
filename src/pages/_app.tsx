@@ -10,6 +10,7 @@ import '@fontsource/inter/700.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import 'react-resizable/css/styles.css';
 
 function MyAppWrapper({ Component, pageProps }) {
   const { theme } = useContext(ThemeContext);

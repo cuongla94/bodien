@@ -1,8 +1,3 @@
-export const BlogFormData = {
-    createFormTitle: 'Create New Blog',
-    editFormTitle: 'Edit Blog'
-};
-
 export const BlogCardItem = {
     readMoreText: 'Read More',
     adminEditControlText: 'Edit',

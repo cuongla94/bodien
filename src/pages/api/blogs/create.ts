@@ -40,6 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const title = Array.isArray(fields.title) ? fields.title[0] : fields.title;
 
+    // Parse category
     let category = null;
     try {
       const rawCategory = Array.isArray(fields.category) ? fields.category[0] : fields.category;
@@ -67,6 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const hiddenRaw = Array.isArray(fields.hidden) ? fields.hidden[0] : fields.hidden;
     const hidden = String(hiddenRaw).toLowerCase() === 'true';
 
+    // Upload cover image
     let coverImageRef = null;
     if (files.coverImage && files.coverImage[0]?.filepath) {
       const file = files.coverImage[0];
@@ -86,13 +88,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
-    const rawSections = Array.isArray(fields.sections) ? fields.sections[0] : fields.sections;
-    const parsedSections = JSON.parse(rawSections || '[]');
-    const sections = [];
+    // Parse and build sections
+    let parsedSections: any[] = [];
+    try {
+      const rawSections = Array.isArray(fields.sections)
+        ? fields.sections[0]
+        : fields.sections;
+      parsedSections = JSON.parse(rawSections || '[]');
+
+      if (!Array.isArray(parsedSections) || parsedSections.length === 0) {
+        return res.status(400).json({ error: 'Sections must be a non-empty array.' });
+      }
+    } catch (err) {
+      return res.status(400).json({ error: 'Invalid sections JSON' });
+    }
+
+    const sections: any[] = [];
 
     for (let i = 0; i < parsedSections.length; i++) {
       const section = parsedSections[i];
       const _key = Math.random().toString(36).substring(2, 10);
+
+      if (!section._type) {
+        console.warn(`Section at index ${i} missing _type`, section);
+        continue;
+      }
 
       if (section._type === 'content') {
         const plainText = section.description || '';
@@ -148,21 +168,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           }
         }
 
-        const affiliateLinks = (section.affiliateLinks || []).map(link => ({
-          _type: 'affiliateLink',
-          label: link.label,
-          url: link.url,
-          clicks: 0,
-        }));
+        const affiliateLinks = (section.affiliateLinks || [])
+          .filter(link => link.label?.trim() && link.url?.trim())
+          .map(link => ({
+            _type: 'affiliateLink',
+            label: link.label,
+            url: link.url,
+            clicks: 0,
+          }));
 
         sections.push({
           _type: 'product',
           _key,
           name: section.name || '',
-          description: section.description,
+          description: section.description || '',
           image: imageRef,
           affiliateLinks,
         });
+      } else if (section._type === 'image') {
+        let imageRef = null;
+
+        if (section.imagePreview) {
+          const match = section.imagePreview.match(
+            /image-([a-zA-Z0-9]+-[a-zA-Z0-9]+-[a-zA-Z0-9]+)/
+          );
+          if (match?.[1]) {
+            imageRef = {
+              _type: 'image',
+              asset: { _type: 'reference', _ref: `image-${match[1]}` },
+            };
+          }
+        }
+
+        if (imageRef) {
+          sections.push({
+            _type: 'image',
+            _key,
+            image: imageRef,
+          });
+        }
       }
     }
 

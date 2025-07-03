@@ -1,25 +1,26 @@
+// BlogForm.tsx
 import { useState, useEffect, useRef } from 'react';
 import { Form, Container, Row, Col } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { BlogFormData } from 'config/blog-config';
 import { isValidUrl } from 'utils/isValidUrl';
 import { BlogFormCoverImage } from './BlogFormCoverImage';
 import { BlogFormTags } from './BlogFormTags';
 import { BlogFormSections } from './BlogFormSections';
 import { BlogFormCategories } from './BlogFormCategories';
 import { Toast } from 'common/Toast';
-import { BlogFormPreview } from './BlogFormPreview'; // <-- NEW IMPORT
+import { BlogFormPreview } from './BlogFormPreview';
 import { BlogFormControlButtons } from './BlogFormControlButton';
-import { AdminLinks } from 'config/admin-config';
+import { AdminBlogForm, AdminLinks } from 'config/admin-config';
+import { v4 as uuidv4 } from 'uuid';
 
 interface BlogFormProps {
-  mode: 'create' | 'edit',
+  mode: 'create' | 'edit'
   initialData?: any
 }
+
 export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps) => {
   const router = useRouter();
-
   const [formData, setFormData] = useState({
     title: '',
     category: { title: '', value: '' },
@@ -27,12 +28,11 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
     coverImage: null,
     coverPreview: '',
   });
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState(null);
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState([]);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false); // <-- NEW STATE
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const sectionRefs = useRef([]);
 
   useEffect(() => {
@@ -40,24 +40,14 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
       setFormData({
         title: initialData.title || '',
         category: initialData.category || { title: '', value: '' },
-        sections: (initialData.sections || []).map(section => {
-          if (section._type === 'product') {
-            return {
-              ...section,
-              image: section.image || null,
-              imagePreview: section.image?.asset?.url || '',
-              description: section.description || '',
-              affiliateLinks: section.affiliateLinks || [],
-            };
-          }
-          if (section._type === 'content') {
-            return {
-              ...section,
-              description: section.description || '',
-            };
-          }
-          return section;
-        }),
+        sections: (initialData.sections || []).map(section => ({
+          ...section,
+          id: section.id || uuidv4(),
+          image: section.image || null,
+          imagePreview: section.imagePreview || section.image?.asset?.url || '',
+          description: section.description || '',
+          affiliateLinks: section.affiliateLinks || [],
+        })),
         coverImage: null,
         coverPreview: initialData.coverImage?.asset?.url || '',
       });
@@ -74,18 +64,29 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
     const file = e.target.files?.[0];
     if (file) {
       const previewUrl = URL.createObjectURL(file);
-      setFormData(prev => ({
-        ...prev,
-        coverImage: file,
-        coverPreview: previewUrl,
-      }));
+      setFormData(prev => ({ ...prev, coverImage: file, coverPreview: previewUrl }));
     }
   };
 
-  const addContentSection = () => {
+const addContentSection = () => {
+  setFormData(prev => ({
+    ...prev,
+    sections: [...prev.sections, { id: uuidv4(), _type: 'content', description: '' }],
+  }));
+};
+
+
+  const addProductSection = () => {
     setFormData(prev => ({
       ...prev,
-      sections: [...prev.sections, { _type: 'content', description: '' }],
+      sections: [...prev.sections, {
+        id: uuidv4(),
+        _type: 'product',
+        description: '',
+        image: null,
+        imagePreview: '',
+        affiliateLinks: [],
+      }],
     }));
     scrollToSection(formData.sections.length);
   };
@@ -93,32 +94,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
   const addImageSection = () => {
     setFormData(prev => ({
       ...prev,
-      sections: [
-        ...prev.sections,
-        {
-          _type: 'image',
-          image: null,
-          imagePreview: '',
-          description: '',
-        },
-      ],
-    }));
-    scrollToSection(formData.sections.length);
-  };
-
-  const addProductSection = () => {
-    setFormData(prev => ({
-      ...prev,
-      sections: [
-        ...prev.sections,
-        {
-          _type: 'product',
-          description: '',
-          image: null,
-          imagePreview: '',
-          affiliateLinks: [],
-        },
-      ],
+      sections: [...prev.sections, { id: uuidv4(), _type: 'image', imagePreview: '' }],
     }));
     scrollToSection(formData.sections.length);
   };
@@ -126,7 +102,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
   const updateSection = (index, field, value) => {
     setFormData(prev => {
       const updated = [...prev.sections];
-      updated[index][field] = value;
+      updated[index] = { ...updated[index], [field]: value };
       return { ...prev, sections: updated };
     });
   };
@@ -150,23 +126,35 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
     updateSection(index, 'imagePreview', '');
   };
 
-  const addAffiliateLink = index => {
-    setFormData(prev => {
-      const updated = [...prev.sections];
-      const section = updated[index];
-      const hasEmpty = section.affiliateLinks.some(
-        link => !link.label.trim() || !isValidUrl(link.url)
-      );
-      if (hasEmpty) return prev;
-      section.affiliateLinks = [...section.affiliateLinks, { label: '', url: '' }];
-      return { ...prev, sections: updated };
-    });
-  };
+  const addAffiliateLink = (index) => {
+  setFormData((prev) => {
+    const sections = [...prev.sections];
+    const section = { ...sections[index] };
+
+    if (section.affiliateLinks?.some(link => !link.label.trim() || !isValidUrl(link.url))) {
+      return prev;
+    }
+
+    const updatedLinks = [...(section.affiliateLinks || []), { label: '', url: '' }];
+    section.affiliateLinks = updatedLinks;
+
+    sections[index] = section;
+
+    return {
+      ...prev,
+      sections,
+    };
+  });
+};
+
 
   const updateAffiliateLink = (sectionIdx, linkIdx, field, value) => {
     setFormData(prev => {
       const updated = [...prev.sections];
-      updated[sectionIdx].affiliateLinks[linkIdx][field] = value;
+      const section = { ...updated[sectionIdx] };
+      const links = [...section.affiliateLinks];
+      links[linkIdx] = { ...links[linkIdx], [field]: value };
+      updated[sectionIdx] = { ...section, affiliateLinks: links };
       return { ...prev, sections: updated };
     });
   };
@@ -174,7 +162,10 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
   const removeAffiliateLink = (sectionIdx, linkIdx) => {
     setFormData(prev => {
       const updated = [...prev.sections];
-      updated[sectionIdx].affiliateLinks.splice(linkIdx, 1);
+      const section = { ...updated[sectionIdx] };
+      const links = [...section.affiliateLinks];
+      links.splice(linkIdx, 1);
+      updated[sectionIdx] = { ...section, affiliateLinks: links };
       return { ...prev, sections: updated };
     });
   };
@@ -208,12 +199,8 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
   };
 
   const isFormValid = () => {
-  return (
-    formData.title.trim().length > 0 &&
-    formData.category?.value?.trim().length > 0
-  );
-};
-
+    return formData.title.trim() && formData.category?.value?.trim();
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -249,6 +236,10 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
           };
         }
 
+        if (section._type === 'image') {
+          return { _type: 'image', imagePreview: section.imagePreview };
+        }
+
         return base;
       });
 
@@ -266,7 +257,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
         setToast({ type: 'success', message: 'Blog post created successfully!' });
       }
 
-      setTimeout(() => router.push('/admin'), 2000);
+      setTimeout(() => router.push(`${AdminLinks.adminDashboard}`), 2000);
     } catch (err) {
       console.error('❌ Form submit error:', err);
       setToast({ type: 'error', message: 'An error occurred while submitting.' });
@@ -278,7 +269,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
   return (
     <Container className="py-4">
       <h2 className="mb-4">
-        {mode === 'edit' ? `${BlogFormData.editFormTitle} Id ${initialData?._id}` : BlogFormData.createFormTitle}
+        {mode === 'edit' ? `${AdminBlogForm.editBlogTitle} Id ${initialData?._id}` : AdminBlogForm.addBlogTitle}
       </h2>
 
       {toast && (
@@ -288,8 +279,8 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
       )}
 
       <Form onSubmit={handleSubmit}>
-        <Row className="mb-4">
-          <Col md={7}>
+        <Row>
+          <Col md={7} lg={7}>
             <Form.Group className="mb-3">
               <Form.Label>Title *</Form.Label>
               <Form.Control
@@ -301,58 +292,64 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
               />
             </Form.Group>
 
-            <BlogFormCategories
-              editCategory={formData.category}
-              onChange={(categoryObj) =>
-                setFormData(prev => ({ ...prev, category: categoryObj }))
-              }
-            />
-
-            <BlogFormTags
-              tags={tags}
-              setTags={setTags}
-              tagInput={tagInput}
-              setTagInput={setTagInput}
+            <BlogFormSections
+              formData={formData}
+              updateSection={updateSection}
+              removeSection={removeSection}
+              handleProductImageChange={handleProductImageChange}
+              removeProductImage={removeProductImage}
+              updateAffiliateLink={updateAffiliateLink}
+              addAffiliateLink={addAffiliateLink}
+              removeAffiliateLink={removeAffiliateLink}
+              moveSectionUp={moveSectionUp}
+              moveSectionDown={moveSectionDown}
+              mode={mode}
+              sectionRefs={sectionRefs}
             />
           </Col>
 
-          <Col md={5}>
-            <BlogFormCoverImage
-              formData={formData}
-              setFormData={setFormData}
-              handleFileChange={handleFileChange}
-            />
+          <Col md={5} lg={5}>
+            <div style={{ position: 'sticky', top: '100px' }}>
+              <BlogFormCoverImage
+                formData={formData}
+                setFormData={setFormData}
+                handleFileChange={handleFileChange}
+              />
+
+              <div className="mt-4">
+                <BlogFormCategories
+                  editCategory={formData.category}
+                  onChange={(categoryObj) => setFormData(prev => ({ ...prev, category: categoryObj }))}
+                />
+              </div>
+
+              <div className="mt-4">
+                <BlogFormTags
+                  tags={tags}
+                  setTags={setTags}
+                  tagInput={tagInput}
+                  setTagInput={setTagInput}
+                />
+              </div>
+
+              <div className="mt-4">
+                <BlogFormControlButtons
+                  addProductSection={addProductSection}
+                  addContentSection={addContentSection}
+                  addImageSection={addImageSection}
+                  setIsPreviewOpen={setIsPreviewOpen}
+                  isSubmitting={isSubmitting}
+                  formTitle={formData.title}
+                  mode={mode}
+                  onCancel={() => router.push(`${AdminLinks.adminDashboard}`)}
+                  isFormValid={isFormValid()}
+                />
+              </div>
+            </div>
           </Col>
         </Row>
-        <BlogFormSections
-          formData={formData}
-          updateSection={updateSection}
-          removeSection={removeSection}
-          handleProductImageChange={handleProductImageChange}
-          removeProductImage={removeProductImage}
-          updateAffiliateLink={updateAffiliateLink}
-          addAffiliateLink={addAffiliateLink}
-          removeAffiliateLink={removeAffiliateLink}
-          moveSectionUp={moveSectionUp}
-          moveSectionDown={moveSectionDown}
-          mode={mode}
-          sectionRefs={sectionRefs}
-        />
-        <hr className="mt-5" />
-       <BlogFormControlButtons
-          addProductSection={addProductSection}
-          addContentSection={addContentSection}
-          addImageSection={addImageSection}
-          setIsPreviewOpen={setIsPreviewOpen}
-          isSubmitting={isSubmitting}
-          formTitle={formData.title}
-          mode={mode}
-          onCancel={() => router.push(`${AdminLinks.adminDashboard}`)}
-          isFormValid={isFormValid()}
-        />
       </Form>
 
-      {/* Blog Preview Modal */}
       <BlogFormPreview
         isOpen={isPreviewOpen}
         onClose={() => setIsPreviewOpen(false)}

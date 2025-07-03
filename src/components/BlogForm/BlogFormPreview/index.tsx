@@ -19,7 +19,7 @@ interface BlogFormPreviewProps {
     title: string;
     coverPreview?: string;
     sections: {
-      _type: 'content' | 'product';
+      _type: 'content' | 'product' | 'image';
       _key?: string;
       name?: string;
       description?: string;
@@ -27,6 +27,8 @@ interface BlogFormPreviewProps {
       imagePreview?: string;
       image?: { asset?: { url: string } };
       affiliateLinks?: { label: string; url: string }[];
+      width?: number;
+      height?: number;
     }[];
   };
 }
@@ -42,9 +44,11 @@ export const BlogFormPreview: React.FC<BlogFormPreviewProps> = ({
     <BlogModal isOpen={isOpen} onClose={onClose}>
       <div style={{ width: '100%' }}>
         <Title>{formData.title}</Title>
+
         {formData.sections.map((section, idx) => {
           const key = section._key || `section-${idx}`;
-          const imagePreview = section.imagePreview || section.image?.asset?.url || '';
+          const imagePreview =
+            section.imagePreview || section.image?.asset?.url || '';
 
           if (section._type === 'content') {
             return (
@@ -97,6 +101,25 @@ export const BlogFormPreview: React.FC<BlogFormPreviewProps> = ({
                   )}
                 </ContentWrapper>
               </ProductWrapper>
+            );
+          }
+
+          if (section._type === 'image') {
+            const width = section.width || 300;
+            const height = section.height || 200;
+
+            return (
+              <SectionWrapper key={key} style={{ textAlign: 'center' }}>
+                {imagePreview && (
+                  <Image
+                    src={imagePreview}
+                    alt="Blog Image"
+                    width={width}
+                    height={height}
+                    objectFit="contain"
+                  />
+                )}
+              </SectionWrapper>
             );
           }
 

@@ -1,4 +1,3 @@
-import { Button } from 'react-bootstrap';
 import { FiEye } from 'react-icons/fi';
 import { AdminBlogForm } from 'config/admin-config';
 import { AnimatedButton } from 'common/AnimatedButton';
@@ -7,27 +6,28 @@ interface BlogFormControlButtonsProps {
   addProductSection: () => void;
   addContentSection: () => void;
   addImageSection: () => void;
-  setIsPreviewOpen: (isOpen: boolean) => void;
   isSubmitting: boolean;
   formTitle: string;
   mode: 'create' | 'edit';
   onCancel: () => void;
-  isFormValid: boolean;
+  isFormValid: string;
+  setIsPreviewOpen: (open: boolean) => void;
 }
 
 export const BlogFormControlButtons = ({
   addProductSection,
   addContentSection,
   addImageSection,
-  setIsPreviewOpen,
   isSubmitting,
   formTitle,
   mode,
   onCancel,
-  isFormValid
+  isFormValid,
+  setIsPreviewOpen,
 }: BlogFormControlButtonsProps) => {
   return (
-    <div className="d-flex justify-content-between align-items-center mb-4">
+    <div className="d-flex flex-column gap-3">
+      {/* Row 1: Add Buttons */}
       <div className="d-flex gap-2 flex-wrap">
         <AnimatedButton
           baseColor="white"
@@ -61,43 +61,44 @@ export const BlogFormControlButtons = ({
         >
           + {AdminBlogForm.controls.addImage}
         </AnimatedButton>
-
-        <AnimatedButton
-            baseColor="#f9c74f"
-            hoverColor="white"
-            textColor="black"
-            hoverTextColor="#f9c74f"
-            borderColor="#f9c74f"
-            onClick={() => setIsPreviewOpen(true)}
-        >
-            <FiEye /> {AdminBlogForm.controls.previewBlog}
-        </AnimatedButton>
       </div>
 
-      <div className="d-flex gap-2">
+      {/* Row 2: Preview + Submit + Cancel */}
+      <div className="d-flex gap-2 flex-wrap">
         <AnimatedButton
-            type="submit"
-            baseColor="#007bff"
-            hoverColor="white"
-            textColor="white"
-            hoverTextColor="#007bff"
-            borderColor="#007bff"
-            disabled={isSubmitting || !isFormValid}
+          baseColor="#f9c74f"
+          hoverColor="white"
+          textColor="black"
+          hoverTextColor="#f9c74f"
+          borderColor="#f9c74f"
+          onClick={() => setIsPreviewOpen(true)}
         >
-        {mode === 'edit'
+          <FiEye /> {AdminBlogForm.controls.previewBlog}
+        </AnimatedButton>
+
+        <AnimatedButton
+          type="submit"
+          baseColor="#007bff"
+          hoverColor="white"
+          textColor="white"
+          hoverTextColor="#007bff"
+          borderColor="#007bff"
+          disabled={isSubmitting || !isFormValid}
+        >
+          {mode === 'edit'
             ? AdminBlogForm.controls.updateBlogPost
             : AdminBlogForm.controls.addBlogPost}
         </AnimatedButton>
 
         <AnimatedButton
-            baseColor="#e0e0e0"
-            hoverColor="white"
-            textColor="black"
-            hoverTextColor="#999"
-            borderColor="#e0e0e0"
-            onClick={onCancel}
+          baseColor="#e0e0e0"
+          hoverColor="white"
+          textColor="black"
+          hoverTextColor="#999"
+          borderColor="#e0e0e0"
+          onClick={onCancel}
         >
-        {AdminBlogForm.controls.cancel}
+          {AdminBlogForm.controls.cancel}
         </AnimatedButton>
       </div>
     </div>
