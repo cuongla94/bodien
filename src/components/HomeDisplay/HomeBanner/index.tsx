@@ -1,35 +1,42 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   HomeBannerWrapper,
   HomeBannerContent,
   HomeBannerHeading,
   HomeBannerSubheading,
   HomeBannerCTAButton,
-  HomeBannerRight
+  HomeBannerRow,
+  HomeBannerImageWrapper,
+  HomeBannerCarousel
 } from './styles';
+import HomeBannerImage from 'assets/HomeBannerImage.png';
+import { AppLinks } from 'config/navigation-config';
+import { Container } from 'react-bootstrap';
 
 export const HomeBanner = () => {
   return (
     <HomeBannerWrapper>
-      <HomeBannerContent>
-        <HomeBannerHeading>
-          Discover Top <span>Tech Reviews</span> & Buying Guides
-        </HomeBannerHeading>
-        <HomeBannerSubheading>
-          Stay ahead with expert insights on the latest gadgets, apps, and innovations. Whether you're a casual user or a tech enthusiast — we’ve got your back.
-        </HomeBannerSubheading>
-        <Link href="/blogs" passHref>
-          <HomeBannerCTAButton>Explore All Reviews →</HomeBannerCTAButton>
-        </Link>
-      </HomeBannerContent>
+      <Container   className="flex-grow-1 d-flex flex-column">
+        <HomeBannerRow>
+          <HomeBannerContent>
+            <HomeBannerHeading>
+              Discover Top <span>Tech Reviews</span> & Buying Guides
+            </HomeBannerHeading>
+            <HomeBannerSubheading>
+              Stay ahead with expert insights on the latest gadgets, apps, and innovations. Whether you're a casual user or a tech enthusiast — we’ve got your back.
+            </HomeBannerSubheading>
+            <Link href={AppLinks.blogs.link} passHref>
+              <HomeBannerCTAButton>Explore All Reviews →</HomeBannerCTAButton>
+            </Link>
+          </HomeBannerContent>
 
-      <HomeBannerRight>
-        {/* Will replace with <HomeBannerCarousel /> */}
-        <div className="carousel-placeholder">
-          Carousel Coming Soon...
-        </div>
-      </HomeBannerRight>
+          <HomeBannerImageWrapper>
+            <Image src={HomeBannerImage} alt="Tech Reviews" layout="responsive" />
+          </HomeBannerImageWrapper>
+        </HomeBannerRow>
+      </Container>
     </HomeBannerWrapper>
   );
 };

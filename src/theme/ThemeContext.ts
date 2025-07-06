@@ -64,7 +64,7 @@ export const themes: { light: AppTheme } = {
     mainTextColor: '#1F2937',
     subTextColor: '#6B7280',
 
-    background: '#F9FAFB',
+    background: '#ffffff',
     backgroundGradient: undefined,
     cardBackground: '#FFFFFF',
     footerBackground: '#F3F4F6',

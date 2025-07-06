@@ -1,26 +1,25 @@
-// src/components/HomeBanner/styles.ts
 import styled from 'styled-components';
 
 export const HomeBannerWrapper = styled.section`
+  padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.md};
+  background: ${({ theme }) => theme.footerBackground};
+`;
+
+export const HomeBannerRow = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing.md};
-  background: ${({ theme }) => theme.background};
+  gap: ${({ theme }) => theme.spacing.lg};
 
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
     flex-direction: row;
     justify-content: space-between;
+    align-items: flex-start;
   }
 `;
 
 export const HomeBannerContent = styled.div`
   max-width: 600px;
-  text-align: center;
-
-  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
-    text-align: left;
-  }
 `;
 
 export const HomeBannerHeading = styled.h1`
@@ -63,14 +62,21 @@ export const HomeBannerCTAButton = styled.a`
   }
 `;
 
-export const HomeBannerRight = styled.div`
-  display: none;
+export const HomeBannerImageWrapper = styled.div`
+  flex: 1;
+  width: 100%;
 
-  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: ${({ theme }) => theme.borderRadius.md};
     display: block;
-    flex: 1;
-    margin-left: ${({ theme }) => theme.spacing.lg};
   }
+`;
+
+export const HomeBannerCarousel = styled.div`
+  margin-top: ${({ theme }) => theme.spacing.xl};
 
   .carousel-placeholder {
     background-color: ${({ theme }) => theme.cardBackground};

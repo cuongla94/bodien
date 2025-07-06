@@ -21,15 +21,7 @@ export default function PageLayout({
   return (
     <LayoutWrapper>
       <AppNavbar />
-
-      <Container className="flex-grow-1 d-flex flex-column">
-        {isAdmin && <AdminControls />}
-
-        <PageWrapper className={`page-wrapper ${className || ''}`}>
-          {children}
-        </PageWrapper>
-      </Container>
-
+        {children}
       <Footer />
       <ScrollToTopButton />
     </LayoutWrapper>
