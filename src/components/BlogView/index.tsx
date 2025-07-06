@@ -15,6 +15,8 @@ import {
   BlogViewContentSection,
   BlogViewLinksWrapper,
   BlogViewContentWrapper,
+  BlogViewMetaRow,
+  BlogViewCategory,
 } from './styles';
 
 interface BlogSection {
@@ -33,6 +35,10 @@ interface BlogSection {
 interface BlogViewProps {
   title: string;
   date?: string;
+    category?: {
+        title: string;
+        value: string;
+    };
   sections: BlogSection[];
   isPreview?: boolean;
   isOpen?: boolean;
@@ -42,6 +48,7 @@ interface BlogViewProps {
 export const BlogView: React.FC<BlogViewProps> = ({
   title,
   date,
+  category,
   sections,
   isPreview = false,
   isOpen = false,
@@ -50,9 +57,15 @@ export const BlogView: React.FC<BlogViewProps> = ({
   const content = (
     <BlogViewContentWrapper>
       <BlogViewTitle>{title}</BlogViewTitle>
-      <BlogViewDate>
-        {date ? `Published on ${date}` : `Current time: ${new Date().toLocaleString()}`}
-    </BlogViewDate>
+        <BlogViewMetaRow>
+            <BlogViewCategory>
+                    {category.title || 'Uncategorized'}
+            </BlogViewCategory>
+            <BlogViewDate>
+                {date ? `Published on ${date}` : `Current time: ${new Date().toLocaleString()}`}
+            </BlogViewDate>
+        </BlogViewMetaRow>
+
 
 
       {sections.map((section, idx) => {

@@ -20,6 +20,10 @@ export const BlogViewDate = styled.div`
 
 export const BlogViewSectionWrapper = styled.div`
   margin-bottom: 2rem;
+
+    p {
+    margin-bottom: 1.25rem;
+  }
 `;
 
 export const BlogViewProductWrapper = styled.div`
@@ -85,4 +89,24 @@ export const BlogViewLinksWrapper = styled.div`
   a {
     font-size: 0.875rem;
   }
+`;
+
+export const BlogViewMetaRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+`;
+
+export const BlogViewCategory = styled.span`
+  background-color: #eef1ff;
+  color: #3f3ddd;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 999px;
+  display: inline-block;
 `;

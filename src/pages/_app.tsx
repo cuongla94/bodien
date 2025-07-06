@@ -1,6 +1,9 @@
+// pages/_app.tsx
 import { useContext, useEffect } from 'react';
-import { ThemeContext, ThemeProvider } from 'theme';
+import { ThemeContext, ThemeProvider as CustomThemeProvider, GlobalStyles } from 'theme';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
+// Styles
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'highlight.js/styles/atom-one-dark.css';
 import 'react-toggle/style.css';
@@ -23,13 +26,18 @@ function MyAppWrapper({ Component, pageProps }) {
     }
   }, [theme]);
 
-  return <Component {...pageProps} />;
+  return (
+    <StyledThemeProvider theme={theme}>
+      <GlobalStyles />
+      <Component {...pageProps} />
+    </StyledThemeProvider>
+  );
 }
 
 export default function App(props) {
   return (
-    <ThemeProvider>
+    <CustomThemeProvider>
       <MyAppWrapper {...props} />
-    </ThemeProvider>
+    </CustomThemeProvider>
   );
 }

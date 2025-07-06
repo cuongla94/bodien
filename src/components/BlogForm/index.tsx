@@ -9,7 +9,6 @@ import { BlogFormTags } from './BlogFormTags';
 import { BlogFormSections } from './BlogFormSections';
 import { BlogFormCategories } from './BlogFormCategories';
 import { Toast } from 'common/Toast';
-import { BlogFormPreview } from './BlogFormPreview';
 import { BlogFormControlButtons } from './BlogFormControlButton';
 import { AdminBlogForm, AdminLinks } from 'config/admin-config';
 import { v4 as uuidv4 } from 'uuid';
@@ -356,6 +355,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
   title={formData.title}
   date=""
   sections={formData.sections}
+  category={formData.category}
   isPreview
   isOpen={isPreviewOpen}
   onClose={() => setIsPreviewOpen(false)}
