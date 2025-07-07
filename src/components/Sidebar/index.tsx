@@ -40,7 +40,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <PostListSection title="Popular Products" posts={popular} onItemClick={onPostClick} />
       )}
 
-      <CategoryList categories={categories} />
+      {/* <CategoryList categories={categories} /> */}
     </aside>
   );
 };

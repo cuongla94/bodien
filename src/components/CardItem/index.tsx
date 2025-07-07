@@ -18,6 +18,7 @@ import {
   CardItemReadMoreLink,
   CardItemFooterStyled,
 } from './styles';
+import { truncateText } from 'utils/text';
 
 interface CardItemProps {
   type?: 'blog' | 'news';
@@ -91,7 +92,9 @@ export const CardItem: React.FC<CardItemProps> = ({
         <CardItemTitle as="div">{title}</CardItemTitle>
 
         {isNews && description && (
-          <CardItemDescription>{description}</CardItemDescription>
+          <CardItemDescription>
+            {truncateText(description, 250)}
+          </CardItemDescription>
         )}
 
         {showAnalytics && (

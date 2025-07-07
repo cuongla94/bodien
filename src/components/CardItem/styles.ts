@@ -77,7 +77,14 @@ export const CardItemDescription = styled.p`
   color: ${({ theme }) => theme.subTextColor || '#6b7280'};
   margin-bottom: 1rem;
   flex-grow: 1;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* Clamp to 4 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
+
 
 export const CardItemFooter = styled.div`
   font-size: 0.75rem;

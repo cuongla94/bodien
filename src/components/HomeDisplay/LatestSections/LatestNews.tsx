@@ -1,5 +1,5 @@
 import React from 'react';
-import { HomeSection } from './styles';
+import { HomeSection } from '../styles';
 import { AppLinks } from 'config/navigation-config';
 import { CardItem } from 'components/CardItem';
 import { SectionHeader } from 'common/SectionHeader';
@@ -40,7 +40,7 @@ export const LatestNews: React.FC<LatestNewsProps> = ({ articles }) => {
       />
       <div className="row g-4">
         {sortedArticles.map((article) => (
-          <div key={article.url} className="col-12 col-sm-6 col-lg-4">
+          <div key={article.url} className="col-12 col-sm-4 col-lg-3">
             <CardItem
               type="news"
               title={article.title}

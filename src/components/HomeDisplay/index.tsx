@@ -1,6 +1,5 @@
 import React from 'react';
-import { LatestNews } from './LatestNews';
-import { LatestPosts } from './LatestPosts';
+import { LatestNews, LatestPosts } from './LatestSections';
 import { HomeBanner } from './HomeBanner';
 import { HomeTopCategories } from './HomeTopCategories';
 
