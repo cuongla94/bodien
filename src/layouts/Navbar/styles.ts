@@ -1,3 +1,4 @@
+// styles.ts
 import styled from 'styled-components';
 import Image from 'next/image';
 import { Navbar } from 'react-bootstrap';
@@ -10,12 +11,8 @@ export const StyledNavbar = styled(Navbar)<{ $scrolled: boolean }>`
   transition: all 0.3s ease;
   background: ${({ $scrolled, theme }) =>
     $scrolled ? theme.navbarBackground || 'rgba(255,255,255,0.8)' : 'transparent'};
-  box-shadow: ${({ $scrolled, theme }) =>
-    $scrolled
-      ? theme.type === 'dark'
-        ? '0 2px 6px rgba(255,255,255,0.08)'
-        : '0 2px 4px rgba(0,0,0,0.1)'
-      : 'none'};
+  box-shadow: ${({ $scrolled }) =>
+    $scrolled ? '0 2px 4px rgba(0,0,0,0.1)' : 'none'};
   backdrop-filter: ${({ $scrolled }) => ($scrolled ? 'blur(8px)' : 'none')};
 `;
 
@@ -43,22 +40,35 @@ export const NavLinks = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+  position: relative;
 
   @media (max-width: 768px) {
-    display: none; // Optional: hide on small screens or implement hamburger menu
+    display: none;
   }
 `;
 
-export const NavLinkItem = styled.a`
-  color: ${({ theme }) => theme.linkColor};
-  font-weight: 500;
-  font-size: 0.95rem;
+export const NavLinkItem = styled.a<{ $active?: boolean }>`
+  color: ${({ theme, $active }) =>
+    $active ? theme.primaryColor : theme.mainTextColor};
+  font-weight: ${({ theme, $active }) =>
+    $active ? theme.fontWeights.bold : theme.fontWeights.medium};
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
-
-  &:hover {
-    color: ${({ theme }) => theme.linkHover};
-    text-decoration: underline;
-  }
+  position: relative;
+  padding-bottom: 4px;
 `;
+
+
+export const ActiveLinkUnderline = styled.div`
+  position: absolute;
+  bottom: -2px;
+  height: 2px;
+  background-color: ${({ theme }) => theme.primaryColor};
+  transform-origin: left center;
+  transition: transform 0.3s ease;
+  will-change: transform;
+`;
+
 

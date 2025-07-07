@@ -3,9 +3,9 @@ import { Container } from 'react-bootstrap';
 import { AppNavbar } from 'layouts/Navbar';
 import { ReactNode } from 'react';
 import { ScrollToTopButton } from 'common/ScrollToTopButton';
-import { LayoutWrapper, PageWrapper } from './styles';
+import { LayoutWrapper } from './styles';
 import { Footer } from 'layouts/Footer';
-import { AdminControls } from 'components/Admin/AdminControls';
+import { useRouter } from 'next/router';
 
 interface IPageLayoutProps {
   children: ReactNode;
@@ -15,14 +15,16 @@ interface IPageLayoutProps {
 
 export default function PageLayout({
   children,
-  className,
   isAdmin = false,
 }: IPageLayoutProps) {
+  const router = useRouter();
+  const activePath = router.pathname;
+
   return (
     <LayoutWrapper>
-      <AppNavbar />
-        {children}
-      <Footer />
+      <AppNavbar isAdmin={isAdmin} activePath={activePath} />
+      {children}
+      <Footer activePath={activePath} />
       <ScrollToTopButton />
     </LayoutWrapper>
   );

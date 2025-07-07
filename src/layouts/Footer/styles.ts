@@ -137,3 +137,18 @@ export const FooterRight = styled.div`
   gap: 2rem;
   flex-wrap: wrap;
 `;
+
+export const FooterNavLink = styled.a`
+  text-decoration: none;
+  color: ${({ theme }) => theme.mainTextColor};
+  font-weight: ${({ theme }) => theme.fontWeights.medium};
+
+  &.active {
+    color: ${({ theme }) => theme.primaryColor};
+    font-weight: ${({ theme }) => theme.fontWeights.bold};
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;

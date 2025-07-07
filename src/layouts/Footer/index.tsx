@@ -9,13 +9,18 @@ import {
   FooterInputGroup,
   FooterInput,
   FollowButton,
-  BottomNote
+  BottomNote,
+  FooterNavLink,
 } from './styles';
 import Link from 'next/link';
 import { Container } from 'react-bootstrap';
 import { AnimatedLink } from 'common/AnimatedLink';
 
-export const Footer = () => {
+interface FooterProps {
+  activePath: string;
+}
+
+export const Footer = ({ activePath }: FooterProps) => {
   return (
     <FooterContainer>
       <Container>
@@ -42,7 +47,11 @@ export const Footer = () => {
               <ul>
                 {Object.values(AppLinks).map((link) => (
                   <li key={link.link}>
-                    <Link href={link.link}>{link.title}</Link>
+                    <Link href={link.link} passHref legacyBehavior>
+                      <FooterNavLink className={activePath === link.link ? 'active' : ''}>
+                        {link.title}
+                      </FooterNavLink>
+                    </Link>
                   </li>
                 ))}
               </ul>

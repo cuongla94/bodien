@@ -63,6 +63,7 @@
     "date-fns": "^4.1.0",
     "dompurify": "^3.2.6",
     "formidable": "^3.5.4",
+    "framer-motion": "^12.23.0",
     "fs": "^0.0.1-security",
     "highlight.js": "^11.9.0",
     "lexical": "^0.32.1",

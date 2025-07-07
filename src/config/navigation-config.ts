@@ -14,10 +14,10 @@ export const AppLinks = {
         title: 'Blogs',
         link: `${appRoute}/blogs`
     },
-    contact: {
-        title: 'Contact',
-        link: `${appRoute}/contact-us`
-    }
+    // contact: {
+    //     title: 'Contact',
+    //     link: `${appRoute}/contact-us`
+    // }
 }
 
 export const LegalLinks = {
