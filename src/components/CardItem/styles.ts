@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Button } from 'react-bootstrap';
 
 //
 // ─── CARD ITEM ──────────────────────────────────────────────────────────────
@@ -170,3 +169,106 @@ export const CardItemFooterStyled = styled.div`
   margin-top: auto;
 `;
 
+//
+// ─── CARD ITEM HORIZONTAL ──────────────────────────────────────────────────────────────
+//
+export const CardItemHorizontalWrapper = styled.div`
+  display: flex;
+  gap: 1rem;
+  flex-direction: row;
+  border: 1px solid #eee;
+  border-radius: 0.75rem;
+  background-color: ${({ theme }) => theme.cardBackground || '#fff'};
+  box-shadow: ${({ theme }) => theme.cardShadow || '0 2px 4px rgba(0, 0, 0, 0.05)'};
+  padding: 1rem;
+  height: 100%; /* ensures it fills column height */
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    box-shadow: ${({ theme }) => theme.boxShadow || '0 8px 24px rgba(0,0,0,0.12)'};
+    transform: translateY(-2px);
+  }
+`;
+
+export const CardItemHorizontalImageWrapper = styled.div`
+  min-width: 100px;
+  height: 100px;
+background-color: #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #888;
+  padding: 1rem 0;
+`;
+
+export const CardItemHorizontalContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+  min-height: 100%;
+`;
+
+
+export const CardItemHorizontalCategory = styled.div`
+  background-color: #e0e7ff;
+  color: #3730a3;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+`;
+
+export const CardItemHorizontalTitle = styled.h5`
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+`;
+
+export const CardItemHorizontalDescription = styled.p`
+  font-size: 0.875rem;
+  color: ${({ theme }) => theme.subTextColor || '#6b7280'};
+  margin: 0.5rem 0;
+  line-height: 1.4;
+  flex-grow: 1;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  min-height: 6.5em;
+`;
+
+export const CardItemHorizontalMeta = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #777;
+  margin-top: 0.25rem;
+  gap: 1rem;
+
+  svg {
+    margin-right: 0.25rem;
+    vertical-align: middle;
+  }
+`;
+
+
+export const CardItemHorizontalReadMore = styled.button`
+  font-size: 0.75rem;
+  color: #2563eb;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;

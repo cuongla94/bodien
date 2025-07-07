@@ -1,4 +1,5 @@
 import React from 'react';
+import { Row, Col } from 'react-bootstrap';
 import { HomeSection } from '../styles';
 import { AppLinks } from 'config/navigation-config';
 import { CardItem } from 'components/CardItem';
@@ -28,7 +29,7 @@ export const LatestNews: React.FC<LatestNewsProps> = ({ articles }) => {
     .slice(0, 6);
 
   const handleReadMore = (url: string) => {
-    window.open(url, '_blank'); // opens in new tab
+    window.open(url, '_blank');
   };
 
   return (
@@ -38,10 +39,11 @@ export const LatestNews: React.FC<LatestNewsProps> = ({ articles }) => {
         hideLink={false}
         href={AppLinks.news.link}
       />
-      <div className="row g-4">
+      <Row className="g-4 align-items-stretch mt-4">
         {sortedArticles.map((article) => (
-          <div key={article.url} className="col-12 col-sm-4 col-lg-3">
+          <Col key={article.url} xs={12} md={6} className="d-flex">
             <CardItem
+              mode="horizontal"
               type="news"
               title={article.title}
               description={article.description}
@@ -52,9 +54,9 @@ export const LatestNews: React.FC<LatestNewsProps> = ({ articles }) => {
               url={article.url}
               onReadMoreClick={() => handleReadMore(article.url)}
             />
-          </div>
+          </Col>
         ))}
-      </div>
+      </Row>
     </HomeSection>
   );
 };

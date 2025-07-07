@@ -1,7 +1,9 @@
 import React from 'react';
-import { FiEye, FiShare2 } from 'react-icons/fi';
+import Image from 'next/image';
+import { FiEye, FiShare2, FiCalendar } from 'react-icons/fi';
 import { urlFor } from 'apis';
 import { BlogCardItem } from 'config/blog-config';
+import { truncateText } from 'utils/text';
 
 import {
   CardItemWrapper,
@@ -17,8 +19,15 @@ import {
   CardItemButton,
   CardItemReadMoreLink,
   CardItemFooterStyled,
+  CardItemHorizontalWrapper,
+  CardItemHorizontalImageWrapper,
+  CardItemHorizontalContent,
+  CardItemHorizontalCategory,
+  CardItemHorizontalTitle,
+  CardItemHorizontalMeta,
+  CardItemHorizontalReadMore,
+  CardItemHorizontalDescription,
 } from './styles';
-import { truncateText } from 'utils/text';
 
 interface CardItemProps {
   type?: 'blog' | 'news';
@@ -41,6 +50,7 @@ interface CardItemProps {
   tags?: string[];
   numOfViews?: number;
   numOfShares?: number;
+  mode?: 'vertical' | 'horizontal';
 }
 
 export const CardItem: React.FC<CardItemProps> = ({
@@ -61,9 +71,18 @@ export const CardItem: React.FC<CardItemProps> = ({
   theme,
   numOfViews,
   numOfShares,
+  mode = 'vertical',
 }) => {
   const isNews = type === 'news';
   const hasImage = !!image;
+
+  const imageUrl = hasImage ? (isNews ? image : urlFor(image).height(220).url()) : null;
+  const horizontalImageUrl = hasImage
+    ? isNews
+      ? image
+      : urlFor(image).width(120).height(120).url()
+    : null;
+
   const displayCategory = typeof category === 'string' ? category : category?.title || '';
   const formattedDate = new Date(publishedDate).toLocaleDateString(undefined, {
     year: 'numeric',
@@ -73,13 +92,61 @@ export const CardItem: React.FC<CardItemProps> = ({
 
   const showAnalytics = isAdmin && (numOfViews || numOfShares);
 
+  // =======================
+  // Horizontal Mode Layout
+  // =======================
+  if (mode === 'horizontal') {
+    return (
+      <CardItemHorizontalWrapper>
+        {horizontalImageUrl ? (
+          <CardItemHorizontalImageWrapper>
+            <Image
+              src={horizontalImageUrl}
+              alt={title}
+              width={100}
+              height={100}
+              objectFit="cover"
+            />
+          </CardItemHorizontalImageWrapper>
+        ) : (
+          <CardItemHorizontalImageWrapper>No Image</CardItemHorizontalImageWrapper>
+        )}
+
+        <CardItemHorizontalContent>
+          {displayCategory && (
+            <CardItemHorizontalCategory>{displayCategory}</CardItemHorizontalCategory>
+          )}
+
+          <CardItemHorizontalTitle>{title}</CardItemHorizontalTitle>
+
+          {isNews && description && (
+            <CardItemDescription>{truncateText(description, 150)}</CardItemDescription>
+          )}
+
+          <CardItemHorizontalMeta>
+            <span>
+              <FiCalendar style={{ marginRight: '4px' }} />
+              {formattedDate}
+            </span>
+
+            {onReadMoreClick && (
+              <CardItemHorizontalReadMore onClick={onReadMoreClick}>
+                Read More
+              </CardItemHorizontalReadMore>
+            )}
+          </CardItemHorizontalMeta>
+        </CardItemHorizontalContent>
+      </CardItemHorizontalWrapper>
+    );
+  }
+
+  // =====================
+  // Vertical Mode Layout
+  // =====================
   return (
     <CardItemWrapper>
       {hasImage ? (
-        <CardItemImage
-          src={isNews ? image : urlFor(image).height(220).url()}
-          alt={title}
-        />
+        <CardItemImage src={imageUrl} alt={title} />
       ) : (
         <CardItemPlaceholderImage>No Image Available</CardItemPlaceholderImage>
       )}
@@ -92,9 +159,9 @@ export const CardItem: React.FC<CardItemProps> = ({
         <CardItemTitle as="div">{title}</CardItemTitle>
 
         {isNews && description && (
-          <CardItemDescription>
-            {truncateText(description, 250)}
-          </CardItemDescription>
+          <CardItemHorizontalDescription>
+            {truncateText(description, 300)}
+          </CardItemHorizontalDescription>
         )}
 
         {showAnalytics && (
@@ -115,9 +182,7 @@ export const CardItem: React.FC<CardItemProps> = ({
         <CardItemFooterStyled>
           <span>{formattedDate}</span>
           {onReadMoreClick && (
-            <CardItemReadMoreLink onClick={onReadMoreClick}>
-              Read more
-            </CardItemReadMoreLink>
+            <CardItemReadMoreLink onClick={onReadMoreClick}>Read more</CardItemReadMoreLink>
           )}
         </CardItemFooterStyled>
 

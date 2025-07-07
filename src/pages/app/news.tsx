@@ -1,6 +1,5 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
 
 import PageLayout from 'layouts/PageLayout';
 import { Breadcrumbs } from 'common/Breadcrumbs';
@@ -33,16 +32,16 @@ const NewsPage = () => {
 
   return (
     <PageLayout>
-      <div className="container mt-5 mb-5">
+      <Container className="flex-grow-1 d-flex flex-column">
         <Breadcrumbs items={breadcrumbItems} className="mb-3" />
         {loading ? (
           <p className="text-muted">Loading...</p>
         ) : articles.length === 0 ? (
           <p className="text-muted">No articles found.</p>
         ) : (
-          <div className="row g-4">
+          <Row className="g-4">
             {articles.map((article, idx) => (
-              <div key={idx} className="col-12 col-sm-6 col-lg-4">
+              <Col key={idx} xs={12} sm={6} lg={4}>
                 <CardItem
                   type="news"
                   title={article.title}
@@ -50,14 +49,14 @@ const NewsPage = () => {
                   author={article.author}
                   source={article.source}
                   image={article.image}
-                  date={article.published_at}
+                  publishedDate={article.published_at}
                   url={article.url}
                 />
-              </div>
+              </Col>
             ))}
-          </div>
+          </Row>
         )}
-      </div>
+      </Container>
     </PageLayout>
   );
 };
