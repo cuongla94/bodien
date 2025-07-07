@@ -13,6 +13,7 @@ import {
 } from './styles';
 import Link from 'next/link';
 import { Container } from 'react-bootstrap';
+import { AnimatedLink } from 'common/AnimatedLink';
 
 export const Footer = () => {
   return (
@@ -51,8 +52,8 @@ export const Footer = () => {
               <h6>Legal</h6>
               <ul>
                 {Object.values(LegalLinks).map((link) => (
-                  <li key={link.link}>
-                    <Link href={link.link}>{link.title}</Link>
+                  <li key={link.link} style={{ listStyle: 'none' }}>
+                    <AnimatedLink href={link.link}>{link.title}</AnimatedLink>
                   </li>
                 ))}
               </ul>

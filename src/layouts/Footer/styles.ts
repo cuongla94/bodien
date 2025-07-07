@@ -114,12 +114,15 @@ export const FooterLinksColumn = styled.div`
       margin-bottom: 0.4rem;
 
       a {
-        color: ${({ theme }) => theme.linkColor};
+        color: ${({ theme }) => theme.subTextColor || '#6b7280'};  // Neutral gray by default
         font-size: 0.9rem;
         text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease, text-decoration 0.2s ease;
 
-        &:hover {
-          color: ${({ theme }) => theme.linkHover};
+        &:hover,
+        &:focus {
+          color: ${({ theme }) => theme.linkHover || '#2563eb'};  // Accent color on interaction
           text-decoration: underline;
         }
       }

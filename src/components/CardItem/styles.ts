@@ -148,14 +148,14 @@ export const CardItemButton = styled.button<{
 export const CardItemReadMoreLink = styled.span`
   font-size: 0.875rem;
   font-weight: 600;
-  color: ${({ theme }) => theme?.linkColor || '#2563eb'};
+  color: ${({ theme }) => theme?.linkColor};
   text-decoration: none;
   margin-left: auto;
   cursor: pointer;
 
   &:hover {
     text-decoration: none;
-    color: ${({ theme }) => theme?.linkHover || '#1D4ED8'};
+    color: ${({ theme }) => theme?.linkHover};
   }
 `;
 
@@ -165,7 +165,7 @@ export const CardItemFooterStyled = styled.div`
   justify-content: space-between;
   align-items: center;
   font-size: 0.75rem;
-  color: ${({ theme }) => theme?.subTextColor || '#888'};
+  color: ${({ theme }) => theme?.subTextColor};
   margin-top: auto;
 `;
 
@@ -193,7 +193,7 @@ export const CardItemHorizontalWrapper = styled.div`
 export const CardItemHorizontalImageWrapper = styled.div`
   min-width: 100px;
   height: 100px;
-background-color: #e5e7eb;
+  background-color: #e5e7eb;
   border-radius: 8px;
   overflow: hidden;
   display: flex;

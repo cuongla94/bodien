@@ -1,7 +1,7 @@
 import React from 'react';
-import Link from 'next/link';
-import { SectionHeaderWrapper, SectionHeaderTitle, SectionHeaderLink } from './styles';
+import { SectionHeaderWrapper, SectionHeaderTitle } from './styles';
 import { sectionHeaderConfig } from 'config/common-config';
+import { AnimatedLink } from 'common/AnimatedLink';
 
 interface SectionHeaderProps {
   title: string;
@@ -16,15 +16,18 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
   hideLink = true,
   linkLabel,
 }) => {
-  linkLabel = sectionHeaderConfig.viewAll;
+  const label = linkLabel || sectionHeaderConfig.viewAll;
 
   return (
     <SectionHeaderWrapper>
       <SectionHeaderTitle>{title}</SectionHeaderTitle>
       {!hideLink && href && (
-        <Link href={href} passHref legacyBehavior>
-          <SectionHeaderLink>{linkLabel}</SectionHeaderLink>
-        </Link>
+        <AnimatedLink
+          href={href}
+          uppercase
+          isBlack>
+            {label}
+        </AnimatedLink>
       )}
     </SectionHeaderWrapper>
   );
