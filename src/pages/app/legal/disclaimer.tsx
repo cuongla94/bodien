@@ -1,8 +1,8 @@
 import React from 'react';
-import { Breadcrumbs } from 'common/Breadcrumbs';
 import PageLayout from 'layouts/PageLayout';
 import { MainInfo } from 'config/main-config';
 import { Container } from 'react-bootstrap';
+import { PageTitle } from 'common/PageTitle';
 
 const DisclaimerPage = () => {
   const breadcrumbItems = [
@@ -12,10 +12,8 @@ const DisclaimerPage = () => {
 
   return (
     <PageLayout>
+      <PageTitle title="Disclaimer" breadcrumbs={breadcrumbItems} />
       <Container className="mt-5">
-        <Breadcrumbs items={breadcrumbItems} className="mb-3" />
-        <h2 className="mb-4">Disclaimer</h2>
-
         <p>
           By using this website, blog, or making a purchase, you agree to the terms outlined below.
         </p>

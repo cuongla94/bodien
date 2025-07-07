@@ -1,7 +1,7 @@
 import PageLayout from 'layouts/PageLayout';
 import { Blogs } from 'components/Blogs';
-import { Breadcrumbs } from 'common/Breadcrumbs';
 import { Container } from 'react-bootstrap';
+import { PageTitle } from 'common/PageTitle';
 
 const BlogsPage = () => {
   const breadcrumbItems = [
@@ -11,12 +11,9 @@ const BlogsPage = () => {
 
   return (
     <PageLayout className="blog-list-page">
+      <PageTitle title="All Blog Posts" breadcrumbs={breadcrumbItems} />
       <Container className="mt-5">
-        <Breadcrumbs items={breadcrumbItems} className="mb-3" />
-        <h1 className="mb-4">All Blog Posts</h1>
-        <Blogs
-          isAdmin={false}
-          authenticated={false} />
+        <Blogs isAdmin={false} authenticated={false} />
       </Container>
     </PageLayout>
   );

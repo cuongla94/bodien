@@ -22,15 +22,21 @@ export const Breadcrumbs = ({ items, className = '' }: BreadcrumbsProps) => {
         return (
           <span key={index} className="d-flex align-items-center text-muted small">
             {!isLast && item.href ? (
-              <Link href={item.href} className="text-decoration-none me-1 text-primary">
+              <Link
+                href={item.href}
+                className="text-decoration-none me-1"
+                style={{ color: '#ffffff', fontWeight: 500 }}
+              >
                 {item.label}
               </Link>
             ) : (
-              <span className="fw-bold text-dark">{item.label}</span>
+              <span className="fw-bold" style={{ color: '#ffffff' }}>
+                {item.label}
+              </span>
             )}
 
             {!isLast && (
-              <FiChevronRight className="mx-2 text-muted" size={14} />
+              <FiChevronRight className="mx-2" style={{ color: '#ffffff' }} size={14} />
             )}
           </span>
         );

@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { BlogList } from './BlogList';
 import { BlogsFilterControls } from './BlogsFilterControls';
 import { Spinner } from 'common/Spinner';
@@ -29,6 +30,8 @@ export const Blogs = ({
   deleteError,
   dismissAlert,
 }: BlogsProps) => {
+  const searchParams = useSearchParams();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState({ view: { list: 0 }, date: { asc: 0 } });
   const [sortOption, setSortOption] = useState<BlogControlSortOptions>('relevant');
@@ -40,7 +43,23 @@ export const Blogs = ({
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const { data, size, setSize, hitEnd } = useGetBlogsPages({ filter });
 
+  useEffect(() => {
+    const sort = searchParams.get('sort');
+    const category = searchParams.get('category');
+
+    if (sort && ['date_asc', 'date_desc', 'title_asc', 'title_desc', 'popularity', 'relevant'].includes(sort)) {
+      setSortOption(sort as BlogControlSortOptions);
+    }
+
+    if (category) {
+      setSelectedCategory(category);
+    }
+  }, [searchParams]);
+
   const flatBlogs = useMemo(() => data?.flat() || [], [data]);
+
+  const effectiveSortOption =
+    selectedCategory && sortOption === 'relevant' ? 'date_desc' : sortOption;
 
   const filteredBlogs = flatBlogs
     .filter(blog => !blog.hidden || isAdmin)
@@ -54,7 +73,7 @@ export const Blogs = ({
         : true
     )
     .sort((a, b) => {
-      switch (sortOption) {
+      switch (effectiveSortOption) {
         case 'date_asc':
           return new Date(a.date).getTime() - new Date(b.date).getTime();
         case 'date_desc':
@@ -65,8 +84,13 @@ export const Blogs = ({
           return b.title.localeCompare(a.title);
         case 'popularity':
           return (b.views || 0) - (a.views || 0);
+        case 'relevant':
         default:
-          return 0;
+          // Combined sort: 1) by views descending, 2) then by date descending
+          if ((b.views || 0) !== (a.views || 0)) {
+            return (b.views || 0) - (a.views || 0);
+          }
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
       }
     });
 
@@ -119,7 +143,7 @@ export const Blogs = ({
       />
 
       {isLoading && (
-        <div className="d-flex justify-content-center my-4">
+        <div className="d-flex justify-content-center align-item-center my-4">
           <Spinner color={theme?.spinnerColor || '#999'} size={28} />
         </div>
       )}

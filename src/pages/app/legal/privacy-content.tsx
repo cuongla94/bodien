@@ -3,20 +3,19 @@ import Link from 'next/link';
 import React from 'react';
 import { AppLinks, LegalLinks, MainInfo } from 'config';
 import { getEffectiveDate } from 'utils/getDates';
-import { Breadcrumbs } from 'common/Breadcrumbs';
 import { Container } from 'react-bootstrap';
+import { PageTitle } from 'common/PageTitle';
 
 const PrivacyPolicyPage = () => {
-    const breadcrumbItems = [
-        { label: 'Home', href: '/' },
-        { label: 'Privacy Content' }
-    ];
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Privacy Content' }
+  ];
 
   return (
     <PageLayout>
+      <PageTitle title="Privacy Policy" breadcrumbs={breadcrumbItems} />
       <Container className="mt-5">
-        <Breadcrumbs items={breadcrumbItems} className="mb-3" />
-        <h2 className="mt-4 mb-4">Privacy Policy</h2>
         <p className="text-muted">Effective Date: {getEffectiveDate()}</p>
 
         <p>

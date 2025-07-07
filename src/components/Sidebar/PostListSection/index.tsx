@@ -21,7 +21,7 @@ export const PostListSection: React.FC<PostListSectionProps> = ({
       <SectionHeaderRow>
         <SectionTitle>{title}</SectionTitle>
         {posts.length > 0 && (
-          <AnimatedLink href={`${AppLinks.blogs.link}?sort=views`} uppercase={false}>
+          <AnimatedLink href={`${AppLinks.blogs.link}?sort=popularity`} uppercase={false}>
             See More
           </AnimatedLink>
         )}
