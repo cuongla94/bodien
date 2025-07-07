@@ -1,9 +1,10 @@
 import PageLayout from 'layouts/PageLayout';
 import Link from 'next/link';
 import React from 'react';
-import { AppLinks, MainInfo } from 'config';
+import { AppLinks, LegalLinks, MainInfo } from 'config';
 import { getEffectiveDate } from 'utils/getDates';
 import { Breadcrumbs } from 'common/Breadcrumbs';
+import { Container } from 'react-bootstrap';
 
 const PrivacyPolicyPage = () => {
     const breadcrumbItems = [
@@ -13,9 +14,9 @@ const PrivacyPolicyPage = () => {
 
   return (
     <PageLayout>
-      <div className="mt-5">
+      <Container className="mt-5">
         <Breadcrumbs items={breadcrumbItems} className="mb-3" />
-        <h2 className="mt-4 mb-4 text-primary">Privacy Policy</h2>
+        <h2 className="mt-4 mb-4">Privacy Policy</h2>
         <p className="text-muted">Effective Date: {getEffectiveDate()}</p>
 
         <p>
@@ -51,8 +52,8 @@ const PrivacyPolicyPage = () => {
         <h4 className="mt-4 mb-2 text-secondary">4. Affiliate Links</h4>
         <p>
           We use affiliate links throughout the site. When you click a product link and make a purchase, we may earn a commission — at no additional cost to you. See our{' '}
-          <Link href={AppLinks.affiliateDisclosure.link} className="text-decoration-underline">
-            {AppLinks.affiliateDisclosure.title}
+          <Link href={LegalLinks.affiliateDisclosure.link} className="text-decoration-underline">
+            {LegalLinks.affiliateDisclosure.title}
           </Link>{' '}
           for more.
         </p>
@@ -79,7 +80,7 @@ const PrivacyPolicyPage = () => {
         <p className="text-muted mt-4">
           Thank you for trusting <strong>[Your Blog Name]</strong>. We’re committed to protecting your privacy and providing a transparent user experience.
         </p>
-      </div>
+      </Container>
     </PageLayout>
   );
 };

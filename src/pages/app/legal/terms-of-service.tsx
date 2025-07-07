@@ -1,9 +1,10 @@
 import PageLayout from 'layouts/PageLayout';
 import Link from 'next/link';
 import React from 'react';
-import { AppLinks, MainInfo } from 'config';
+import { AppLinks, LegalLinks, MainInfo } from 'config';
 import { getEffectiveDate } from 'utils/getDates';
 import { Breadcrumbs } from 'common/Breadcrumbs';
+import { Container } from 'react-bootstrap';
 
 const TermsOfServicePage = () => {
   const breadcrumbItems = [
@@ -13,9 +14,9 @@ const TermsOfServicePage = () => {
 
   return (
     <PageLayout>
-      <div className="mt-5">
+      <Container className="mt-5">
         <Breadcrumbs items={breadcrumbItems} className="mb-3" />
-        <h2 className="mt-4 mb-4 text-primary">Terms of Service</h2>
+        <h2 className="mt-4 mb-4">Terms of Service</h2>
         <p className="text-muted">Effective Date: {getEffectiveDate()}</p>
 
         <p>
@@ -30,8 +31,8 @@ const TermsOfServicePage = () => {
         <h4 className="mt-4 mb-2 text-secondary">2. Affiliate Relationships</h4>
         <p>
           We participate in affiliate marketing programs, which means we may earn a commission on qualifying purchases made through links on our site. Please read our{' '}
-          <Link href={AppLinks.affiliateDisclosure.link} className="text-decoration-underline">
-            {AppLinks.affiliateDisclosure.title}
+          <Link href={LegalLinks.affiliateDisclosure.link} className="text-decoration-underline">
+            {LegalLinks.affiliateDisclosure.title}
           </Link>{' '}
           for full details.
         </p>
@@ -69,7 +70,7 @@ const TermsOfServicePage = () => {
         <p className="text-muted mt-4">
           Thank you for using <strong>{MainInfo.brandName}</strong>. We appreciate your trust and readership.
         </p>
-      </div>
+      </Container>
     </PageLayout>
   );
 };

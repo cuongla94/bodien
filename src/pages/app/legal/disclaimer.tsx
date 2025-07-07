@@ -2,6 +2,7 @@ import React from 'react';
 import { Breadcrumbs } from 'common/Breadcrumbs';
 import PageLayout from 'layouts/PageLayout';
 import { MainInfo } from 'config/main-config';
+import { Container } from 'react-bootstrap';
 
 const DisclaimerPage = () => {
   const breadcrumbItems = [
@@ -11,7 +12,7 @@ const DisclaimerPage = () => {
 
   return (
     <PageLayout>
-      <div className="mt-5">
+      <Container className="mt-5">
         <Breadcrumbs items={breadcrumbItems} className="mb-3" />
         <h2 className="mb-4">Disclaimer</h2>
 
@@ -62,7 +63,7 @@ const DisclaimerPage = () => {
         <p className="text-muted mt-4">
           Thank you for visiting <strong>{MainInfo.brandName}</strong> and trusting us to provide helpful content.
         </p>
-      </div>
+      </Container>
     </PageLayout>
   );
 };

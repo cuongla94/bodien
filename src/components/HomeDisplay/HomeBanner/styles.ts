@@ -55,12 +55,14 @@ export const HomeBannerCTAButton = styled.a`
   border-radius: 50px;
   text-decoration: none;
   font-family: ${({ theme }) => theme.fontFamily.button};
-  transition: background-color ${({ theme }) => theme.transition.normal};
+  transition: background-color ${({ theme }) => theme.transition.normal}, color ${({ theme }) => theme.transition.normal};
 
   &:hover {
     background-color: ${({ theme }) => theme.buttonHoverBg};
+    color: ${({ theme }) => theme.buttonText}; // <-- explicitly preserve text color
   }
 `;
+
 
 export const HomeBannerImageWrapper = styled.div`
   flex: 1;

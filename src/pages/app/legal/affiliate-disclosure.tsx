@@ -2,6 +2,7 @@ import { Breadcrumbs } from 'common/Breadcrumbs';
 import { AffiliatePrograms, MainInfo } from 'config/main-config';
 import PageLayout from 'layouts/PageLayout';
 import React from 'react';
+import { Container } from 'react-bootstrap';
 
 const AffiliateDisclosurePage = () => {
     const breadcrumbItems = [
@@ -11,7 +12,7 @@ const AffiliateDisclosurePage = () => {
 
   return (
     <PageLayout>
-        <div className='mt-5'>
+        <Container className='mt-5'>
             <Breadcrumbs items={breadcrumbItems} className="mb-3" />
             <h2 className="mb-4">Affiliate Disclosure</h2>
 
@@ -65,7 +66,7 @@ const AffiliateDisclosurePage = () => {
             <p className="text-muted mt-4">
             Thank you for your trust and support. ❤️ — The <strong>[Your Blog Name]</strong> Team
             </p>
-        </div>
+        </Container>
     </PageLayout>
   );
 };

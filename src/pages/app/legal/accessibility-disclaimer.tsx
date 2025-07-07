@@ -2,6 +2,7 @@ import { Breadcrumbs } from 'common/Breadcrumbs';
 import PageLayout from 'layouts/PageLayout';
 import { MainInfo } from 'config/main-config';
 import React from 'react';
+import { Container } from 'react-bootstrap';
 
 const AccessibilityDisclaimerPage = () => {
   const breadcrumbItems = [
@@ -11,12 +12,12 @@ const AccessibilityDisclaimerPage = () => {
 
   return (
     <PageLayout>
-      <div className="mt-5">
+      <Container className="mt-5">
         <Breadcrumbs items={breadcrumbItems} className="mb-3" />
         <h2 className="mb-4">Accessibility Statement</h2>
 
         <p>
-          <strong>{MainInfo.brandName}</strong> is committed to making our website accessible to all individuals, regardless of ability or technology. We continuously strive to improve the user experience for everyone.
+          <strong>{MainInfo.brandName}</strong> is committed to making our website accessible to all inContaineriduals, regardless of ability or technology. We continuously strive to improve the user experience for everyone.
         </p>
 
         <h4 className="mt-4 mb-2 text-secondary">Our Accessibility Goals</h4>
@@ -40,7 +41,7 @@ const AccessibilityDisclaimerPage = () => {
         <p className="text-muted mt-4">
           Thank you for helping us build an inclusive and accessible digital space. 💙
         </p>
-      </div>
+      </Container>
     </PageLayout>
   );
 };
