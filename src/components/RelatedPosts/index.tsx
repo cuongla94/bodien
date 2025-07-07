@@ -1,6 +1,6 @@
 import React from 'react';
 import { IBlogPost } from 'types/blog';
-import { SectionTitle, SectionWrapper } from './styles';
+import { RelatedPostsSectionTitle, RelatedPostsSectionWrapper } from './styles';
 import { RelatedPostItem } from './RelatedPostItem';
 
 interface RelatedPostsProps {
@@ -15,26 +15,31 @@ export const RelatedPosts: React.FC<RelatedPostsProps> = ({
   allPosts,
   currentPostId,
   currentCategory,
-  onReadMoreClick
+  onReadMoreClick,
 }) => {
+  // Normalize currentCategory value
   const categoryValue =
     typeof currentCategory === 'string'
       ? currentCategory
-      : currentCategory?.value || currentCategory?.title;
+      : currentCategory?.value || currentCategory?.title || '';
 
+  // Filter related posts
   const related = allPosts
-    .filter(
-      (post) =>
-        post._id !== currentPostId &&
-        (typeof post.category === 'string'
-          ? post.category === categoryValue
-          : post.category?.value === categoryValue)
-    )
+    .filter((post) => {
+      if (post._id === currentPostId) return false;
+
+      const postCategory =
+        typeof post.category === 'string'
+          ? post.category
+          : post.category?.value || post.category?.title || '';
+
+      return postCategory === categoryValue;
+    })
     .slice(0, 5);
 
   return (
-    <SectionWrapper>
-      <SectionTitle>Related Posts</SectionTitle>
+    <RelatedPostsSectionWrapper>
+      <RelatedPostsSectionTitle>Related Posts</RelatedPostsSectionTitle>
       {related.length === 0 ? (
         <p className="text-muted">No related posts available.</p>
       ) : (
@@ -48,6 +53,6 @@ export const RelatedPosts: React.FC<RelatedPostsProps> = ({
           ))}
         </div>
       )}
-    </SectionWrapper>
+    </RelatedPostsSectionWrapper>
   );
 };

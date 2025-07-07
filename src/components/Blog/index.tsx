@@ -1,9 +1,8 @@
+// components/Blog/index.tsx
 import React from 'react';
-import { Row, Col } from 'react-bootstrap';
-import { BlogModal } from './BlogModal';
 import { IBlogPost } from 'types/blog';
-import { BlogDetails } from './BlogDetails';
 import { RelatedPosts } from 'components/RelatedPosts';
+import { BlogView } from 'components/BlogView';
 
 interface BlogProps {
   blog: IBlogPost;
@@ -22,22 +21,30 @@ export const Blog: React.FC<BlogProps> = ({
   onReadMoreClick,
   theme,
 }) => {
+  const sections = blog.sections || [];
+
   return (
-    <BlogModal isOpen={isOpen} onClose={onClose}>
-      <Row>
-        <Col lg={8} md={12}>
-          <BlogDetails blog={blog} />
-        </Col>
-        <Col lg={4} md={12}>
-          <RelatedPosts
-            allPosts={allPosts}
-            currentPostId={blog._id}
-            currentCategory={blog.category}
-            onReadMoreClick={onReadMoreClick}
-            theme={theme}
-          />
-        </Col>
-      </Row>
-    </BlogModal>
+    <BlogView
+      title={blog.title}
+      date={blog.publishedAt}
+      category={blog.category}
+      sections={[
+        ...sections,
+        {
+          _type: 'product',
+        },
+      ]}
+      isOpen={isOpen}
+      onClose={onClose}
+      isPreview={true}
+    >
+      <RelatedPosts
+        allPosts={allPosts}
+        currentPostId={blog._id}
+        currentCategory={blog.category}
+        onReadMoreClick={onReadMoreClick}
+        theme={theme}
+      />
+    </BlogView>
   );
 };

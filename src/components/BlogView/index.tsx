@@ -3,7 +3,6 @@ import Image from 'next/image';
 import { Col, Row } from 'react-bootstrap';
 import { PortableText } from '@portabletext/react';
 import { portableTextComponents } from 'utils/html/portableTextComponent';
-import { BlogModal } from 'components/Blog/BlogModal';
 import { QuillPreview } from 'components/QuillPreview';
 
 import {
@@ -18,32 +17,9 @@ import {
   BlogViewMetaRow,
   BlogViewCategory,
 } from './styles';
-
-interface BlogSection {
-  _type: 'content' | 'product' | 'image';
-  _key?: string;
-  name?: string;
-  content?: any;
-  description?: any;
-  imagePreview?: string;
-  image?: { asset?: { url: string } };
-  affiliateLinks?: { label: string; url: string; clicks?: number }[];
-  width?: number;
-  height?: number;
-}
-
-interface BlogViewProps {
-  title: string;
-  date?: string;
-    category?: {
-        title: string;
-        value: string;
-    };
-  sections: BlogSection[];
-  isPreview?: boolean;
-  isOpen?: boolean;
-  onClose?: () => void;
-}
+import { BlogViewModal } from './BlogViewModal';
+import moment from 'moment';
+import { BlogViewProps } from './types';
 
 export const BlogView: React.FC<BlogViewProps> = ({
   title,
@@ -53,16 +29,19 @@ export const BlogView: React.FC<BlogViewProps> = ({
   isPreview = false,
   isOpen = false,
   onClose = () => {},
+  children
 }) => {
   const content = (
     <BlogViewContentWrapper>
       <BlogViewTitle>{title}</BlogViewTitle>
         <BlogViewMetaRow>
             <BlogViewCategory>
-                    {category.title || 'Uncategorized'}
+              {category.title || 'Uncategorized'}
             </BlogViewCategory>
             <BlogViewDate>
-                {date ? `Published on ${date}` : `Current time: ${new Date().toLocaleString()}`}
+              {date
+                ? `Published on ${moment(date).format('MMMM DD, YYYY')}`
+                : `Current time: ${moment().format('MMMM DD, YYYY')}`}
             </BlogViewDate>
         </BlogViewMetaRow>
 
@@ -137,6 +116,7 @@ export const BlogView: React.FC<BlogViewProps> = ({
                             href={link.url}
                             target="_blank"
                             rel="noopener noreferrer"
+                            style={{ textDecoration: 'none' }}
                             className="btn btn-sm btn-outline-primary me-2 mb-2"
                           >
                             {link.label}
@@ -195,10 +175,16 @@ export const BlogView: React.FC<BlogViewProps> = ({
   );
 
   return isPreview ? (
-    <BlogModal isOpen={isOpen} onClose={onClose}>
-      {content}
-    </BlogModal>
+    <BlogViewModal isOpen={isOpen} onClose={onClose}>
+      <>
+        {content}
+        {children && <div style={{ marginTop: '2rem' }}>{children}</div>}
+      </>
+    </BlogViewModal>
   ) : (
-    content
+    <>
+      {content}
+      {children && <div style={{ marginTop: '2rem' }}>{children}</div>}
+    </>
   );
 };
