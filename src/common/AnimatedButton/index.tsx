@@ -9,6 +9,7 @@ interface AnimatedButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
   borderColor?: string;
   hoverTextColor?: string;
   disabled?: boolean;
+  fontSize?: keyof import('theme/types').AppTheme['fontSize'];
 }
 
 export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
@@ -19,6 +20,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   borderColor,
   hoverTextColor,
   disabled,
+  fontSize,
   ...rest
 }) => {
   return (
@@ -29,6 +31,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       borderColor={borderColor}
       hoverTextColor={hoverTextColor}
       disabled={disabled}
+      fontSize={fontSize}
       {...rest}
     >
       {children}

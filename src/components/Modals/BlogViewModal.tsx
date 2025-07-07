@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import {
-  BlogViewModalCloseButton,
-  BlogViewModalContent,
-  BlogViewModalOverlay,
-  BlogViewModalFooterButton,
-  BlogViewModalSlideWrapper
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  ModalFooterButton,
+  ModalSlideWrapper
 } from './styles';
 
 interface BlogViewModalProps {
@@ -48,24 +48,24 @@ export const BlogViewModal: React.FC<BlogViewModalProps> = ({ isOpen, onClose, c
   };
 
   return (
-    <BlogViewModalOverlay onClick={handleOverlayClick}>
-      <BlogViewModalSlideWrapper animation={animation}>
-        <BlogViewModalContent ref={contentRef}>
-          <BlogViewModalCloseButton
+    <ModalOverlay onClick={handleOverlayClick}>
+      <ModalSlideWrapper animation={animation}>
+        <ModalContent ref={contentRef}>
+          <ModalCloseButton
             onClick={(e) => {
               e.stopPropagation();
               triggerClose();
             }}
           >
             ×
-          </BlogViewModalCloseButton>
+          </ModalCloseButton>
 
           <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
             {children}
           </div>
 
           <div className="d-flex justify-content-end mt-4" style={{ width: '100%' }}>
-            <BlogViewModalFooterButton
+            <ModalFooterButton
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
@@ -73,10 +73,10 @@ export const BlogViewModal: React.FC<BlogViewModalProps> = ({ isOpen, onClose, c
               }}
             >
               Close
-            </BlogViewModalFooterButton>
+            </ModalFooterButton>
           </div>
-        </BlogViewModalContent>
-      </BlogViewModalSlideWrapper>
-    </BlogViewModalOverlay>
+        </ModalContent>
+      </ModalSlideWrapper>
+    </ModalOverlay>
   );
 };

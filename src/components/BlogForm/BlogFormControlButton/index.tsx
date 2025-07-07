@@ -1,7 +1,9 @@
 import { FiEye } from 'react-icons/fi';
 import { AdminBlogForm } from 'config/admin-config';
 import { AnimatedButton } from 'common/AnimatedButton';
-
+import { FiPlusCircle } from 'react-icons/fi';
+import { Col, Row } from 'react-bootstrap';
+import { ColumnWithBottomPadding, FirstColumn, LastColumn, MiddleColumn } from './styles';
 interface BlogFormControlButtonsProps {
   addProductSection: () => void;
   addContentSection: () => void;
@@ -28,43 +30,52 @@ export const BlogFormControlButtons = ({
   return (
     <div className="d-flex flex-column gap-3">
       {/* Row 1: Add Buttons */}
-      <div className="d-flex gap-2 flex-wrap">
-        <AnimatedButton
-          type="button"
-          baseColor="white"
-          hoverColor="black"
-          textColor="black"
-          borderColor="black"
-          hoverTextColor="white"
-          onClick={addProductSection}
-        >
-          + {AdminBlogForm.controls.addProductReviews}
-        </AnimatedButton>
+      <Row>
+        <FirstColumn md={4}>
+          <AnimatedButton
+            type="button"
+            baseColor="white"
+            hoverColor="black"
+            textColor="black"
+            borderColor="black"
+            hoverTextColor="white"
+            fontSize="sm"
+            onClick={addProductSection}
+          >
+            + {AdminBlogForm.controls.addProductReviews}
+          </AnimatedButton>
+        </FirstColumn>
 
-        <AnimatedButton
-          type="button"
-          baseColor="white"
-          hoverColor="black"
-          textColor="black"
-          borderColor="black"
-          hoverTextColor="white"
-          onClick={addContentSection}
-        >
-          + {AdminBlogForm.controls.addText}
-        </AnimatedButton>
+        <MiddleColumn md={4}>
+          <AnimatedButton
+            type="button"
+            baseColor="white"
+            hoverColor="black"
+            textColor="black"
+            borderColor="black"
+            hoverTextColor="white"
+            fontSize="sm"
+            onClick={addContentSection}
+          >
+            + {AdminBlogForm.controls.addText}
+          </AnimatedButton>
+        </MiddleColumn>
 
-        <AnimatedButton
-          type="button"
-          baseColor="white"
-          hoverColor="black"
-          textColor="black"
-          borderColor="black"
-          hoverTextColor="white"
-          onClick={addImageSection}
-        >
-          + {AdminBlogForm.controls.addImage}
-        </AnimatedButton>
-      </div>
+        <LastColumn md={4}>
+          <AnimatedButton
+            type="button"
+            baseColor="white"
+            hoverColor="black"
+            textColor="black"
+            borderColor="black"
+            hoverTextColor="white"
+            fontSize="sm"
+            onClick={addImageSection}
+          >
+            + {AdminBlogForm.controls.addImage}
+          </AnimatedButton>
+        </LastColumn>
+      </Row>
 
       {/* Row 2: Preview + Submit + Cancel */}
       <div className="d-flex gap-2 flex-wrap">
@@ -92,18 +103,6 @@ export const BlogFormControlButtons = ({
           {mode === 'edit'
             ? AdminBlogForm.controls.updateBlogPost
             : AdminBlogForm.controls.addBlogPost}
-        </AnimatedButton>
-
-        <AnimatedButton
-          type="button"
-          baseColor="#e0e0e0"
-          hoverColor="white"
-          textColor="black"
-          hoverTextColor="#999"
-          borderColor="#e0e0e0"
-          onClick={onCancel}
-        >
-          {AdminBlogForm.controls.cancel}
         </AnimatedButton>
       </div>
     </div>

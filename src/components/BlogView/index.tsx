@@ -4,7 +4,6 @@ import { Col, Row } from 'react-bootstrap';
 import { PortableText } from '@portabletext/react';
 import { portableTextComponents } from 'utils/html/portableTextComponent';
 import { QuillPreview } from 'components/QuillPreview';
-
 import {
   BlogViewTitle,
   BlogViewDate,
@@ -17,7 +16,7 @@ import {
   BlogViewMetaRow,
   BlogViewCategory,
 } from './styles';
-import { BlogViewModal } from './BlogViewModal';
+import { BlogViewModal } from 'components/Modals';
 import moment from 'moment';
 import { BlogViewProps } from './types';
 

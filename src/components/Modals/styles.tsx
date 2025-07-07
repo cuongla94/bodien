@@ -22,7 +22,7 @@ const slideDownToClose = keyframes`
   }
 `;
 
-export const BlogViewModalSlideWrapper = styled.div<{ animation: 'in' | 'out' }>`
+export const ModalSlideWrapper = styled.div<{ animation: 'in' | 'out' }>`
   animation: ${({ animation }) =>
     animation === 'in'
       ? css`${slideInFromLeft} 0.3s ease forwards`
@@ -32,7 +32,7 @@ export const BlogViewModalSlideWrapper = styled.div<{ animation: 'in' | 'out' }>
   width: 100%;
 `;
 
-export const BlogViewModalOverlay = styled.div`
+export const ModalOverlay = styled.div`
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
@@ -42,7 +42,7 @@ export const BlogViewModalOverlay = styled.div`
   justify-content: center;
 `;
 
-export const BlogViewModalContent = styled.div`
+export const ModalContent = styled.div`
   background: ${({ theme }) => theme.cardBackground};
   max-width: 1100px;
   width: 100%;
@@ -55,7 +55,7 @@ export const BlogViewModalContent = styled.div`
   flex-direction: column;
 `;
 
-export const BlogViewModalCloseButton = styled.button`
+export const ModalCloseButton = styled.button`
   position: absolute;
   top: ${({ theme }) => theme.spacing.md};
   right: ${({ theme }) => theme.spacing.md};
@@ -71,7 +71,7 @@ export const BlogViewModalCloseButton = styled.button`
 `;
 
 
-export const BlogViewModalFooterButton = styled.button`
+export const ModalFooterButton = styled.button`
   background-color: ${({ theme }) => theme.primaryColor};
   color: ${({ theme }) => theme.buttonText};
   border: none;

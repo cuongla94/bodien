@@ -23,6 +23,16 @@ const slideOut = keyframes`
   }
 `;
 
+
+const shrink = keyframes`
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+`;
+
 export const ToastWrapper = styled.div<{ type: string; isExiting: boolean }>`
   min-width: 300px;
   max-width: 400px;
@@ -51,4 +61,15 @@ export const ToastWrapper = styled.div<{ type: string; isExiting: boolean }>`
       ? css`${slideOut} 0.4s ease forwards`
       : css`${slideIn} 0.4s ease forwards`};
   transition: all 0.3s ease;
+`;
+
+export const ProgressBar = styled.div<{ duration: number }>`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.7);
+  animation: ${shrink} ${({ duration }) => duration}ms linear forwards;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 `;

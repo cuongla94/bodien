@@ -15,11 +15,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { BlogView } from 'components/BlogView';
 
 interface BlogFormProps {
-  mode: 'create' | 'edit'
-  initialData?: any
+  mode: 'create' | 'edit';
+  initialData?: any;
+  onSuccess?: () => void;
 }
 
-export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps) => {
+export const BlogForm = ({ mode = 'create', initialData = null, onSuccess }: BlogFormProps) => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     title: '',
@@ -29,7 +30,7 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
     coverPreview: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [toast, setToast] = useState(null);
+  const [toast, setToast] = useState<any>(null);
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState([]);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -136,13 +137,9 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
 
       const updatedLinks = [...(section.affiliateLinks || []), { label: '', url: '' }];
       section.affiliateLinks = updatedLinks;
-
       sections[index] = section;
 
-      return {
-        ...prev,
-        sections,
-      };
+      return { ...prev, sections };
     });
   };
 
@@ -202,7 +199,6 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
 
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log('SUBMIT TRIGGERED');
     if (isSubmitting) return;
     setIsSubmitting(true);
     setToast(null);
@@ -249,15 +245,27 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
         await axios.put(`/api/blogs/edit/${initialData._id}`, formDataToSend, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-        setToast({ type: 'success', message: 'Blog post updated successfully!' });
+        setToast({
+          type: 'success',
+          message: 'Blog post updated successfully!',
+          onClose: () => {
+            if (typeof onSuccess === 'function') onSuccess();
+            else router.push(`${AdminLinks.adminDashboard}`);
+          },
+        });
       } else {
         await axios.post('/api/blogs/create', formDataToSend, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-        setToast({ type: 'success', message: 'Blog post created successfully!' });
+        setToast({
+          type: 'success',
+          message: 'Blog post created successfully!',
+          onClose: () => {
+            if (typeof onSuccess === 'function') onSuccess();
+            else router.push(`${AdminLinks.adminDashboard}`);
+          },
+        });
       }
-
-      setTimeout(() => router.push(`${AdminLinks.adminDashboard}`), 2000);
     } catch (err) {
       console.error('❌ Form submit error:', err);
       setToast({ type: 'error', message: 'An error occurred while submitting.' });
@@ -274,7 +282,14 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
 
       {toast && (
         <div style={{ position: 'fixed', top: '1rem', right: '1rem', zIndex: 9999 }}>
-          <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => {
+              setToast(null);
+              toast.onClose?.();
+            }}
+          />
         </div>
       )}
 
@@ -282,12 +297,13 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
         <Row>
           <Col md={7} lg={7}>
             <Form.Group className="mb-3">
-              <Form.Label>Title *</Form.Label>
+              <Form.Label >Title *</Form.Label>
               <Form.Control
                 type="text"
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
+                placeholder='Please enter title...'
                 required
               />
             </Form.Group>
@@ -350,17 +366,15 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
         </Row>
       </Form>
 
-      {/* Move Preview outside of <Form> to prevent accidental submit */}
-<BlogView
-  title={formData.title}
-  date=""
-  sections={formData.sections}
-  category={formData.category}
-  isPreview
-  isOpen={isPreviewOpen}
-  onClose={() => setIsPreviewOpen(false)}
-/>
-
+      <BlogView
+        title={formData.title}
+        date=""
+        sections={formData.sections}
+        category={formData.category}
+        isPreview
+        isOpen={isPreviewOpen}
+        onClose={() => setIsPreviewOpen(false)}
+      />
     </Container>
   );
 };

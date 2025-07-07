@@ -6,6 +6,7 @@ import { ScrollToTopButton } from 'common/ScrollToTopButton';
 import { LayoutWrapper } from './styles';
 import { Footer } from 'layouts/Footer';
 import { useRouter } from 'next/router';
+import { AdminControls } from 'components/Admin/AdminControls';
 
 interface IPageLayoutProps {
   children: ReactNode;
@@ -23,6 +24,7 @@ export default function PageLayout({
   return (
     <LayoutWrapper>
       <AppNavbar isAdmin={isAdmin} activePath={activePath} />
+      {isAdmin && <AdminControls />}
       {children}
       <Footer activePath={activePath} />
       <ScrollToTopButton />

@@ -1,6 +1,5 @@
-// src/components/Toast.tsx
 import React, { useEffect, useState } from 'react';
-import { ToastWrapper } from './styles';
+import { ToastWrapper, ProgressBar } from './styles';
 
 interface ToastProps {
   message: string;
@@ -27,5 +26,10 @@ export const Toast: React.FC<ToastProps> = ({
     };
   }, [duration, onClose]);
 
-  return <ToastWrapper type={type} isExiting={isExiting}>{message}</ToastWrapper>;
+  return (
+    <ToastWrapper type={type} isExiting={isExiting}>
+      {message}
+      <ProgressBar duration={duration} />
+    </ToastWrapper>
+  );
 };

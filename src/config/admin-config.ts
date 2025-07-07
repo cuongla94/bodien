@@ -17,7 +17,7 @@ export const AdminBlogForm = {
     controls: {
         affiliateLink: 'Add Affiliate Link',
         addText: 'Add Text',
-        addProductReviews: 'Add Product Reviews',
+        addProductReviews: 'Add Product',
         addImage: 'Add Image',
         previewBlog: 'Preview',
         cancel: 'Cancel',
