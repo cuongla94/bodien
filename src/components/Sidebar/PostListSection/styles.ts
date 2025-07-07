@@ -5,8 +5,16 @@ export const SectionWrapper = styled.div`
 `;
 
 export const SectionTitle = styled.h3`
-  font-size: 1.25rem;
+  font-size: ${({ theme }) => theme?.fontSize.md};
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin: 0;
   color: #1f2937;
+  line-height: 1.4;
+`;
+
+export const SectionHeaderRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
 `;

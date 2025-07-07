@@ -15,6 +15,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'react-resizable/css/styles.css';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 function MyAppWrapper({ Component, pageProps }) {
   const { theme } = useContext(ThemeContext);

@@ -259,16 +259,34 @@ export const CardItemHorizontalMeta = styled.div`
   }
 `;
 
-
 export const CardItemHorizontalReadMore = styled.button`
   font-size: 0.75rem;
-  color: #2563eb;
+  color: ${({ theme }) => theme?.primaryColor || '#111827'};
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
+  position: relative;
+  text-decoration: none;
+  font-weight: 600;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 0%;
+    height: 1px;
+    background-color: ${({ theme }) => theme?.primaryColor || '#111827'};
+    transition: width 0.3s ease;
+  }
+
+  &:hover::after {
+    width: 100%;
+  }
 
   &:hover {
-    text-decoration: underline;
+    color: ${({ theme }) => theme?.primaryColor || '#111827'};
   }
 `;
+

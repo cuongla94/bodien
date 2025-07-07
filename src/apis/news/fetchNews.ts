@@ -16,7 +16,7 @@ export async function fetchTechNewsFromDB(): Promise<TechNewsRow[]> {
   return data || [];
 }
 
-export async function fetchLatestNews(limit: number = 6) {
+export async function fetchLatestNews(limit: number = 18) {
   const { data, error } = await supabaseClient
     .from('tech_news')
     .select('*')

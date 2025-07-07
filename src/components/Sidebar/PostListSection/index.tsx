@@ -1,7 +1,9 @@
 import React from 'react';
 import { IBlogPost } from 'types/blog';
-import { SectionTitle, SectionWrapper } from './styles';
+import { SectionWrapper, SectionHeaderRow, SectionTitle } from './styles';
 import { RelatedPostItem } from '../RelatedPostItem';
+import { AnimatedLink } from 'common/AnimatedLink';
+import { AppLinks } from 'config/navigation-config';
 
 interface PostListSectionProps {
   title: string;
@@ -16,15 +18,21 @@ export const PostListSection: React.FC<PostListSectionProps> = ({
 }) => {
   return (
     <SectionWrapper>
-      <SectionTitle>{title}</SectionTitle>
+      <SectionHeaderRow>
+        <SectionTitle>{title}</SectionTitle>
+        {posts.length > 0 && (
+          <AnimatedLink href={`${AppLinks.blogs.link}?sort=views`} uppercase={false}>
+            See More
+          </AnimatedLink>
+        )}
+      </SectionHeaderRow>
+
       {posts.length === 0 ? (
         <p className="text-muted">No post available.</p>
       ) : (
-        <div>
-          {posts.map((post) => (
-            <RelatedPostItem key={post._id} post={post} onClick={onItemClick} />
-          ))}
-        </div>
+        posts.map((post) => (
+          <RelatedPostItem key={post._id} post={post} onClick={onItemClick} />
+        ))
       )}
     </SectionWrapper>
   );

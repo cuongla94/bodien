@@ -1,34 +1,48 @@
 import React from 'react';
-import { SectionHeaderWrapper, SectionHeaderTitle } from './styles';
+import Link from 'next/link';
+import {
+  SectionHeaderWrapper,
+  SectionHeaderTitle,
+  SectionHeaderTitleRow,
+  SectionHeaderNavControls,
+  SectionHeaderStyledLink,
+} from './styles';
 import { sectionHeaderConfig } from 'config/common-config';
-import { AnimatedLink } from 'common/AnimatedLink';
 
 interface SectionHeaderProps {
   title: string;
   href?: string;
   hideLink?: boolean;
   linkLabel?: string;
+  isNews?: boolean;
+  children?: React.ReactNode; // for nav controls
 }
 
 export const SectionHeader: React.FC<SectionHeaderProps> = ({
   title,
   href,
-  hideLink = true,
+  hideLink = false,
   linkLabel,
+  isNews = false,
+  children,
 }) => {
   const label = linkLabel || sectionHeaderConfig.viewAll;
 
   return (
     <SectionHeaderWrapper>
-      <SectionHeaderTitle>{title}</SectionHeaderTitle>
-      {!hideLink && href && (
-        <AnimatedLink
-          href={href}
-          uppercase
-          isBlack>
-            {label}
-        </AnimatedLink>
-      )}
+      <SectionHeaderTitleRow>
+        <SectionHeaderTitle>{title}</SectionHeaderTitle>
+        {!hideLink && href && (
+          <span style={{ marginLeft: '1rem' }}>
+            (
+            <Link href={href} passHref legacyBehavior>
+              <SectionHeaderStyledLink>{label}</SectionHeaderStyledLink>
+            </Link>
+            )
+          </span>
+        )}
+      </SectionHeaderTitleRow>
+      {isNews && <SectionHeaderNavControls>{children}</SectionHeaderNavControls>}
     </SectionHeaderWrapper>
   );
 };
