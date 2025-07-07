@@ -36,7 +36,7 @@ export const Blogs = ({
   const [filter, setFilter] = useState({ view: { list: 0 }, date: { asc: 0 } });
   const [sortOption, setSortOption] = useState<BlogControlSortOptions>('relevant');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [isFeaturedOnly, setIsFeaturedOnly] = useState(false);
+  const [showHidden, setShowHidden] = useState(false); // NEW
   const [isFiltering, setIsFiltering] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -62,9 +62,11 @@ export const Blogs = ({
     selectedCategory && sortOption === 'relevant' ? 'date_desc' : sortOption;
 
   const filteredBlogs = flatBlogs
-    .filter(blog => !blog.hidden || isAdmin)
+    .filter(blog => {
+      if (showHidden) return blog.hidden === true;
+      return !blog.hidden || isAdmin;
+    })
     .filter(blog => blog.title?.toLowerCase().includes(searchTerm.toLowerCase()))
-    .filter(blog => (isFeaturedOnly ? blog.featured : true))
     .filter(blog =>
       selectedCategory
         ? typeof blog.category === 'object'
@@ -86,7 +88,6 @@ export const Blogs = ({
           return (b.views || 0) - (a.views || 0);
         case 'relevant':
         default:
-          // Combined sort: 1) by views descending, 2) then by date descending
           if ((b.views || 0) !== (a.views || 0)) {
             return (b.views || 0) - (a.views || 0);
           }
@@ -104,14 +105,13 @@ export const Blogs = ({
       setIsLoading(false);
     }, 500);
     return () => clearTimeout(timeout);
-  }, [searchTerm, sortOption, isFeaturedOnly, selectedCategory]);
+  }, [searchTerm, sortOption, selectedCategory, showHidden]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0];
         const isVisible = entry.isIntersecting;
-
         const isFullBatchLoaded = totalBlogs > 0 && totalBlogs % MainDashboard.numsOfPost === 0;
 
         if (isVisible && isFullBatchLoaded && !hitEnd) {
@@ -136,10 +136,10 @@ export const Blogs = ({
         onSearchChange={setSearchTerm}
         sortOption={sortOption}
         onSortChange={setSortOption}
-        isFeaturedOnly={isFeaturedOnly}
-        onToggleFeatured={() => setIsFeaturedOnly(prev => !prev)}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
+        showHidden={showHidden}
+        onToggleHidden={() => setShowHidden(prev => !prev)}
       />
 
       {isLoading && (

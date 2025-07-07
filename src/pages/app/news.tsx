@@ -146,6 +146,7 @@ const NewsPage = () => {
                     image={article.image}
                     publishedDate={article.published_at}
                     url={article.url}
+                    onReadMoreClick={() => window.open(article.url, '_blank')}
                   />
                 </Col>
               ))}

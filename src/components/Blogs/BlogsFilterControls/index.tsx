@@ -4,7 +4,6 @@ import { BlogControls } from 'config/blog-config';
 import { BlogControlSortOptions } from 'types/blog';
 import { BlogSortDropdown } from './BlogSortDropDown';
 import { BlogSearchbar } from './BlogSearchbar';
-import { BlogFeaturedToggle } from './BlogFeaturedToggle';
 import { BlogCategoryFilters } from './BlogCategoryFilters';
 
 interface BlogsFilterControlsProps {
@@ -12,10 +11,10 @@ interface BlogsFilterControlsProps {
   onSearchChange: (value: string) => void;
   sortOption: BlogControlSortOptions;
   onSortChange: (value: BlogControlSortOptions) => void;
-  isFeaturedOnly: boolean;
-  onToggleFeatured: () => void;
   selectedCategory: string;
   onCategoryChange: (value: string) => void;
+  showHidden: boolean;
+  onToggleHidden: () => void;
 }
 
 export const BlogsFilterControls = ({
@@ -23,14 +22,14 @@ export const BlogsFilterControls = ({
   onSearchChange,
   sortOption,
   onSortChange,
-  isFeaturedOnly,
-  onToggleFeatured,
   selectedCategory,
   onCategoryChange,
+  showHidden,
+  onToggleHidden,
 }: BlogsFilterControlsProps) => {
   return (
     <FilterWrapper>
-      <Row className="align-items-center justify-content w-100">
+      <Row className="align-items-center justify-content-between w-100">
         <Col className="mb-2">
           <BlogSearchbar
             value={searchTerm}
@@ -50,12 +49,20 @@ export const BlogsFilterControls = ({
           <BlogSortDropdown value={sortOption} onChange={onSortChange} />
         </Col>
 
-        {/* <Col md={2} className="text-end">
-          <BlogFeaturedToggle
-            checked={isFeaturedOnly}
-            onToggle={onToggleFeatured}
-          />
-        </Col> */}
+        <Col md="auto" className="mb-2 d-flex align-items-center" style={{ marginLeft: '12px' }}>
+          <div className="form-check">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="hiddenToggle"
+              checked={showHidden}
+              onChange={onToggleHidden}
+            />
+            <label className="form-check-label ms-1" htmlFor="hiddenToggle">
+              Hidden
+            </label>
+          </div>
+        </Col>
       </Row>
     </FilterWrapper>
   );

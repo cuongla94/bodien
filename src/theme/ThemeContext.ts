@@ -67,6 +67,7 @@ export const themes: { light: AppTheme } = {
     background: '#ffffff',
     backgroundGradient: undefined,
     cardBackground: '#FFFFFF',
+    cardBorder: '#E5E7EB',
     footerBackground: '#F3F4F6',
     navbarBackground: 'rgba(255, 255, 255, 0.9)',
 

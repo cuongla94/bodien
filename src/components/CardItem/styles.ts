@@ -8,17 +8,20 @@ export const CardItemWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background: ${({ theme }) => theme.cardBackground || '#fff'};
+  border: 1px solid #eee;
   border-radius: 1rem;
   overflow: hidden;
-  box-shadow: ${({ theme }) => theme.cardShadow || '0 2px 8px rgba(0,0,0,0.05)'};
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: ${({ theme }) => theme.cardShadow || '0 1px 3px rgba(0, 0, 0, 0.05)'};
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
   height: 100%;
 
   &:hover {
-    box-shadow: ${({ theme }) => theme.boxShadow || '0 8px 24px rgba(0,0,0,0.12)'};
+    border-color: ${({ theme }) => theme.primaryColor || '#007bff'};
+    box-shadow: ${({ theme }) => theme.boxShadow || '0 8px 20px rgba(0, 0, 0, 0.08)'};
     transform: translateY(-4px);
   }
 `;
+
 
 export const CardItemImage = styled.img`
   width: 100%;

@@ -49,6 +49,7 @@ export interface AppTheme {
   background: string;
   backgroundGradient?: string;
   cardBackground: string;
+  cardBorder: string;
   footerBackground: string;
   navbarBackground: string;
   primaryColor: string;

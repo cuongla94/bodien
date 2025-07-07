@@ -8,6 +8,7 @@ import { AdminPasswordForm } from 'components/Admin/AdminPasswordForm';
 import { ConfirmationModal } from 'common/modals';
 import { AdminLinks } from 'config/navigation-config';
 import PageLayout from 'layouts/PageLayout';
+import { Container } from 'react-bootstrap';
 
 export default function AdminPage() {
   const { theme } = useThemeProvider();
@@ -72,40 +73,42 @@ export default function AdminPage() {
 
   return (
     <PageLayout isAdmin>
-      <AdminPasswordForm
-        show={!authenticated}
-        onSubmit={handlePasswordSubmit}
-        error={error}
-        loading={formLoading}
-      />
-
-      {authenticated && (
-        <Blogs
-          isAdmin={true}
-          theme={theme}
-          authenticated={authenticated}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onToggleHidden={handleToggleHidden}
-          deleteSuccess={deleteSuccess}
-          deleteError={deleteError}
-          dismissAlert={dismissAlert}
+      <Container>
+        <AdminPasswordForm
+          show={!authenticated}
+          onSubmit={handlePasswordSubmit}
+          error={error}
+          loading={formLoading}
         />
-      )}
 
-      <ConfirmationModal
-        show={showConfirm}
-        title="Delete Confirmation"
-        message={`Are you sure you want to delete "${selectedBlog?.title}"?`}
-        confirmLabel={deleteLoading ? 'Deleting...' : 'Delete'}
-        cancelLabel="Cancel"
-        confirmVariant="danger"
-        onConfirm={confirmDelete}
-        onCancel={() => {
-          setShowConfirm(false);
-          setSelectedBlog(null);
-        }}
-      />
+        {authenticated && (
+          <Blogs
+            isAdmin={true}
+            theme={theme}
+            authenticated={authenticated}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onToggleHidden={handleToggleHidden}
+            deleteSuccess={deleteSuccess}
+            deleteError={deleteError}
+            dismissAlert={dismissAlert}
+          />
+        )}
+
+        <ConfirmationModal
+          show={showConfirm}
+          title="Delete Confirmation"
+          message={`Are you sure you want to delete "${selectedBlog?.title}"?`}
+          confirmLabel={deleteLoading ? 'Deleting...' : 'Delete'}
+          cancelLabel="Cancel"
+          confirmVariant="danger"
+          onConfirm={confirmDelete}
+          onCancel={() => {
+            setShowConfirm(false);
+            setSelectedBlog(null);
+          }}
+        />
+      </Container>
     </PageLayout>
   );
 }
