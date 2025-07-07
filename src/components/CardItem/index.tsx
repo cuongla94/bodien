@@ -57,12 +57,10 @@ export const CardItem: React.FC<CardItemProps> = ({
   type = 'blog',
   title,
   description,
-  author,
-  source,
   image,
   publishedDate,
   category,
-  isAdmin = false,
+  isAdmin,
   onEdit,
   onDelete,
   onToggleHidden,
@@ -89,8 +87,6 @@ export const CardItem: React.FC<CardItemProps> = ({
     month: 'long',
     day: 'numeric',
   });
-
-  const showAnalytics = isAdmin && (numOfViews || numOfShares);
 
   // =======================
   // Horizontal Mode Layout
@@ -129,7 +125,7 @@ export const CardItem: React.FC<CardItemProps> = ({
               {formattedDate}
             </span>
 
-            {onReadMoreClick && (
+            {onReadMoreClick && !isAdmin && (
               <CardItemHorizontalReadMore onClick={onReadMoreClick}>
                 Read More
               </CardItemHorizontalReadMore>
@@ -164,25 +160,23 @@ export const CardItem: React.FC<CardItemProps> = ({
           </CardItemHorizontalDescription>
         )}
 
-        {showAnalytics && (
+        {isAdmin && (
           <CardItemFooter>
-            {typeof numOfViews === 'number' && (
-              <CardItemFooterItem>
-                <FiEye /> {numOfViews} {BlogCardItem.blogViewText}
-              </CardItemFooterItem>
-            )}
-            {typeof numOfShares === 'number' && (
-              <CardItemFooterItem>
-                <FiShare2 /> {numOfShares} {BlogCardItem.blogShareText}
-              </CardItemFooterItem>
-            )}
+            <CardItemFooterItem>
+              <FiEye /> {numOfViews ?? 0} {BlogCardItem.blogViewText}
+            </CardItemFooterItem>
+            <CardItemFooterItem>
+              <FiShare2 /> {numOfShares ?? 0} {BlogCardItem.blogShareText}
+            </CardItemFooterItem>
           </CardItemFooter>
         )}
 
         <CardItemFooterStyled>
-          <span>{formattedDate}</span>
-          {onReadMoreClick && (
-            <CardItemReadMoreLink onClick={onReadMoreClick}>Read more</CardItemReadMoreLink>
+          <span> {isAdmin && `Created on`} {formattedDate}</span>
+          {onReadMoreClick && !isAdmin && (
+            <CardItemReadMoreLink onClick={onReadMoreClick}>
+              Read more
+            </CardItemReadMoreLink>
           )}
         </CardItemFooterStyled>
 

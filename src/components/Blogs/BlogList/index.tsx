@@ -67,7 +67,7 @@ export const BlogList = ({
         <>
           <Row>
             {blogs.map((blog) => (
-              <Col key={blog._id || blog.slug} lg={3} md={4} className="mb-4">
+              <Col key={blog._id || blog.slug} lg={4} md={4} className="mb-4">
                 <CardItem
                   title={blog.title}
                   category={blog.category}

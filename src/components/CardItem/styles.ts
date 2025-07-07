@@ -16,7 +16,6 @@ export const CardItemWrapper = styled.div`
   height: 100%;
 
   &:hover {
-    border-color: ${({ theme }) => theme.primaryColor || '#007bff'};
     box-shadow: ${({ theme }) => theme.boxShadow || '0 8px 20px rgba(0, 0, 0, 0.08)'};
     transform: translateY(-4px);
   }
@@ -95,6 +94,7 @@ export const CardItemFooter = styled.div`
   align-items: center;
   gap: 1.5rem;
   flex-wrap: wrap;
+  margin-bottom: .6rem;
 `;
 
 export const CardItemFooterItem = styled.span`
