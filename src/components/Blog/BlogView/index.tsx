@@ -21,7 +21,6 @@ import moment from 'moment';
 import { BlogViewProps } from './types';
 import { useRouter } from 'next/router';
 import { useTrackBlogView } from 'hooks/blogHooks';
-import { AppApis } from 'config/apis-config';
 import { AppLinks } from 'config/navigation-config';
 
 export const BlogView: React.FC<BlogViewProps> = ({
