@@ -87,6 +87,7 @@ export const BlogFormControlButtons = ({
           hoverTextColor="#f9c74f"
           borderColor="#f9c74f"
           onClick={() => setIsPreviewOpen(true)}
+          disabled={!isFormValid}
         >
           <FiEye /> {AdminBlogForm.controls.previewBlog}
         </AnimatedButton>

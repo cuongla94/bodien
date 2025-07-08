@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { themes } from '../../theme/ThemeContext';
+import { themes } from 'theme';
 
 const fontSizeMobile = themes.light.responsiveFontSize.body.mobile;
 const fontSizeDesktop = themes.light.responsiveFontSize.body.desktop;

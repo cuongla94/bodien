@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { Col, Row } from 'react-bootstrap';
 import { PortableText } from '@portabletext/react';
@@ -19,32 +19,54 @@ import {
 import { BlogViewModal } from 'common/Modals';
 import moment from 'moment';
 import { BlogViewProps } from './types';
+import { useRouter } from 'next/router';
+import { useTrackBlogView } from 'hooks/blogHooks';
+import { AppApis } from 'config/apis-config';
 
 export const BlogView: React.FC<BlogViewProps> = ({
+  slug,
   title,
   date,
   category,
   sections,
   isPreview = false,
+  isFormPreview = false,
   isOpen = false,
   onClose = () => {},
   children
 }) => {
+  const router = useRouter();
+  const previousUrl = useRef<string | null>(null);
+
+  // ✅ Track view (only if not preview)
+  useTrackBlogView(!isFormPreview ? slug : '');
+  useEffect(() => {
+    if (isOpen && slug && !isFormPreview) {
+      previousUrl.current = window.location.pathname;
+      const newUrl = `${AppApis.blogs.default}/${slug}`;
+      window.history.pushState(null, '', newUrl);
+    }
+
+    return () => {
+      if (isOpen && previousUrl.current) {
+        window.history.pushState(null, '', previousUrl.current);
+      }
+    };
+  }, [isOpen, slug]);
+
   const content = (
     <BlogViewContentWrapper>
       <BlogViewTitle>{title}</BlogViewTitle>
-        <BlogViewMetaRow>
-            <BlogViewCategory>
-              {category.title || 'Uncategorized'}
-            </BlogViewCategory>
-            <BlogViewDate>
-              {date
-                ? `Published on ${moment(date).format('MMMM DD, YYYY')}`
-                : `Current time: ${moment().format('MMMM DD, YYYY')}`}
-            </BlogViewDate>
-        </BlogViewMetaRow>
-
-
+      <BlogViewMetaRow>
+        <BlogViewCategory>
+          {category.title || 'Uncategorized'}
+        </BlogViewCategory>
+        <BlogViewDate>
+          {date
+            ? `Published on ${moment(date).format('MMMM DD, YYYY')}`
+            : `Current time: ${moment().format('MMMM DD, YYYY')}`}
+        </BlogViewDate>
+      </BlogViewMetaRow>
 
       {sections.map((section, idx) => {
         const key = section._key || `section-${idx}`;

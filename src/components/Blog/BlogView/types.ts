@@ -12,6 +12,7 @@ export interface BlogSection {
 }
 
 export interface BlogViewProps {
+  slug: string;
   title: string;
   date?: string;
     category?: {
@@ -20,6 +21,7 @@ export interface BlogViewProps {
     };
   sections: BlogSection[];
   isPreview?: boolean;
+  isFormPreview?: boolean;
   isOpen?: boolean;
   onClose?: () => void;
   children?: React.ReactNode;

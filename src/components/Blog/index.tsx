@@ -25,6 +25,7 @@ export const Blog: React.FC<BlogProps> = ({
 
   return (
     <BlogView
+      slug={blog.slug}
       title={blog.title}
       date={blog.publishedAt}
       category={blog.category}
@@ -37,6 +38,7 @@ export const Blog: React.FC<BlogProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       isPreview={true}
+      isFormPreview={false}
     >
       <RelatedPosts
         allPosts={allPosts}
