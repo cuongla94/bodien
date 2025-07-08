@@ -18,7 +18,7 @@ export const AppLinks = {
     //     title: 'Contact',
     //     link: `${appRoute}/contact-us`
     // }
-}
+};
 
 export const LegalLinks = {
     affiliateDisclosure: {
@@ -41,11 +41,19 @@ export const LegalLinks = {
         title: 'Disclaimer',
         link: `${legalRoute}/disclaimer`
     }
-}
+};
 
 export const AdminLinks = {
+    adminDashboard: {
+        title: 'Admin',
+        link: '/admin'
+    },
+    createBlog: {
+        title: 'Create',
+        link: '/admin/blogs/create'
+    },
     edit: {
         title: 'Edit',
         link: `/admin/blogs/edit/`
     }
-}
+};

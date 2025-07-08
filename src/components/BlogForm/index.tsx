@@ -10,10 +10,12 @@ import { BlogFormSections } from './BlogFormSections';
 import { BlogFormCategories } from './BlogFormCategories';
 import { Toast } from 'common/Toast';
 import { BlogFormControlButtons } from './BlogFormControlButtons';
-import { AdminBlogForm, AdminLinks } from 'config/admin-config';
+import { AdminBlogForm } from 'config/admin-config';
 import { v4 as uuidv4 } from 'uuid';
 import { BlogView } from 'components/Blog/BlogView';
 import { BlogFormPreview } from './BlogFormPreview';
+import { AppApis } from 'config/apis-config';
+import { AdminLinks } from 'config/navigation-config';
 
 interface BlogFormProps {
   mode: 'create' | 'edit'
@@ -247,12 +249,12 @@ export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps)
       formDataToSend.append('sections', JSON.stringify(serializedSections));
 
       if (mode === 'edit' && initialData?._id) {
-        await axios.put(`/api/blogs/edit/${initialData._id}`, formDataToSend, {
+        await axios.put(`${AppApis.blogs.edit}/${initialData._id}`, formDataToSend, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         setToast({ type: 'success', message: 'Blog post updated successfully!' });
       } else {
-        await axios.post('/api/blogs/create', formDataToSend, {
+        await axios.post(`${AppApis.blogs.create}`, formDataToSend, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         setToast({ type: 'success', message: 'Blog post created successfully!' });

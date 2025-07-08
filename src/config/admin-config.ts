@@ -1,6 +1,6 @@
 export const AdminInfo = {
     brandName: "Bodien"
-}
+};
 
 export const AdminControlsData = {
     navigation: {
@@ -9,7 +9,7 @@ export const AdminControlsData = {
         analytics: 'Analytics'
     },
     logout: 'Log Out'
-}
+};
 
 export const AdminBlogForm = {
     addBlogTitle: 'Create New Blog',
@@ -24,10 +24,4 @@ export const AdminBlogForm = {
         addBlogPost: 'Add Blog Post',
         updateBlogPost: 'Update Blog Post'
     }
-}
-
-export const AdminLinks = {
-    adminDashboard: '/admin',
-    blogCreate: '/admin/blogs/create',
-    blogEdit: '/admin/blogs/edit'
-}
+};

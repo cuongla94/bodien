@@ -9,6 +9,7 @@ import { ConfirmationModal } from 'common/Modals';
 import { AdminLinks } from 'config/navigation-config';
 import PageLayout from 'layouts/PageLayout';
 import { Container } from 'react-bootstrap';
+import { AppApis } from 'config/apis-config';
 
 export default function AdminPage() {
   const { theme } = useThemeProvider();
@@ -43,7 +44,7 @@ export default function AdminPage() {
     if (!selectedBlog?.id) return;
     setDeleteLoading(true);
     try {
-      await axios.delete(`/api/blogs/delete`, {
+      await axios.delete(`${AppApis.blogs.delete}`, {
         params: { id: selectedBlog.id },
       });
       setDeleteSuccess(`Deleted "${selectedBlog.title}"`);
@@ -58,7 +59,7 @@ export default function AdminPage() {
 
   const handleToggleHidden = async (id: string, hidden: boolean) => {
     try {
-      await axios.patch(`/api/blog/toggle-visibility`, { id, hidden });
+      await axios.patch(`${AppApis.blogs.toggleVisibility}`, { id, hidden });
     } catch {
       setDeleteError('Failed to toggle visibility');
     }

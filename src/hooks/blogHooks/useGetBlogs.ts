@@ -1,3 +1,4 @@
+import { AppApis } from 'config/apis-config';
 import useSWR, { SWRConfiguration } from 'swr';
 import { IBlogPost } from 'types/blog';
 
@@ -8,8 +9,6 @@ const fetcher = async (url: string): Promise<any> => {
   }
   return res.json();
 };
-
-export const useGetHello = () => useSWR('/api/hello', fetcher);
 
 export const getBlogs = async (url: string) => {
   return fetcher(url);
@@ -33,7 +32,7 @@ export const useGetBlogs = (
   { offset, filter }: UseGetBlogsParams,
   initialData?: BlogsResponse
 ) => {
-  const key = `/api/blogs?offset=${offset || 0}&date=${filter.date.asc ? 'asc' : 'desc'}`;
+  const key = `${AppApis.blogs.default}?offset=${offset || 0}&date=${filter.date.asc ? 'asc' : 'desc'}`;
 
   const config: SWRConfiguration<BlogsResponse> = initialData
     ? { fallbackData: initialData }
@@ -51,7 +50,7 @@ export const useGetBlogsTyped = (
   }
 ) => {
   const { offset, filter } = params;
-  const key = `/api/blogs?offset=${offset || 0}&date=${filter.date.asc ? 'asc' : 'desc'}`;
+  const key = `${AppApis.blogs.default}?offset=${offset || 0}&date=${filter.date.asc ? 'asc' : 'desc'}`;
 
   const config: SWRConfiguration<BlogsResponse> = {
     fallbackData: options?.initialData,

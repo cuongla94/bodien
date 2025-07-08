@@ -1,4 +1,3 @@
-// pages/api/cron/cleanup-tech-news.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { supabaseClient } from 'services/supabase';
 

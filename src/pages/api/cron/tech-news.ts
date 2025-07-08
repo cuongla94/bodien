@@ -1,4 +1,3 @@
-// pages/api/cron/tech-news.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { fetchTechNews } from 'apis/news';
 import { saveArticlesToSupabase } from 'utils';

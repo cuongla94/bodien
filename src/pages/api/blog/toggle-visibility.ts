@@ -1,4 +1,3 @@
-// pages/api/blog/toggleHidden.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { sanityClient } from 'services';
 
