@@ -1,19 +1,19 @@
 import React, { useRef, useEffect, useState } from 'react';
 import {
-  BlogModalCloseButton,
-  BlogModalContent,
-  BlogModalOverlay,
-  BlogModalFooterButton,
-  SlideWrapper
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  ModalFooterButton,
+  ModalSlideWrapper
 } from './styles';
 
-interface BlogModalProps {
+interface BlogViewModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
 }
 
-export const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, children }) => {
+export const BlogViewModal: React.FC<BlogViewModalProps> = ({ isOpen, onClose, children }) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const [shouldRender, setShouldRender] = useState(isOpen);
   const [animation, setAnimation] = useState<'in' | 'out'>('in');
@@ -25,8 +25,8 @@ export const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, children 
     } else {
       setAnimation('out');
       const timeout = setTimeout(() => {
-        setShouldRender(false); // Only unmount after animation
-      }, 300); // Match your animation duration (0.3s)
+        setShouldRender(false);
+      }, 300);
 
       return () => clearTimeout(timeout);
     }
@@ -48,24 +48,24 @@ export const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, children 
   };
 
   return (
-    <BlogModalOverlay onClick={handleOverlayClick}>
-      <SlideWrapper animation={animation}>
-        <BlogModalContent ref={contentRef}>
-          <BlogModalCloseButton
+    <ModalOverlay onClick={handleOverlayClick}>
+      <ModalSlideWrapper animation={animation}>
+        <ModalContent ref={contentRef}>
+          <ModalCloseButton
             onClick={(e) => {
               e.stopPropagation();
               triggerClose();
             }}
           >
             ×
-          </BlogModalCloseButton>
+          </ModalCloseButton>
 
           <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
             {children}
           </div>
 
           <div className="d-flex justify-content-end mt-4" style={{ width: '100%' }}>
-            <BlogModalFooterButton
+            <ModalFooterButton
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
@@ -73,10 +73,10 @@ export const BlogModal: React.FC<BlogModalProps> = ({ isOpen, onClose, children 
               }}
             >
               Close
-            </BlogModalFooterButton>
+            </ModalFooterButton>
           </div>
-        </BlogModalContent>
-      </SlideWrapper>
-    </BlogModalOverlay>
+        </ModalContent>
+      </ModalSlideWrapper>
+    </ModalOverlay>
   );
 };

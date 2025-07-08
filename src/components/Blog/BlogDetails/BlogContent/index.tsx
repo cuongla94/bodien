@@ -1,6 +1,6 @@
 // components/BlogContent/index.tsx
 import { PortableText } from '@portabletext/react';
-import HighlightCode from 'components/HighlightCode';
+import { BlogContentHighlightCode } from './BlogContentHighlightCode';
 import { urlFor } from 'apis';
 
 import {
@@ -19,10 +19,10 @@ const components = {
     }: {
       value: { language: string; code: string; filename: string };
     }) => (
-      <HighlightCode language={value.language}>
+      <BlogContentHighlightCode language={value.language}>
         {value.code}
         {value.filename && <CodeFilename>{value.filename}</CodeFilename>}
-      </HighlightCode>
+      </BlogContentHighlightCode>
     ),
 
     image: ({

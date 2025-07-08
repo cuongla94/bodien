@@ -5,7 +5,7 @@ export const AdminInfo = {
 export const AdminControlsData = {
     navigation: {
         dashboard: 'Admin Dashboard',
-        add_blog: 'Add Blog',
+        add_blog: 'Add New Blog',
         analytics: 'Analytics'
     },
     logout: 'Log Out'

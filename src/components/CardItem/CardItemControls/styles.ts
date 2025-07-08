@@ -7,9 +7,17 @@ export const ControlsWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-export const ThemedButton = styled(Button)<{ bg?: string; text?: string }>`
-  background-color: ${({ bg, theme }) => bg || theme.buttonBg};
-  color: ${({ text, theme }) => text || theme.buttonText};
+export const ThemedButton = styled(Button)<{
+  bg?: string;
+  text?: string;
+  variantType?: 'edit' | 'default';
+}>`
+  background-color: ${({ variantType, bg, theme }) =>
+    bg || (variantType === 'edit' ? theme.warningColor : theme.buttonBg)};
+
+  color: ${({ text, variantType, theme }) =>
+    text || (variantType === 'edit' ? 'black' : theme.buttonText)};
+
   border: none;
   font-size: 0.875rem;
   padding: 0.375rem 0.75rem;
@@ -27,8 +35,8 @@ export const ThemedButton = styled(Button)<{ bg?: string; text?: string }>`
   }
 
   &:disabled {
-    background-color: ${({ theme }) => theme.disabledBg || '#ccc'};
-    color: ${({ theme }) => theme.disabledText || '#666'};
+    background-color: ${({ theme }) => theme.disabledBg};
+    color: ${({ theme }) => theme.disabledText};
     cursor: not-allowed;
     opacity: 0.6;
   }

@@ -5,7 +5,7 @@ import PageLayout from 'layouts/PageLayout';
 import { PageTitle } from 'common/PageTitle';
 import { CardItem } from 'components/CardItem';
 import { fetchArticlesFromSupabase, TechNewsRow } from 'utils/news';
-import { NewsFilters } from 'components/NewsFilters';
+import { NewsFilters } from 'components/News/NewsFilters';
 import { Spinner } from 'common/Spinner';
 
 const ARTICLES_PER_LOAD = 12;

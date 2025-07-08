@@ -104,6 +104,18 @@ export const BlogFormControlButtons = ({
             ? AdminBlogForm.controls.updateBlogPost
             : AdminBlogForm.controls.addBlogPost}
         </AnimatedButton>
+
+        <AnimatedButton
+          type="button"
+          baseColor="#e0e0e0"
+          hoverColor="white"
+          textColor="black"
+          hoverTextColor="#999"
+          borderColor="#e0e0e0"
+          onClick={onCancel}
+        >
+          {AdminBlogForm.controls.cancel}
+        </AnimatedButton>
       </div>
     </div>
   );

@@ -13,7 +13,6 @@ export const StyledInput = styled.input`
   font-size: 1rem;
 
   &:focus {
-    outline: none;
     box-shadow: none;
     border-color: #ccc;
   }

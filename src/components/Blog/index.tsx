@@ -2,7 +2,7 @@
 import React from 'react';
 import { IBlogPost } from 'types/blog';
 import { RelatedPosts } from 'components/RelatedPosts';
-import { BlogView } from 'components/BlogView';
+import { BlogView } from 'components/Blog/BlogView';
 
 interface BlogProps {
   blog: IBlogPost;

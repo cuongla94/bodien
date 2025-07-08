@@ -5,16 +5,15 @@ export const ControlsContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
   flex-wrap: wrap;
-  gap: 1rem;
-  padding: 0px 2px;
-  margin-top: 2rem;
+  padding: 0 ${({ theme }) => theme.spacing.xs};
+  margin: ${({ theme }) => `${theme.spacing.lg} 0 ${theme.spacing.lg}`};
+  gap: ${({ theme }) => theme.spacing.md};
 `;
 
 export const ControlsGroup = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.75rem;
   flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing.sm};
 `;

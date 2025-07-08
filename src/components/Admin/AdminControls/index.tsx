@@ -1,12 +1,10 @@
-import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { Button, Container } from 'react-bootstrap';
 import { FaPlus, FaSignOutAlt, FaHome } from 'react-icons/fa';
-import { useRouter } from 'next/router';
 import { AdminControlsData, AdminLinks } from 'config/admin-config';
-import { ControlsContainer, ControlsGroup } from './styles';
 import { AppLinks } from 'config/navigation-config';
-import { BlogFormModal } from 'components/Modals/BlogFormModal';
-import { BlogForm } from 'components/BlogForm';
+import { ControlsContainer, ControlsGroup } from './styles';
+import { AnimatedButton } from 'common/AnimatedButton';
 
 interface AdminControlsProps {
   onLogout?: () => void;
@@ -15,7 +13,6 @@ interface AdminControlsProps {
 export const AdminControls = ({ onLogout }: AdminControlsProps) => {
   const router = useRouter();
   const isDashboard = router.pathname === `${AdminLinks.adminDashboard}`;
-  const [showModal, setShowModal] = useState(false);
 
   const logout = () => {
     localStorage.removeItem('bodien-admin-auth');
@@ -23,18 +20,22 @@ export const AdminControls = ({ onLogout }: AdminControlsProps) => {
   };
 
   return (
-    <Container className='mb-3'>
+    <Container className="mb-3">
       <ControlsContainer>
         <ControlsGroup>
           {isDashboard ? (
-            <Button
-              variant="primary"
-              onClick={() => setShowModal(true)}
-              className="d-flex align-items-center gap-2"
+            <AnimatedButton
+              onClick={() => router.push('/admin/blogs/create')}
+              baseColor="black"
+              hoverColor="white"
+              textColor="white"
+              borderColor="black"
+              hoverTextColor="black"
+              fontSize="sm"
             >
-              <FaPlus />
+              <FaPlus style={{ marginRight: '0.4rem' }} />
               {AdminControlsData.navigation.add_blog}
-            </Button>
+            </AnimatedButton>
           ) : (
             <Button
               variant="secondary"
@@ -59,11 +60,6 @@ export const AdminControls = ({ onLogout }: AdminControlsProps) => {
           </Button>
         </div>
       </ControlsContainer>
-
-      {/* Blog Form Modal */}
-      <BlogFormModal isOpen={showModal} onClose={() => setShowModal(false)}>
-        <BlogForm mode="create" />
-      </BlogFormModal>
     </Container>
   );
 };

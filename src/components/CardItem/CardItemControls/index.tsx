@@ -51,6 +51,7 @@ export const CardItemControls: React.FC<CardItemControlsProps> = ({
           onClick={onEdit}
           bg={theme?.primaryColor}
           text={theme?.buttonText}
+          variantType="edit"
         >
           {BlogCardItem.adminEditControlText}
         </ThemedButton>

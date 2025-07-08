@@ -1,4 +1,4 @@
-import { HomeDisplay } from 'components/HomeDisplay';
+import { HomeDisplay } from 'components/Home';
 import PageLayout from 'layouts/PageLayout';
 import { useThemeProvider } from 'hooks/useThemeProvider';
 import { getPaginatedBlogs } from 'apis';

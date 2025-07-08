@@ -1,6 +1,6 @@
 // BlogForm.tsx
 import { useState, useEffect, useRef } from 'react';
-import { Form, Container, Row, Col } from 'react-bootstrap';
+import { Form, Container, Row, Col, Button } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { isValidUrl } from 'utils/isValidUrl';
@@ -9,18 +9,18 @@ import { BlogFormTags } from './BlogFormTags';
 import { BlogFormSections } from './BlogFormSections';
 import { BlogFormCategories } from './BlogFormCategories';
 import { Toast } from 'common/Toast';
-import { BlogFormControlButtons } from './BlogFormControlButton';
+import { BlogFormControlButtons } from './BlogFormControlButtons';
 import { AdminBlogForm, AdminLinks } from 'config/admin-config';
 import { v4 as uuidv4 } from 'uuid';
-import { BlogView } from 'components/BlogView';
+import { BlogView } from 'components/Blog/BlogView';
+import { BlogFormPreview } from './BlogFormPreview';
 
 interface BlogFormProps {
-  mode: 'create' | 'edit';
-  initialData?: any;
-  onSuccess?: () => void;
+  mode: 'create' | 'edit'
+  initialData?: any
 }
 
-export const BlogForm = ({ mode = 'create', initialData = null, onSuccess }: BlogFormProps) => {
+export const BlogForm = ({ mode = 'create', initialData = null }: BlogFormProps) => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     title: '',
@@ -30,7 +30,7 @@ export const BlogForm = ({ mode = 'create', initialData = null, onSuccess }: Blo
     coverPreview: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [toast, setToast] = useState<any>(null);
+  const [toast, setToast] = useState(null);
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState([]);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -137,9 +137,13 @@ export const BlogForm = ({ mode = 'create', initialData = null, onSuccess }: Blo
 
       const updatedLinks = [...(section.affiliateLinks || []), { label: '', url: '' }];
       section.affiliateLinks = updatedLinks;
+
       sections[index] = section;
 
-      return { ...prev, sections };
+      return {
+        ...prev,
+        sections,
+      };
     });
   };
 
@@ -199,6 +203,7 @@ export const BlogForm = ({ mode = 'create', initialData = null, onSuccess }: Blo
 
   const handleSubmit = async e => {
     e.preventDefault();
+    console.log('SUBMIT TRIGGERED');
     if (isSubmitting) return;
     setIsSubmitting(true);
     setToast(null);
@@ -245,27 +250,15 @@ export const BlogForm = ({ mode = 'create', initialData = null, onSuccess }: Blo
         await axios.put(`/api/blogs/edit/${initialData._id}`, formDataToSend, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-        setToast({
-          type: 'success',
-          message: 'Blog post updated successfully!',
-          onClose: () => {
-            if (typeof onSuccess === 'function') onSuccess();
-            else router.push(`${AdminLinks.adminDashboard}`);
-          },
-        });
+        setToast({ type: 'success', message: 'Blog post updated successfully!' });
       } else {
         await axios.post('/api/blogs/create', formDataToSend, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-        setToast({
-          type: 'success',
-          message: 'Blog post created successfully!',
-          onClose: () => {
-            if (typeof onSuccess === 'function') onSuccess();
-            else router.push(`${AdminLinks.adminDashboard}`);
-          },
-        });
+        setToast({ type: 'success', message: 'Blog post created successfully!' });
       }
+
+      setTimeout(() => router.push(`${AdminLinks.adminDashboard}`), 2000);
     } catch (err) {
       console.error('❌ Form submit error:', err);
       setToast({ type: 'error', message: 'An error occurred while submitting.' });
@@ -282,14 +275,7 @@ export const BlogForm = ({ mode = 'create', initialData = null, onSuccess }: Blo
 
       {toast && (
         <div style={{ position: 'fixed', top: '1rem', right: '1rem', zIndex: 9999 }}>
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            onClose={() => {
-              setToast(null);
-              toast.onClose?.();
-            }}
-          />
+          <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
         </div>
       )}
 
@@ -297,13 +283,13 @@ export const BlogForm = ({ mode = 'create', initialData = null, onSuccess }: Blo
         <Row>
           <Col md={7} lg={7}>
             <Form.Group className="mb-3">
-              <Form.Label >Title *</Form.Label>
+              <Form.Label>Title *</Form.Label>
               <Form.Control
                 type="text"
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                placeholder='Please enter title...'
+                placeholder='Please Enter Title...'
                 required
               />
             </Form.Group>
@@ -366,14 +352,11 @@ export const BlogForm = ({ mode = 'create', initialData = null, onSuccess }: Blo
         </Row>
       </Form>
 
-      <BlogView
-        title={formData.title}
-        date=""
-        sections={formData.sections}
-        category={formData.category}
-        isPreview
+      {/* Blog Preview Modal */}
+      <BlogFormPreview
         isOpen={isPreviewOpen}
         onClose={() => setIsPreviewOpen(false)}
+        formData={formData}
       />
     </Container>
   );

@@ -9,7 +9,7 @@ import {
   Title,
   LinksWrapper,
 } from './styles';
-import { BlogModal } from 'components/Blog/BlogModal';
+import { BlogViewModal } from 'common/Modals';
 import { QuillPreview } from 'components/QuillPreview';
 import { Col, Row } from 'react-bootstrap';
 
@@ -42,7 +42,7 @@ export const BlogFormPreview: React.FC<BlogFormPreviewProps> = ({
   if (!formData) return null;
 
   return (
-    <BlogModal isOpen={isOpen} onClose={onClose}>
+    <BlogViewModal isOpen={isOpen} onClose={onClose}>
       <div style={{ width: '100%' }}>
         <Title>{formData.title}</Title>
 
@@ -134,6 +134,6 @@ export const BlogFormPreview: React.FC<BlogFormPreviewProps> = ({
           return null;
         })}
       </div>
-    </BlogModal>
+    </BlogViewModal>
   );
 };
