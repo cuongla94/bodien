@@ -9,7 +9,7 @@ import {
   Title,
   LinksWrapper,
 } from './styles';
-import { BlogViewModal } from '../../../common/modals';
+import { BlogViewModal } from '../../../common/Modals';
 import { QuillPreview } from 'components/QuillPreview';
 import { Col, Row } from 'react-bootstrap';
 

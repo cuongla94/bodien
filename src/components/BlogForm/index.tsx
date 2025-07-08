@@ -12,7 +12,6 @@ import { Toast } from 'common/Toast';
 import { BlogFormControlButtons } from './BlogFormControlButtons';
 import { AdminBlogForm } from 'config/admin-config';
 import { v4 as uuidv4 } from 'uuid';
-import { BlogView } from 'components/Blog/BlogView';
 import { BlogFormPreview } from './BlogFormPreview';
 import { AppApis } from 'config/apis-config';
 import { AdminLinks } from 'config/navigation-config';

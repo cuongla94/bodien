@@ -16,7 +16,7 @@ import {
   BlogViewMetaRow,
   BlogViewCategory,
 } from './styles';
-import { BlogViewModal } from '../../../common/modals';
+import { BlogViewModal } from 'common/Modals';
 import moment from 'moment';
 import { BlogViewProps } from './types';
 import { useRouter } from 'next/router';
