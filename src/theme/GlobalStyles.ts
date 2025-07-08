@@ -2,9 +2,6 @@
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
-  /* Google Font Imports (if not using Head or next/font) */
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@600;700&family=Roboto:wght@400;500&family=Source+Sans+Pro:wght@300;400&family=Fira+Code&display=swap');
-
   *, *::before, *::after {
     margin: 0;
     padding: 0;

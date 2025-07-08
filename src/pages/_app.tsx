@@ -17,6 +17,10 @@ import 'swiper/css/navigation';
 import 'react-resizable/css/styles.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import '@fontsource/montserrat/600.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/source-sans-pro/400.css';
+import '@fontsource/fira-code';
 
 function MyAppWrapper({ Component, pageProps }) {
   const { theme } = useContext(ThemeContext);
