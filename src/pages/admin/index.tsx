@@ -5,7 +5,7 @@ import { useThemeProvider } from 'hooks/useThemeProvider';
 import { useAdminAuth } from 'hooks/useAdminAuth';
 import { Blogs } from 'components/Blogs';
 import { AdminPasswordForm } from 'components/Admin/AdminPasswordForm';
-import { ConfirmationModal } from 'common/Modals';
+import { ConfirmationModal } from 'common/modals';
 import { AdminLinks } from 'config/navigation-config';
 import PageLayout from 'layouts/PageLayout';
 import { Container } from 'react-bootstrap';
