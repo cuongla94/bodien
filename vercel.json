@@ -2,10 +2,10 @@
   "version": 2,
   "functions": {
     "api/cron/tech-news.ts": {
-      "runtime": "nodejs20.x"
+      "runtime": "@vercel/node"
     },
     "api/cron/cleanup-tech-news.ts": {
-      "runtime": "nodejs20.x"
+      "runtime": "@vercel/node"
     }
   },
   "crons": [
