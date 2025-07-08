@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { AdminLinks } from 'config/admin-config';
+import { AdminLinks } from 'config/navigation-config';
 
 const ADMIN_KEY = 'bodien-admin-auth';
 const EXPIRY = 72 * 60 * 60 * 1000;

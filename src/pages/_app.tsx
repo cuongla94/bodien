@@ -6,7 +6,6 @@ import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 // Styles
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'highlight.js/styles/atom-one-dark.css';
-import 'react-toggle/style.css';
 import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.bubble.css';
 import '@fontsource/inter/400.css';
@@ -15,8 +14,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'react-resizable/css/styles.css';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 import '@fontsource/montserrat/600.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/source-sans-pro/400.css';

@@ -8,12 +8,11 @@ export const useThemeProvider = () => {
 
   useEffect(() => {
     const saved = localStorage.getItem(THEME_KEY);
-    if (saved === 'dark') setTheme(themes.dark);
     if (saved === 'light') setTheme(themes.light);
   }, []);
 
   const toggleTheme = () => {
-    const newTheme = theme.type === 'dark' ? themes.light : themes.dark;
+    const newTheme = themes.light;
     setTheme(newTheme);
     localStorage.setItem(THEME_KEY, newTheme.type);
   };
