@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { FiEye, FiShare2, FiCalendar } from 'react-icons/fi';
 import { urlFor } from 'apis';
@@ -28,6 +28,7 @@ import {
   CardItemHorizontalReadMore,
   CardItemHorizontalDescription,
 } from './styles';
+import { AppLinks } from 'config/navigation-config';
 
 interface CardItemProps {
   type?: 'blog' | 'news';
@@ -51,11 +52,20 @@ interface CardItemProps {
   numOfViews?: number;
   numOfShares?: number;
   mode?: 'vertical' | 'horizontal';
+  slug?: string
 }
+
+const getBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  return '';
+};
 
 export const CardItem: React.FC<CardItemProps> = ({
   type = 'blog',
   title,
+  slug,
   description,
   image,
   publishedDate,
@@ -87,6 +97,32 @@ export const CardItem: React.FC<CardItemProps> = ({
     month: 'long',
     day: 'numeric',
   });
+
+  const baseUrl = getBaseUrl();
+  const fullUrl = slug ? `${baseUrl}${AppLinks.blogs.link}?post=${slug}` : '';
+
+const [copied, setCopied] = useState(false);
+
+const handleCopyLink = () => {
+  if (!fullUrl) return;
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(fullUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  } else {
+    const textArea = document.createElement('textarea');
+    textArea.value = fullUrl;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+};
+
 
   // =======================
   // Horizontal Mode Layout
@@ -181,7 +217,7 @@ export const CardItem: React.FC<CardItemProps> = ({
         </CardItemFooterStyled>
 
         {isAdmin && (
-          <CardItemControls>
+          <CardItemControls >
             <CardItemButton
               size="sm"
               onClick={onEdit}
@@ -196,6 +232,13 @@ export const CardItem: React.FC<CardItemProps> = ({
             <CardItemButton size="sm" variant="secondary" onClick={onToggleHidden}>
               {hidden ? 'Unhide' : 'Hide'}
             </CardItemButton>
+<CardItemButton
+  size="sm"
+  onClick={handleCopyLink}
+  style={{ backgroundColor: '#000', color: '#fff', border: 'none' }}
+>
+  {copied ? 'Copied!' : 'Copy Link'}
+</CardItemButton>
           </CardItemControls>
         )}
       </CardItemContent>

@@ -6,6 +6,7 @@ import { BlogCardItem } from 'config/blog-config';
 
 interface CardItemControlsProps {
   isAdmin?: boolean;
+  slug?: string;
   link?: { href: string; as?: string };
   theme?: {
     buttonBg?: string;
@@ -20,6 +21,7 @@ interface CardItemControlsProps {
 
 export const CardItemControls: React.FC<CardItemControlsProps> = ({
   isAdmin,
+  slug,
   link,
   theme,
   onEdit,
@@ -27,6 +29,17 @@ export const CardItemControls: React.FC<CardItemControlsProps> = ({
   onToggleHidden,
   hidden,
 }) => {
+  const baseUrl = getBaseUrl();
+  const fullUrl = slug ? `${baseUrl}/app/blogs/${slug}` : '';
+
+
+  const handleCopyLink = () => {
+    if (fullUrl) {
+      navigator.clipboard.writeText(fullUrl);
+      alert('Link copied to clipboard!');
+    }
+  };
+
   if (!isAdmin && link) {
     return (
       <ControlsWrapper>
@@ -39,6 +52,13 @@ export const CardItemControls: React.FC<CardItemControlsProps> = ({
             {BlogCardItem.readMoreText}
           </ThemedButton>
         </Link>
+        <Button
+          size="sm"
+          variant="outline-primary"
+          onClick={handleCopyLink}
+        >
+          Copy Link
+        </Button>
       </ControlsWrapper>
     );
   }
@@ -66,9 +86,25 @@ export const CardItemControls: React.FC<CardItemControlsProps> = ({
         <Button size="sm" variant="secondary" onClick={onToggleHidden}>
           {hidden ? 'Unhide' : 'Hide'}
         </Button>
+        {slug && (
+          <Button
+            size="sm"
+            variant="outline-primary"
+            onClick={handleCopyLink}
+          >
+            Copy Link
+          </Button>
+        )}
       </ControlsWrapper>
     );
   }
 
   return null;
+};
+
+const getBaseUrl = () => {
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  return '';
 };

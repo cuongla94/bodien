@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
+import { useRouter } from 'next/router';
 import { CardItem } from 'components/CardItem';
 import { Wrapper, MessageBox } from './styles';
 import { Toast } from 'common/Toast';
@@ -23,9 +24,21 @@ export const BlogList = ({
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [selectedBlog, setSelectedBlog] = useState<IBlogPost | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [slugFromUrl, setSlugFromUrl] = useState<string | null>(null);
+
+  const router = useRouter();
 
   const blogs = Array.isArray(data[0]) ? data.flat() : data;
 
+  // Extract ?post=slug from URL on initial mount
+useEffect(() => {
+  const querySlug = new URLSearchParams(window.location.search).get('post');
+  if (querySlug) {
+    setSlugFromUrl(querySlug);
+  }
+}, []);
+
+  // Handle delete toasts and modal open after blogs are ready
   useEffect(() => {
     if (deleteSuccess) {
       setToast({ type: 'success', message: deleteSuccess });
@@ -35,19 +48,30 @@ export const BlogList = ({
       setToast({ type: 'error', message: deleteError });
       dismissAlert('error');
     }
-  }, [deleteSuccess, deleteError, dismissAlert]);
 
-  const handleReadMore = (blog: IBlogPost) => {
+if (slugFromUrl && blogs.length > 0 && !selectedBlog) {
+  const matchedBlog = blogs.find((b) => b.slug === slugFromUrl);
+  if (matchedBlog) {
+    handleReadMore(matchedBlog, false); // don't push URL again
+    setSlugFromUrl(null); // ✅ prevent re-trigger
+  }
+}
+  }, [deleteSuccess, deleteError, dismissAlert, blogs, selectedBlog, slugFromUrl]);
+
+  const handleReadMore = (blog: IBlogPost, updateUrl = true) => {
     setSelectedBlog(blog);
     setModalOpen(true);
-    window.history.pushState({}, '', `${AppLinks.blogs.link}/${blog.slug}`);
+    if (updateUrl) {
+      window.history.pushState({}, '', `${AppLinks.blogs.link}?post=${blog.slug}`);
+    }
   };
 
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setSelectedBlog(null);
-    window.history.pushState({}, '', AppLinks.blogs.link);
-  };
+const handleCloseModal = () => {
+  setModalOpen(false);
+  setSelectedBlog(null);
+  window.history.pushState({}, '', AppLinks.blogs.link); // clears ?post=
+};
+
 
   if (isAdmin && !authenticated) return null;
 
@@ -87,20 +111,21 @@ export const BlogList = ({
                   numOfViews={blog.numOfViews || 0}
                   numOfShares={blog.numOfShares || 0}
                   onReadMoreClick={() => handleReadMore(blog)}
+                  slug={blog.slug}
                 />
               </Col>
             ))}
           </Row>
 
           {selectedBlog && (
-          <Blog
-            blog={selectedBlog}
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
-            allPosts={blogs}
-            onReadMoreClick={handleReadMore}
-            theme={theme}
-          />
+            <Blog
+              blog={selectedBlog}
+              isOpen={isModalOpen}
+              onClose={handleCloseModal}
+              allPosts={blogs}
+              onReadMoreClick={handleReadMore}
+              theme={theme}
+            />
           )}
         </>
       ) : (

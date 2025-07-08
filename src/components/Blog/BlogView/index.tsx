@@ -22,6 +22,7 @@ import { BlogViewProps } from './types';
 import { useRouter } from 'next/router';
 import { useTrackBlogView } from 'hooks/blogHooks';
 import { AppApis } from 'config/apis-config';
+import { AppLinks } from 'config/navigation-config';
 
 export const BlogView: React.FC<BlogViewProps> = ({
   slug,
@@ -43,7 +44,7 @@ export const BlogView: React.FC<BlogViewProps> = ({
   useEffect(() => {
     if (isOpen && slug && !isFormPreview) {
       previousUrl.current = window.location.pathname;
-      const newUrl = `${AppApis.blogs.default}/${slug}`;
+      const newUrl = `${AppLinks.blogs.link}?post=${slug}`;
       window.history.pushState(null, '', newUrl);
     }
 
