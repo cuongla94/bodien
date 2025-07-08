@@ -39,8 +39,8 @@ export const AppNavbar = ({ isAdmin, activePath }: AppNavBarProps) => {
           <Link href="/" passHref legacyBehavior>
             <a style={{ textDecoration: 'none' }}>
               <NavbarBrandWrapper>
-                <NavbarLogo src={LogoImage} alt="Logo" width={32} height={32} />
-                <NavbarBrandTitle>{MainInfo.brandName}</NavbarBrandTitle>
+                <NavbarLogo src={LogoImage} alt="Logo" width={158} height={50} />
+                {/* <NavbarBrandTitle>{MainInfo.brandName}</NavbarBrandTitle> */}
               </NavbarBrandWrapper>
             </a>
           </Link>

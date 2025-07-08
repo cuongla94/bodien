@@ -15,7 +15,8 @@ import {
 import Link from 'next/link';
 import { Container } from 'react-bootstrap';
 import { AnimatedLink } from 'common/AnimatedLink';
-
+import LogoImage from 'assets/LogoImage.png';
+import Image from 'next/image';
 interface FooterProps {
   activePath: string;
 }
@@ -26,7 +27,15 @@ export const Footer = ({ activePath }: FooterProps) => {
       <Container>
         <FooterWrapper>
           <FooterLeft>
-            <p className="fw-bold mb-1">{MainInfo.brandName}</p>
+            <div className="d-flex align-items-center gap-2 mb-1">
+              {/* <Image
+                src={LogoImage}
+                alt={`${MainInfo.brandName} logo`}
+                width={100}
+                height={40}
+              /> */}
+              <h3 className="fw-bold mb-2">{MainInfo.brandName}</h3>
+            </div>
             <p className="text-muted mb-2">
               We write honest reviews & insights on the best tools, apps, and tech products.
               <br />
