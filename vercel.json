@@ -1,13 +1,5 @@
 {
   "version": 2,
-  "functions": {
-    "api/cron/tech-news.ts": {
-      "runtime": "@vercel/node"
-    },
-    "api/cron/cleanup-tech-news.ts": {
-      "runtime": "@vercel/node"
-    }
-  },
   "crons": [
     {
       "path": "/api/cron/tech-news",
