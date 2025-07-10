@@ -8,7 +8,7 @@ export const BlogCardItem = {
 };
 
 export const BlogControls = {
-    filters: [
+    sorts: [
         { title: 'Most Relevant', value: 'relevant' },
         { title: 'Most Popular', value: 'popularity' },
         { title: 'Newest First', value: 'date_desc' },
@@ -21,28 +21,23 @@ export const BlogControls = {
 };
 
 export const BlogFormCategorySelections = [
-  "Fitness Gear",
-  "Home Health Devices",
+  "Fitness",
   "Sleep & Wellness",
   "Mental Health Tools",
-  "Beauty & Self-Care",
   "Smart Kitchen",
-  "Pain Relief & Recovery",
-  "Pet Gadgets",
-  "Parenting & Baby Gear",
-  "Senior Wellness",
-  "Travel Essentials",
-  "Camping & Outdoor Gear",
-  "Roadtrip Accessories",
-  "Tesla & EV Accessories",
-  "Phone & Everyday Gadgets",
-  "Home & Lifestyle",
-  "Work From Home Tools",
-  "Eco-Friendly Gadgets",
+  "Pet",
+  "Baby",
+  "Travel",
+  "Camping & Outdoor",
   "Tech for Students",
-  "Gaming Accessories",
-  "Productivity Tools",
-  "Smart Cleaning Devices",
   "Health Monitoring Apps",
-  "Wearables & Trackers"
+  "Wearables & Trackers",
+  "Home",
+  "Electric Car",
+  "Car Accessories",
+  "Health",
+  "Work & Productivity",
+  "Beauty & Skincare",
+  "Gaming Accessories",
+  "Phone"
 ];

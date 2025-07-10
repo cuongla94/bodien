@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Row } from 'react-bootstrap';
 import { FiChevronDown, FiChevronUp, FiX } from 'react-icons/fi';
-
 import {
   NewsFiltersWrapper,
   NewsFiltersCustomSelectWrapper,
@@ -13,6 +12,7 @@ import {
   CategoryCol,
   SourceCol,
 } from './styles';
+import { useRouter } from 'next/router';
 
 export type NewsFiltersProps = {
   filters: {
@@ -37,6 +37,8 @@ export function NewsFilters({
   allCategories,
   allSources,
 }: NewsFiltersProps) {
+  const router = useRouter();
+
   const [showCategoryOptions, setShowCategoryOptions] = useState(false);
   const [showSourceOptions, setShowSourceOptions] = useState(false);
   const [showSortOptions, setShowSortOptions] = useState(false);
@@ -96,6 +98,18 @@ export function NewsFilters({
     filters.source
   );
 
+  const updateQuery = (field: string, value: string) => {
+    const newQuery = new URLSearchParams(window.location.search);
+    if (value) {
+      newQuery.set(field, value);
+    } else {
+      newQuery.delete(field);
+    }
+    router.replace(`${window.location.pathname}?${newQuery.toString()}`, undefined, {
+      shallow: true,
+    });
+  };
+
   return (
     <NewsFiltersWrapper>
       <Row className="w-100">
@@ -112,6 +126,7 @@ export function NewsFilters({
                 <NewsFiltersCustomOption
                   onClick={() => {
                     setFilters((prev) => ({ ...prev, published_at: 'desc' }));
+                    updateQuery('sort', 'desc');
                     setShowSortOptions(false);
                   }}
                   $active={filters.published_at === 'desc'}
@@ -121,6 +136,7 @@ export function NewsFilters({
                 <NewsFiltersCustomOption
                   onClick={() => {
                     setFilters((prev) => ({ ...prev, published_at: 'asc' }));
+                    updateQuery('sort', 'asc');
                     setShowSortOptions(false);
                   }}
                   $active={filters.published_at === 'asc'}
@@ -136,7 +152,7 @@ export function NewsFilters({
         <CategoryCol as="div" className="col-7 col-sm-7 col-md-4">
           <NewsFiltersCustomSelectWrapper ref={categoryRef}>
             <NewsFiltersStyledLabel onClick={() => setShowCategoryOptions((prev) => !prev)}>
-              {filters.category || 'All Categories'}
+              {filters.category ? filters.category : 'All'}
               {showCategoryOptions ? <FiChevronUp size={16} /> : <FiChevronDown size={16} />}
             </NewsFiltersStyledLabel>
 
@@ -165,23 +181,23 @@ export function NewsFilters({
                   )}
                 </div>
 
-                {(!categorySearch || !filters.category) && (
-                  <NewsFiltersCustomOption
-                    onClick={() => {
-                      setFilters((prev) => ({ ...prev, category: '' }));
-                      setShowCategoryOptions(false);
-                    }}
-                    $active={!filters.category}
-                  >
-                    All Categories
-                  </NewsFiltersCustomOption>
-                )}
+                <NewsFiltersCustomOption
+                  onClick={() => {
+                    setFilters((prev) => ({ ...prev, category: '' }));
+                    updateQuery('category', '');
+                    setShowCategoryOptions(false);
+                  }}
+                  $active={!filters.category}
+                >
+                  All
+                </NewsFiltersCustomOption>
 
                 {filteredCategories.map((cat) => (
                   <NewsFiltersCustomOption
                     key={cat}
                     onClick={() => {
                       setFilters((prev) => ({ ...prev, category: cat }));
+                      updateQuery('category', cat);
                       setShowCategoryOptions(false);
                     }}
                     $active={filters.category === cat}
@@ -198,7 +214,7 @@ export function NewsFilters({
         <SourceCol as="div" className="col-xs-12 col-sm-12 col-md-6">
           <NewsFiltersCustomSelectWrapper ref={sourceRef}>
             <NewsFiltersStyledLabel onClick={() => setShowSourceOptions((prev) => !prev)}>
-              {filters.source || 'All Sources'}
+              {filters.source ? filters.source : 'All'}
               {showSourceOptions ? <FiChevronUp size={16} /> : <FiChevronDown size={16} />}
             </NewsFiltersStyledLabel>
 
@@ -227,23 +243,23 @@ export function NewsFilters({
                   )}
                 </div>
 
-                {(!sourceSearch || !filters.source) && (
-                  <NewsFiltersCustomOption
-                    onClick={() => {
-                      setFilters((prev) => ({ ...prev, source: '' }));
-                      setShowSourceOptions(false);
-                    }}
-                    $active={!filters.source}
-                  >
-                    All Sources
-                  </NewsFiltersCustomOption>
-                )}
+                <NewsFiltersCustomOption
+                  onClick={() => {
+                    setFilters((prev) => ({ ...prev, source: '' }));
+                    updateQuery('source', '');
+                    setShowSourceOptions(false);
+                  }}
+                  $active={!filters.source}
+                >
+                  All
+                </NewsFiltersCustomOption>
 
                 {filteredSources.map((src) => (
                   <NewsFiltersCustomOption
                     key={src}
                     onClick={() => {
                       setFilters((prev) => ({ ...prev, source: src }));
+                      updateQuery('source', src);
                       setShowSourceOptions(false);
                     }}
                     $active={filters.source === src}

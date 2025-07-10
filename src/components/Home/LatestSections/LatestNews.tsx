@@ -57,7 +57,7 @@ export const LatestNews: React.FC<LatestNewsProps> = ({ articles }) => {
 
   return (
     <HomeSection className="container">
-      <SectionHeader title="What today's news" href="/app/news" isNews>
+      <SectionHeader title="What today's news" href={`${AppLinks.news.link}?sort=desc`} isNews>
         <LatestNewsNavControls>
           <button onClick={handlePrev} disabled={currentPage === 1}>
             <FaArrowLeft />

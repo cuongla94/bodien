@@ -6,12 +6,16 @@ import {
 } from './styles';
 import { HomeCategoryItem } from './HomeCategoryItem';
 import { Col, Row } from 'react-bootstrap';
+import Link from 'next/link';
+
 import carImage from 'assets/HomeCategories/Car.webp';
 import healthImage from 'assets/HomeCategories/Health.webp';
 import gamingImage from 'assets/HomeCategories/Gaming.webp';
 import homeImage from 'assets/HomeCategories/Home.webp';
 import beautyImage from 'assets/HomeCategories/Beauty.webp';
 import workImage from 'assets/HomeCategories/Work.webp';
+import { slugify } from 'utils/slugify';
+import { AppLinks } from 'config/navigation-config';
 
 export const categories = [
   {
@@ -25,7 +29,7 @@ export const categories = [
     image: healthImage
   },
   {
-    name: 'Gaming',
+    name: 'Gaming Accessories',
     count: 2,
     image: gamingImage
   },
@@ -35,7 +39,7 @@ export const categories = [
     image: carImage
   },
   {
-    name: 'Beauty',
+    name: 'Beauty & Skincare',
     count: 4,
     image: beautyImage
   },
@@ -60,11 +64,19 @@ export const HomeTopCategories = () => {
             lg={2}
             className="d-flex justify-content-center"
           >
-            <HomeCategoryItem
-              name={category.name}
-              count={category.count}
-              image={category.image}
-            />
+            <Link
+              href={`${AppLinks.blogs.link}?sort=relevant&category=${slugify(category.name)}`}
+              passHref
+              legacyBehavior
+            >
+              <a style={{ textDecoration: 'none', width: '100%' }}>
+                <HomeCategoryItem
+                  name={category.name}
+                  count={category.count}
+                  image={category.image}
+                />
+              </a>
+            </Link>
           </Col>
         ))}
       </Row>

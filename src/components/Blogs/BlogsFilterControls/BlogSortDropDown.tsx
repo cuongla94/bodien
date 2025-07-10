@@ -25,7 +25,7 @@ export const BlogSortDropdown = ({ value, onChange }: BlogSortDropdownProps) => 
       <StyledSelectContent position="popper" sideOffset={5}>
         <StyledSelectViewport>
           <Select.Group>
-            {BlogControls.filters.map(({ title, value }) => (
+            {BlogControls.sorts.map(({ title, value }) => (
               <StyledSelectItem key={value} value={value}>
                 <Select.ItemText>{title}</Select.ItemText>
               </StyledSelectItem>

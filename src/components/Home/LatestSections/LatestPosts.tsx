@@ -54,7 +54,7 @@ export const LatestPosts = ({ theme }: LatestPostsProps) => {
       <SectionHeader
         title={HomeConfig.postsTitle}
         hideLink={false}
-        href={AppLinks.blogs.link}
+        href={`${AppLinks.blogs.link}?sort=date_desc`}
       />
 
       <Row className="g-4">

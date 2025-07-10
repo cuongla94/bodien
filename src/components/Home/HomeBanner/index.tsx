@@ -27,7 +27,7 @@ export const HomeBanner = () => {
             <HomeBannerSubheading>
               Stay ahead with expert insights on the latest gadgets, apps, and innovations. Whether you're a casual user or a tech enthusiast — we’ve got your back.
             </HomeBannerSubheading>
-            <Link href={AppLinks.blogs.link} passHref>
+            <Link href={`${AppLinks.blogs.link}?sort=popularity`} passHref>
               <HomeBannerCTAButton>Explore All Reviews →</HomeBannerCTAButton>
             </Link>
           </HomeBannerContent>

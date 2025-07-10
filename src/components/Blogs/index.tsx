@@ -6,6 +6,9 @@ import { Spinner } from 'common/Spinner';
 import { MainDashboard } from 'config/main-config';
 import { useGetBlogsPages } from 'hooks/blogHooks/useGetBlogPages';
 import { BlogControlSortOptions } from 'types/blog';
+import { slugify } from 'utils/slugify';
+import { useRouter } from 'next/router';
+import { BlogControls } from 'config/blog-config';
 
 interface BlogsProps {
   isAdmin?: boolean;
@@ -30,13 +33,14 @@ export const Blogs = ({
   deleteError,
   dismissAlert,
 }: BlogsProps) => {
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState({ view: { list: 0 }, date: { asc: 0 } });
   const [sortOption, setSortOption] = useState<BlogControlSortOptions>('relevant');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [showHidden, setShowHidden] = useState(false); // NEW
+  const [showHidden, setShowHidden] = useState(false);
   const [isFiltering, setIsFiltering] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -47,12 +51,13 @@ export const Blogs = ({
     const sort = searchParams.get('sort');
     const category = searchParams.get('category');
 
-    if (sort && ['date_asc', 'date_desc', 'title_asc', 'title_desc', 'popularity', 'relevant'].includes(sort)) {
+    const validSortOptions = BlogControls.sorts.map((s) => s.value);
+    if (sort && validSortOptions.includes(sort)) {
       setSortOption(sort as BlogControlSortOptions);
     }
 
     if (category) {
-      setSelectedCategory(category);
+      setSelectedCategory(category.replace(/_/g, ' '));
     }
   }, [searchParams]);
 
@@ -67,13 +72,16 @@ export const Blogs = ({
       return !blog.hidden || isAdmin;
     })
     .filter(blog => blog.title?.toLowerCase().includes(searchTerm.toLowerCase()))
-    .filter(blog =>
-      selectedCategory
-        ? typeof blog.category === 'object'
-          ? blog.category.value === selectedCategory
-          : blog.category?.toLowerCase() === selectedCategory.toLowerCase()
-        : true
-    )
+    .filter(blog => {
+      if (!selectedCategory || selectedCategory === 'all') return true;
+
+      const blogCategory =
+        typeof blog.category === 'object'
+          ? blog.category?.value?.toLowerCase()
+          : blog.category?.toLowerCase();
+
+      return slugify(blogCategory || '') === selectedCategory.toLowerCase();
+    })
     .sort((a, b) => {
       switch (effectiveSortOption) {
         case 'date_asc':
@@ -129,15 +137,43 @@ export const Blogs = ({
     };
   }, [totalBlogs, hitEnd, setSize]);
 
+  const handleCategoryChange = (val: string) => {
+    setSelectedCategory(val);
+
+    const params = new URLSearchParams(searchParams);
+    if (val) {
+      const slug = slugify(val);
+      params.set('category', slugify(val))
+    } else {
+      params.delete('category');
+    }
+
+    router.replace(`/app/blogs?${params.toString()}`, undefined, { shallow: true });
+  };
+
+  const handleSortChange = (val: string) => {
+    setSortOption(val as BlogControlSortOptions);
+
+    const params = new URLSearchParams(searchParams);
+    if (val) {
+      params.set('sort', val);
+    } else {
+      params.delete('sort');
+    }
+
+    router.replace(`/app/blogs?${params.toString()}`, undefined, { shallow: true });
+  };
+
+
   return (
     <>
       <BlogsFilterControls
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         sortOption={sortOption}
-        onSortChange={setSortOption}
+        onSortChange={handleSortChange}
         selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
+        onCategoryChange={handleCategoryChange}
         showHidden={showHidden}
         onToggleHidden={() => setShowHidden(prev => !prev)}
       />

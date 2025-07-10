@@ -7,6 +7,7 @@ import {
   CategoryOption,
   InputWrapper,
 } from './styles';
+import { slugify } from 'utils/slugify';
 
 interface BlogFormCategoriesProps {
   editCategory: { title: string; value: string };
@@ -17,10 +18,13 @@ export const BlogFormCategories = ({
   editCategory,
   onChange,
 }: BlogFormCategoriesProps) => {
-  const transformedCategories = BlogFormCategorySelections.map((title) => ({
-    title,
-    value: title.toLowerCase().replace(/[^\w]+/g, '-'),
-  }));
+  const transformedCategories = [
+    { title: 'All', value: 'all' },
+    ...BlogFormCategorySelections.map((title) => ({
+      title,
+      value: slugify(title),
+    })),
+  ];
 
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<{ title: string; value: string } | null>(null);

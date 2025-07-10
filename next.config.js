@@ -6,6 +6,6 @@ module.exports = {
   },
   reactStrictMode: true,
   images: {
-    domains: ['cdn.sanity.io', 'i-invdn-com.investing.com', 'media.wired.com', 'o.aolcdn.com', 'www.ft.com'],
+    domains: ['cdn.sanity.io', 'i-invdn-com.investing.com', 'media.wired.com', 'o.aolcdn.com', 'www.ft.com', 'fortune.com', 'static01.nyt.com'],
   },
 };
