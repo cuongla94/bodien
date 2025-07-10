@@ -45,7 +45,7 @@ export const HomeBannerSubheading = styled.p`
   font-family: ${({ theme }) => theme.fontFamily.subtext};
 `;
 
-export const HomeBannerCTAButton = styled.a`
+export const HomeBannerCTAButton = styled.span`
   display: inline-block;
   background-color: ${({ theme }) => theme.primaryColor};
   color: ${({ theme }) => theme.buttonText};

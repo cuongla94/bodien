@@ -47,7 +47,7 @@ export const NavLinks = styled.ul`
   }
 `;
 
-export const NavLinkItem = styled.a<{ $active?: boolean }>`
+export const NavLinkItem = styled.span<{ $active?: boolean }>`
   color: ${({ theme, $active }) =>
     $active ? theme.primaryColor : theme.mainTextColor};
   font-weight: ${({ theme, $active }) =>

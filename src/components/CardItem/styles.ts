@@ -60,7 +60,7 @@ export const CardItemCategory = styled.span`
   width: fit-content; /* ensures it only takes up as much space as needed */
 `;
 
-export const CardItemTitle = styled.a`
+export const CardItemTitle = styled.span`
   font-size: 1rem;
   font-weight: 700;
   color: ${({ theme }) => theme?.mainTextColor || '#111827'};

@@ -57,7 +57,7 @@ export const SectionHeaderNavControls = styled.div`
   }
 `;
 
-export const SectionHeaderStyledLink = styled.a`
+export const SectionHeaderStyledLink = styled.span`
   font-size: 0.875rem;
   font-weight: 500;
   color: ${({ theme }) => theme.linkColor};
@@ -65,7 +65,7 @@ export const SectionHeaderStyledLink = styled.a`
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
-  padding: 0 4px; /* ✅ reduce horizontal padding */
+  padding: 0 4px;
 
   &::after {
     content: '';

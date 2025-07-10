@@ -7,8 +7,6 @@ import {
   ProductWrapper,
   ImageWrapper,
   ContentWrapper,
-  Title,
-  Description,
   LinksWrapper,
 } from './styles';
 

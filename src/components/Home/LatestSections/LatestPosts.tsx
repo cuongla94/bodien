@@ -59,27 +59,31 @@ export const LatestPosts = ({ theme }: LatestPostsProps) => {
 
       <Row className="g-4">
         <Col lg={9} md={12}>
-          <Row className="g-4">
-            {posts.map((post) => (
-              <Col key={post._id} xs={4}>
-                <CardItem
-                  type="blog"
-                  title={post.title}
-                  category={post.category}
-                  image={post.coverImage}
-                  publishedDate={post.publishedAt}
-                  updatedDate={post._updatedAt}
-                  url={undefined}
-                  theme={theme}
-                  isAdmin={false}
-                  numOfViews={post.numOfViews}
-                  numOfShares={post.numOfShares}
-                  hidden={post.hidden}
-                  onReadMoreClick={() => handleReadMoreClick(post)}
-                />
-              </Col>
-            ))}
-          </Row>
+          {posts.length === 0 ? (
+            <p>No Posts Available.</p>
+          ) : (
+            <Row className="g-4">
+              {posts.map((post) => (
+                <Col key={post._id} xs={4}>
+                  <CardItem
+                    type="blog"
+                    title={post.title}
+                    category={post.category}
+                    image={post.coverImage}
+                    publishedDate={post.publishedAt}
+                    updatedDate={post._updatedAt}
+                    url={undefined}
+                    theme={theme}
+                    isAdmin={false}
+                    numOfViews={post.numOfViews}
+                    numOfShares={post.numOfShares}
+                    hidden={post.hidden}
+                    onReadMoreClick={() => handleReadMoreClick(post)}
+                  />
+                </Col>
+              ))}
+            </Row>
+          )}
         </Col>
 
         <Col lg={3} md={12}>

@@ -1,18 +1,18 @@
-// components/AnimatedLink.tsx
+// styles.ts
 import styled from 'styled-components';
 
 interface AnimatedStyledLinkProps {
-  uppercase?: boolean;
-  isBlack?: boolean;
+  $uppercase?: boolean;
+  $isBlack?: boolean;
 }
 
-export const AnimatedStyledLink = styled.a<AnimatedStyledLinkProps>`
+export const AnimatedStyledLink = styled.span<AnimatedStyledLinkProps>`
   font-size: ${({ theme }) => theme.fontSize.sm};
   font-weight: ${({ theme }) => theme.fontWeights.medium};
-  color: ${({ isBlack, theme }) => (isBlack ? '#000' : theme.linkColor)};
+  color: ${({ $isBlack, theme }) => ($isBlack ? '#000' : theme.linkColor)};
   position: relative;
-  text-transform: ${({ uppercase }) => (uppercase ? 'uppercase' : 'none')};
-  text-decoration: none !important; /* ✅ Prevent default underline */
+  text-transform: ${({ $uppercase }) => ($uppercase ? 'uppercase' : 'none')};
+  text-decoration: none !important;
   cursor: pointer;
   padding-bottom: 2px;
 
@@ -28,8 +28,8 @@ export const AnimatedStyledLink = styled.a<AnimatedStyledLinkProps>`
   }
 
   &:hover {
-    color: ${({ isBlack, theme }) =>
-      isBlack ? theme.subTextColor : theme.linkHover};
+    color: ${({ $isBlack, theme }) =>
+      $isBlack ? theme.subTextColor : theme.linkHover};
 
     &::after {
       width: 100%;

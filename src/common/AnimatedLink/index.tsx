@@ -1,4 +1,3 @@
-// components/AnimatedLink.tsx
 import React from 'react';
 import Link from 'next/link';
 import { AnimatedStyledLink } from './styles';
@@ -18,25 +17,22 @@ export const AnimatedLink: React.FC<AnimatedLinkProps> = ({
   external = false,
   isBlack = false,
 }) => {
+  const props = {
+    $uppercase: uppercase,
+    $isBlack: isBlack,
+  };
+
   if (external) {
     return (
-      <AnimatedStyledLink
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        uppercase={uppercase}
-        isBlack={isBlack}
-      >
-        {children}
-      </AnimatedStyledLink>
+      <a href={href} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+        <AnimatedStyledLink {...props}>{children}</AnimatedStyledLink>
+      </a>
     );
   }
 
   return (
-    <Link href={href} passHref legacyBehavior>
-      <AnimatedStyledLink uppercase={uppercase} isBlack={isBlack}>
-        {children}
-      </AnimatedStyledLink>
+    <Link href={href}>
+      <AnimatedStyledLink {...props}>{children}</AnimatedStyledLink>
     </Link>
   );
 };

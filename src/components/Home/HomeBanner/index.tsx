@@ -33,7 +33,20 @@ export const HomeBanner = () => {
           </HomeBannerContent>
 
           <HomeBannerImageWrapper>
-            <Image src={HomeBannerImage} alt="Tech Reviews" layout="responsive" />
+            <Image
+              src={HomeBannerImage}
+              alt="Tech Reviews"
+              width={0}
+              height={0}
+              sizes="100vw"
+              style={{
+                width: '100%',
+                height: 'auto',
+                objectFit: 'cover',
+                borderRadius: '1rem'
+              }}
+              priority
+            />
           </HomeBannerImageWrapper>
         </HomeBannerRow>
       </Container>

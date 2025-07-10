@@ -138,7 +138,7 @@ export const FooterRight = styled.div`
   flex-wrap: wrap;
 `;
 
-export const FooterNavLink = styled.a`
+export const FooterNavLink = styled.span`
   text-decoration: none;
   color: ${({ theme }) => theme.mainTextColor};
   font-weight: ${({ theme }) => theme.fontWeights.medium};

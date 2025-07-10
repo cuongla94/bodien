@@ -132,13 +132,15 @@ const handleCopyLink = () => {
       <CardItemHorizontalWrapper>
         {horizontalImageUrl ? (
           <CardItemHorizontalImageWrapper>
-            <Image
-              src={horizontalImageUrl}
-              alt={title}
-              width={100}
-              height={100}
-              objectFit="cover"
-            />
+            <div style={{ position: 'relative', width: '100px', height: '100px' }}>
+              <Image
+                src={horizontalImageUrl}
+                alt={title}
+                fill
+                style={{ objectFit: 'cover', borderRadius: '6px' }}
+                sizes="100px"
+              />
+            </div>
           </CardItemHorizontalImageWrapper>
         ) : (
           <CardItemHorizontalImageWrapper>No Image</CardItemHorizontalImageWrapper>

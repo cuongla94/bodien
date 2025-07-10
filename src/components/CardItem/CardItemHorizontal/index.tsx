@@ -51,7 +51,14 @@ export const CardItemHorizontal: React.FC<CardItemHorizontalProps> = ({
     <CardItemHorizontalWrapper>
       {imageUrl ? (
         <CardItemHorizontalImageWrapper>
-          <Image src={imageUrl} alt={title} width={100} height={100} objectFit="cover" />
+          <div style={{ position: 'relative', width: '100px', height: '100px' }}>
+            <Image
+              src={imageUrl}
+              alt={title}
+              fill
+              style={{ objectFit: 'cover', borderRadius: '8px' }}
+            />
+          </div>
         </CardItemHorizontalImageWrapper>
       ) : (
         <CardItemHorizontalImageWrapper>No Image</CardItemHorizontalImageWrapper>
