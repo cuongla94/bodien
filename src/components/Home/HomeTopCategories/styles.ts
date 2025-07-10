@@ -1,4 +1,5 @@
 // src/components/HomeTopCategories/styles.ts
+import Image from 'next/image';
 import styled from 'styled-components';
 
 export const SectionWrapper = styled.section`
@@ -17,65 +18,63 @@ export const SectionTitle = styled.h2`
   color: ${({ theme }) => theme.mainTextColor};
 `;
 
-export const CategoriesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: ${({ theme }) => theme.spacing.lg};
-  justify-items: center;
-  align-items: start;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  }
-`;
-
-export const CategoryCard = styled.div`
+export const HomeCategoryItemCard = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center; // center image and text horizontally
-  text-align: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-`;
-
-
-export const CategoryImage = styled.div`
-  width: 100%;
-  aspect-ratio: 3 / 2;
-  background-color: ${({ theme }) => theme.cardBackground};
+  cursor: pointer;
   border-radius: ${({ theme }) => theme.borderRadius.md};
   overflow: hidden;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  &:hover .overlay {
+    opacity: 1;
   }
 
-  .no-image {
-    color: ${({ theme }) => theme.subTextColor};
-    font-size: ${({ theme }) => theme.fontSize.sm};
-    font-style: italic;
-    font-family: ${({ theme }) => theme.fontFamily.subtext};
-    text-align: center;
+  &:hover .border-animate {
     width: 100%;
   }
 `;
 
-export const CategoryName = styled.div`
-  margin-top: ${({ theme }) => theme.spacing.sm};
-  font-weight: ${({ theme }) => theme.fontWeights.medium};
-  font-family: ${({ theme }) => theme.fontFamily.base};
-  color: ${({ theme }) => theme.mainTextColor};
-  font-size: ${({ theme }) => theme.fontSize.md};
+export const HomeCategoryItemImageWrapper = styled.div`
+  position: relative;
+  aspect-ratio: 4/3;
+  width: 100%;
+  background-color: ${({ theme }) => theme.cardBackground};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  overflow: hidden;
+`;
 
-  span {
-    color: ${({ theme }) => theme.primaryColor};
-    font-weight: ${({ theme }) => theme.fontWeights.bold};
+export const HomeCategoryItemImage = styled(Image)`
+  object-fit: fill;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+`;
+
+export const HomeCategoryItemOverlayText = styled.div`
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  color: white;
+  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  font-family: ${({ theme }) => theme.fontFamily.heading};
+  z-index: 2;
+  pointer-events: none;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 6px 12px;
+  border-radius: 8px;
+`;
+
+
+export const HomeCategoryItemBottomBorder = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background-color: ${({ theme }) => theme.primaryColor};
+  width: 0;
+  transition: width 0.3s ease;
+  z-index: 1;
+
+  ${HomeCategoryItemCard}:hover & {
+    width: 100%;
   }
 `;

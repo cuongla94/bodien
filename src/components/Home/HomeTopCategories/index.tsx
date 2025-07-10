@@ -2,46 +2,49 @@
 import React from 'react';
 import {
   SectionWrapper,
-  SectionTitle,
-  CategoriesGrid
+  SectionTitle
 } from './styles';
 import { HomeCategoryItem } from './HomeCategoryItem';
 import { Col, Row } from 'react-bootstrap';
+import carImage from 'assets/HomeCategories/Car.webp';
+import healthImage from 'assets/HomeCategories/Health.webp';
+import gamingImage from 'assets/HomeCategories/Gaming.webp';
+import homeImage from 'assets/HomeCategories/Home.webp';
+import beautyImage from 'assets/HomeCategories/Beauty.webp';
+import workImage from 'assets/HomeCategories/Work.webp';
 
-// src/components/HomeTopCategories/data.ts
 export const categories = [
   {
-    name: 'Accessories',
+    name: 'Home',
     count: 0,
-    image: '/images/accessories.jpg'
+    image: homeImage
   },
   {
-    name: 'Air',
+    name: 'Health',
+    count: 1,
+    image: healthImage
+  },
+  {
+    name: 'Gaming',
     count: 2,
-    image: '/images/air.jpg'
+    image: gamingImage
   },
   {
-    name: 'Bikes',
-    count: 2,
-    image: '/images/bikes.jpg'
-  },
-  {
-    name: 'Car',
+    name: 'Car Accessories',
     count: 3,
-    image: '/images/car.jpg'
+    image: carImage
   },
   {
-    name: 'Headphones',
-    count: 2,
-    image: '/images/headphones.jpg'
+    name: 'Beauty',
+    count: 4,
+    image: beautyImage
   },
   {
-    name: 'Smartwatch',
-    count: 3,
-    image: '/images/smartwatch.jpg'
+    name: 'Work & Productivity',
+    count: 4,
+    image: workImage
   }
 ];
-
 
 export const HomeTopCategories = () => {
   return (

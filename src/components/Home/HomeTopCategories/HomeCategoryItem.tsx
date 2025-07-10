@@ -1,46 +1,40 @@
 // src/components/HomeTopCategories/HomeCategoryItem.tsx
 import React, { useState } from 'react';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import {
-  CategoryCard,
-  CategoryImage,
-  CategoryName
+  HomeCategoryItemCard,
+  HomeCategoryItemImageWrapper,
+  HomeCategoryItemImage,
+  HomeCategoryItemOverlayText,
+  HomeCategoryItemBottomBorder,
 } from './styles';
 
 interface Props {
   name: string;
   count: number;
-  image?: string;
+  image: string | StaticImageData;
 }
 
-export const HomeCategoryItem: React.FC<Props> = ({ name, count, image }) => {
+export const HomeCategoryItem: React.FC<Props> = ({ name, image }) => {
   const [hasImageError, setHasImageError] = useState(false);
 
   return (
-    <CategoryCard>
-      <CategoryImage>
+    <HomeCategoryItemCard>
+      <HomeCategoryItemImageWrapper>
         {!image || hasImageError ? (
           <div className="no-image">No Image Found</div>
         ) : (
-          <Image
+          <HomeCategoryItemImage
             src={image}
             alt={name}
-            width={240}
-            height={160}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
             onError={() => setHasImageError(true)}
-            style={{
-              borderRadius: '12px',
-              objectFit: 'cover',
-              width: '100%',
-              height: '100%'
-            }}
           />
         )}
-      </CategoryImage>
-
-      <CategoryName>
-        {name}
-      </CategoryName>
-    </CategoryCard>
+        <HomeCategoryItemOverlayText>{name}</HomeCategoryItemOverlayText>
+        <HomeCategoryItemBottomBorder />
+      </HomeCategoryItemImageWrapper>
+    </HomeCategoryItemCard>
   );
 };
